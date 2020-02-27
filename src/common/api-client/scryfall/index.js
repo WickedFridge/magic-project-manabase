@@ -13,11 +13,10 @@ class ScryfallApiClient extends AbstractApiClient {
         });
     }
 
-    async getCardByName(name) {
+    async getCardByName(cardName) {
         const results = await this._timeTrackedAxiosCall({
             method: `get`,
-            url: `/cards/search`,
-            q: `!"${name}"`,
+            url: `/cards/search?q=!"${cardName}"`,
             timeTrackerLabel: `scryfall`,
         });
         if (results.status) {

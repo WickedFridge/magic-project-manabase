@@ -5,7 +5,7 @@ const ScryfallApiClient = require(`.`);
  * NLU API client
  */
 class ScryfallApiClientMock extends ScryfallApiClient {
-    async getCardByName(name) {
+    async getCardByName(cardName) {
         if (this.forceError) {
             return Promise.resolve({
                 "object": "error",

@@ -12,5 +12,12 @@
     "jest-html-reporter": "^2.4.2",
     "jest-junit": "^6.3.0",
     "jest-sonar-reporter": "^2.0.0"
+  },
+  "dependencies": {
+    "axios": "^0.19.2",
+    "config": "^3.3.0",
+    "crypto": "^1.0.1",
+    "winston": "^3.2.1",
+    "winston-daily-rotate-file": "^4.4.2"
   }
 }
