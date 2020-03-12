@@ -1,43 +1,25 @@
 const config = require('config');
-const { island, forest, guildGate, growthSpiral } = require('./cards');
-const { getAllCombinations, canPlaySpellOnCurve } = require('./utils');
-const { createClient } = require('./common/api-client/scryfall/factory');
+const bodyParser = require('body-parser');
+const express = require('express');
+const { analyzeDecklist } = require('./services/analyzeDecklist');
 const { customLogger } = require('./common/logger');
 
 const logger = customLogger('index');
-const scryfallApiClient = createClient(config.apiClients.scryfall);
 
+const app = express();
+app.use(bodyParser.json({ limit: '50mb' }));
 
-async function searchCard(cardName) {
-    const forestCard = await scryfallApiClient.getCardByName(cardName);
-    logger.info(forestCard);
-}
+app.post('/analyze', async (req, res) => {
+    const decklist = req.body.deck;
+    try {
+        const result = await analyzeDecklist(decklist);
+        return res.json(result);
+    } catch (e) {
+        logger.error(e);
+        return res.status(500).json(e.message);
+    }
+});
 
-const lands = [
-    guildGate(0),
-    guildGate(1),
-    guildGate(2),
-    guildGate(3),
-    forest(0),
-    forest(1),
-    forest(2),
-    forest(3),
-    forest(4),
-    forest(5),
-    forest(6),
-    forest(7),
-    forest(8),
-    forest(9),
-    forest(10),
-    forest(11),
-    forest(12),
-];
-
-const keepableLandCombinations = getAllCombinations(lands).filter(c => c.length >= 2 && c.length <= 5);
-const playableHands = keepableLandCombinations.filter(hand => canPlaySpellOnCurve(hand, growthSpiral(0)));
-const unplayableHands = keepableLandCombinations.filter(hand => !canPlaySpellOnCurve(hand, growthSpiral(0)));
-logger.info(keepableLandCombinations.length);
-logger.info(playableHands.length / keepableLandCombinations.length);
-// console.log(playableHands);
-
-searchCard('Growth Spiral').then();
+app.listen(config.port, () => {
+    logger.info(`Starting "${config.name}" listening on port ${config.port}`);
+});

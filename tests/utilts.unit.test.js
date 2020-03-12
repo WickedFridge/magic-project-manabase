@@ -1,5 +1,6 @@
-const { canPlaySpellOnCurve } = require('../src/utils');
-const { forest, island, mountain, guildGate, giantGrowth, growthSpiral } = require('../src/cards');
+const { canPlaySpellOnCurve } = require('../src/services/cards/utils');
+const { forest, island, mountain, guildGate, giantGrowth, growthSpiral,
+        mockGrowthSpiral, mockTemple, mockIsland } = require('../src/cards');
 
 describe('Basic can play spell testing - color', () => {
     it('basic can play giant growth', () => {
@@ -26,6 +27,12 @@ describe('Basic can play spell testing - color', () => {
         const lands = [forest(0), forest(1)];
         const spell = growthSpiral(0);
         expect(canPlaySpellOnCurve(lands, spell)).toBe(false);
+    });
+
+    it(`mock can play growth spiral 0`, () => {
+        const lands = [mockTemple(), mockIsland()];
+        const spell = mockGrowthSpiral();
+        expect(canPlaySpellOnCurve(lands, spell)).toBe(true);
     });
 });
 
