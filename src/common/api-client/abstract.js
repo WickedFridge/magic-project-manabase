@@ -119,7 +119,7 @@ class AbstractApiClient {
             if (this.forceTimeout) { throw new AxiosTimeout(); }
             if (this.forceError) { throw new AxiosError(`fake internal error`, 500); }
             const response = await axios.request(params);
-            logSuccess(this.logger, params, response, logLevel || this.logLevel);
+            // logSuccess(this.logger, params, response, logLevel || this.logLevel);
             if (cacheKey) {
                 this.logger.debug(`Cache set ${cacheKey}`);
                 this.cache.set(cacheKey, response.data, cacheTtl);

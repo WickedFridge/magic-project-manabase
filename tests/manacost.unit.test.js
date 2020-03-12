@@ -1,5 +1,5 @@
 const { forest, island, mountain, guildGate, giantGrowth, growthSpiral } = require('../src/cards');
-const { evaluateCost } = require('../src/utils');
+const { evaluateCost } = require('../src/services/cards/utils');
 
 describe('manacost 1', () => {
     it('test 0', () => {
@@ -24,5 +24,11 @@ describe('manacost 1', () => {
         const cost = { U: 1, G: 1};
         const lands = [mountain(0), guildGate(0), guildGate(1)];
         expect(evaluateCost(lands, cost)).toBe(false);
+    });
+
+    it('test 4', () => {
+        const cost = { U: 2, G: 2};
+        const lands = [guildGate(0), guildGate(1), guildGate(2), island(0)];
+        expect(evaluateCost(lands, cost)).toBe(true);
     });
 });

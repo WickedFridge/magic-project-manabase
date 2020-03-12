@@ -1,30 +1,25 @@
-const { island, forest, guildGate, growthSpiral } = require('./cards');
-const { getAllCombinations, canPlaySpellOnCurve } = require('./utils');
+const config = require('config');
+const bodyParser = require('body-parser');
+const express = require('express');
+const { analyzeDecklist } = require('./services/analyzeDecklist');
+const { customLogger } = require('./common/logger');
 
-const lands = [
-    guildGate(0),
-    guildGate(1),
-    guildGate(2),
-    guildGate(3),
-    forest(0),
-    forest(1),
-    forest(2),
-    forest(3),
-    forest(4),
-    forest(5),
-    forest(6),
-    forest(7),
-    forest(8),
-    forest(9),
-    forest(10),
-    forest(11),
-    forest(12),
-];
+const logger = customLogger('index');
 
-const keepableLandCombinations = getAllCombinations(lands).filter(c => c.length >= 2 && c.length <= 5);
-const playableHands = keepableLandCombinations.filter(hand => canPlaySpellOnCurve(hand, growthSpiral(0)));
-const unplayableHands = keepableLandCombinations.filter(hand => !canPlaySpellOnCurve(hand, growthSpiral(0)));
-console.log(keepableLandCombinations.length);
-console.log(playableHands.length / keepableLandCombinations.length);
+const app = express();
+app.use(bodyParser.json({ limit: '50mb' }));
 
-// console.log(playableHands);
+app.post('/analyze', async (req, res) => {
+    const decklist = req.body.deck;
+    try {
+        const result = await analyzeDecklist(decklist);
+        return res.json(result);
+    } catch (e) {
+        logger.error(e);
+        return res.status(500).json(e.message);
+    }
+});
+
+app.listen(config.port, () => {
+    logger.info(`Starting "${config.name}" listening on port ${config.port}`);
+});

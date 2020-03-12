@@ -1,3 +1,4 @@
+const { getManaCost } = require("../../../services/cards/utils");
 const AbstractApiClient = require(`../abstract`);
 
 /**
@@ -13,13 +14,21 @@ class ScryfallApiClient extends AbstractApiClient {
         });
     }
 
-    getCardByName(name) {
-        return this._timeTrackedAxiosCall({
+    async getCardByName(cardName) {
+        const results = await this._timeTrackedAxiosCall({
             method: `get`,
-            url: `/cards/search`,
-            q: `!"${name}"`,
+            url: `/cards/search?q=!"${cardName}"`,
             timeTrackerLabel: `scryfall`,
         });
+        if (results.status) {
+            this.logger.error('error !');
+            throw new Error('error catched', results.status);
+        }
+        const { id, name, mana_cost, cmc, colors, color_identity, type_line, oracle_text } = results.data[0];
+        if (RegExp('Land').test(type_line)) {
+            colors.push(...color_identity);
+        }
+        return { id, name, cmc, colors, type: type_line, text: oracle_text, cost: getManaCost(mana_cost) };
     }
 }
 
