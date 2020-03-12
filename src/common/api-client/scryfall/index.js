@@ -1,3 +1,4 @@
+const { getManaCost } = require("../../../services/cards/utils");
 const AbstractApiClient = require(`../abstract`);
 
 /**
@@ -23,8 +24,11 @@ class ScryfallApiClient extends AbstractApiClient {
             this.logger.error('error !');
             throw new Error('error catched', results.status);
         }
-        const { id, name, mana_cost, cmc, colors, type_line } = results.data[0];
-        return { id, name, mana_cost, cmc, colors, type_line };
+        const { id, name, mana_cost, cmc, colors, color_identity, type_line, oracle_text } = results.data[0];
+        if (RegExp('Land').test(type_line)) {
+            colors.push(...color_identity);
+        }
+        return { id, name, cmc, colors, type: type_line, text: oracle_text, cost: getManaCost(mana_cost) };
     }
 }
 
