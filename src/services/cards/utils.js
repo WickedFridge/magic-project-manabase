@@ -44,24 +44,24 @@ function evaluateCost(lands, cost) {
             if (color === 'generic') {
                 usedLands.push(remainingLands.pop());
                 colorsToFind[color]--;
-            } else {
-                // look for a land that exactly match the color
-                const exactMatchs = remainingLands.filter(land => land.colors.length === 1 && land.colors.includes(color));
-                if (exactMatchs.length > 0) {
-                    const foundLand = exactMatchs.pop();
-                    usedLands.push(...remainingLands.splice(remainingLands.findIndex(l => l.name === foundLand.name), 1));
-                    colorsToFind[color]--;
-                } else {
-                    remainingLands.some((land) => {
-                        if (land.colors.includes(color)) {
-                            usedLands.push(...remainingLands.splice(remainingLands.findIndex(l => l.name === land.name), 1));
-                            colorsToFind[color]--;
-                            return true
-                        }
-                        return false;
-                    });
-                }
+                break;
             }
+            // look for a land that exactly match the color
+            const exactMatchs = remainingLands.filter(land => land.colors.length === 1 && land.colors.includes(color));
+            if (exactMatchs.length > 0) {
+                const foundLand = exactMatchs.pop();
+                usedLands.push(...remainingLands.splice(remainingLands.findIndex(l => l.name === foundLand.name), 1));
+                colorsToFind[color]--;
+                break;
+            }
+            remainingLands.some((land) => {
+                if (land.colors.includes(color)) {
+                    usedLands.push(...remainingLands.splice(remainingLands.findIndex(l => l.name === land.name), 1));
+                    colorsToFind[color]--;
+                    return true
+                }
+                return false;
+            });
         }
     });
     return Object.values(colorsToFind).every(l => l === 0) && hasUntappedLand(usedLands);
