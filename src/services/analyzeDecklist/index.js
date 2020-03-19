@@ -33,10 +33,8 @@ async function analyzeDecklist(decklist) {
     const lands = deck
         .filter(card => hasTypeLand(card))
         .map(land => markEtb(land));
-    logger.info(lands);
 
     const spells = deck.filter(card => !hasTypeLand(card));
-    logger.info(spells);
 
     const data = {};
 

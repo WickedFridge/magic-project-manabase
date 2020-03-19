@@ -16,7 +16,7 @@ function markEtb(card) {
 }
 
 function hasCorrectColors(lands, spell) {
-    return Object.keys(spell.cost).every(color => {
+    return Object.keys(spell.cost).filter(color => color !== 'generic').every(color => {
         return lands.some(l => l.colors.includes(color));
     });
 }
@@ -37,23 +37,30 @@ function evaluateCost(lands, cost) {
     const colorsToFind = copy(cost);
     const remainingLands = copy(lands).sort((land1, land2) => land1.colors.length - land2.colors.length);
     const usedLands = [];
-    Object.keys(cost).forEach((color) => {
+    const sortedLandsToFind = Object.keys(cost).sort((c1, c2) => c1.length - c2.length);
+    sortedLandsToFind.forEach((color) => {
         for(let i=0; i<cost[color]; i++) {
-            // look for a land that exactly match the color
-            const exactMatchs = remainingLands.filter(land => land.colors.length === 1 && land.colors.includes(color));
-            if (exactMatchs.length > 0) {
-                const foundLand = exactMatchs.pop();
-                usedLands.push(...remainingLands.splice(remainingLands.findIndex(l => l.name === foundLand.name), 1));
+            // if we look for generic, take any land
+            if (color === 'generic') {
+                usedLands.push(remainingLands.pop());
                 colorsToFind[color]--;
             } else {
-                remainingLands.some((land) => {
-                    if (land.colors.includes(color)) {
-                        usedLands.push(...remainingLands.splice(remainingLands.findIndex(l => l.name === land.name), 1));
-                        colorsToFind[color]--;
-                        return true
-                    }
-                    return false;
-                });
+                // look for a land that exactly match the color
+                const exactMatchs = remainingLands.filter(land => land.colors.length === 1 && land.colors.includes(color));
+                if (exactMatchs.length > 0) {
+                    const foundLand = exactMatchs.pop();
+                    usedLands.push(...remainingLands.splice(remainingLands.findIndex(l => l.name === foundLand.name), 1));
+                    colorsToFind[color]--;
+                } else {
+                    remainingLands.some((land) => {
+                        if (land.colors.includes(color)) {
+                            usedLands.push(...remainingLands.splice(remainingLands.findIndex(l => l.name === land.name), 1));
+                            colorsToFind[color]--;
+                            return true
+                        }
+                        return false;
+                    });
+                }
             }
         }
     });
@@ -62,9 +69,14 @@ function evaluateCost(lands, cost) {
 
 function canPlaySpellOnCurve(lands, spell) {
     if (!hasCorrectColors(lands, spell)) {
+        logger.error('has no correct colors');
+        logger.error(lands);
+        logger.error(spell);
         return false;
     }
     if (!hasUntappedLand(lands)) {
+        logger.error('has no untapped land');
+        logger.error(lands.map(l => l.name));
         return false;
     }
 
@@ -72,7 +84,6 @@ function canPlaySpellOnCurve(lands, spell) {
     if (comb.length === 0) {
         return false;
     }
-    logger.info(comb.length);
     const canPlay = comb.some(comb => evaluateCost(comb, spell.cost));
     if (!canPlay) {
         logger.error(lands.map(l => l.name));
@@ -106,4 +117,5 @@ module.exports = {
     evaluateCost,
     getManaCost,
     canPlaySpellOnCurve,
+    hasCorrectColors,
 };
