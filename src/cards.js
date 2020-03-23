@@ -107,6 +107,17 @@ const mockUro = () => ({
     cost: { generic: 1, G: 1, U: 1 },
 });
 
+const frilledMystic = () => ({
+    id: '50595d02-edad-48a6-b10c-6fa859cc88bb',
+    name: 'Frilled Mystic',
+    cmc: 4,
+    colors: [ 'G', 'U' ],
+    type: 'Creature — Elf Lizard Wizard',
+    text:
+        'Flash\nWhen Frilled Mystic enters the battlefield, you may counter target spell.',
+    cost: { G: 2, U: 2 }
+});
+
 module.exports = {
     forest,
     island,
@@ -120,4 +131,5 @@ module.exports = {
     mockTempleGolgari,
     mockGrowthSpiral,
     mockUro,
+    frilledMystic,
 };

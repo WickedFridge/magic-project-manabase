@@ -1,6 +1,7 @@
-const { canPlaySpellOnCurve, hasCorrectColors } = require('../src/services/cards/utils');
+const { cachedCanPlaySpellOnCurve, hasCorrectColors } = require('../src/services/cards/utils');
 const { forest, island, mountain, swamp, simicGuildGate, giantGrowth, growthSpiral,
-        mockGrowthSpiral, mockTempleSimic, mockIsland, mockTempleGolgari, mockUro } = require('../src/cards');
+        mockGrowthSpiral, mockTempleSimic, mockIsland, mockTempleGolgari, mockUro,
+        frilledMystic } = require('../src/cards');
 
 describe('has Correct Colors unit testing', () => {
     it('handling generic mana', () => {
@@ -11,7 +12,7 @@ describe('has Correct Colors unit testing', () => {
 });
 
 const testCanPlayOnCurve = ({ text, lands, spell, outcome }) => () => {
-    expect(canPlaySpellOnCurve(lands, spell)).toBe(outcome);
+    expect(cachedCanPlaySpellOnCurve(lands, spell)).toBe(outcome);
 };
 
 describe('Basic can play spell testing - color', () => {
@@ -89,6 +90,11 @@ describe('can play spell testing - generic mana', () => {
     it('can play Uro', testCanPlayOnCurve({
         lands: [mockTempleGolgari(), island(), swamp()],
         spell: mockUro(),
+        outcome: true,
+    }));
+    it('can play Frilled Mystic', testCanPlayOnCurve({
+        lands: [mockTempleGolgari(0), mockTempleGolgari(1), island(0), island(1)],
+        spell: frilledMystic(),
         outcome: true,
     }))
 })
