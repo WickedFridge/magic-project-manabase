@@ -2,6 +2,7 @@ const config = require('config');
 const bodyParser = require('body-parser');
 const express = require('express');
 const { analyzeDecklist } = require('./services/analyzeDecklist');
+const { getCache } = require('./services/cards/utils');
 const { customLogger } = require('./common/logger');
 
 const logger = customLogger('index');
@@ -18,6 +19,11 @@ app.post('/analyze', async (req, res) => {
         logger.error(e);
         return res.status(500).json(e.message);
     }
+});
+
+app.get('/cache', async (req, res) => {
+    const cache = Array.from(getCache()).map(([key, value]) => [...JSON.parse(key), value]);
+    res.json(cache);
 });
 
 app.listen(config.port, () => {

@@ -42,8 +42,29 @@ function getAllCombinations(rest, active = [], res = []){
     return res;
 }
 
+/**
+ * Returns the Sets of all combinations of cards of length n
+ * @param rest
+ * @param length of the combinations
+ * @param
+ * @param active
+ * @param res
+ * @returns {Array}
+ */
+function getAllCombinationsOfMaxLength(rest, length, active = [], res = []){
+    if (rest.length === 0 || active.length === length){
+        res.push(active);
+        return active;
+    } else {
+        getAllCombinationsOfMaxLength(rest.slice(1), length, [...active, rest[0]], res);
+        getAllCombinationsOfMaxLength(rest.slice(1), length, active, res);
+    }
+    return res;
+}
+
 module.exports = {
     copy,
     getAllPermutations,
     getAllCombinations,
+    getAllCombinationsOfMaxLength,
 };

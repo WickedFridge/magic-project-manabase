@@ -4,6 +4,8 @@ const { copy, getAllCombinations } = require('../../common/tools/utils');
 
 const logger = customLogger('utils');
 
+const cache = new Map();
+
 function hasTypeLand(card) {
     return RegExp('Land').test(card.type);
 }
@@ -16,13 +18,24 @@ function markEtb(card) {
 }
 
 function hasCorrectColors(lands, spell) {
-    return Object.keys(spell.cost).every(color => {
+    return Object.keys(spell.cost).filter(color => color !== 'generic').every(color => {
         return lands.some(l => l.colors.includes(color));
     });
 }
 
 function hasUntappedLand(lands) {
     return lands.some(l => l.etbTapped === false);
+}
+
+function findCorrectLand(lands, color) {
+    if (color === 'generic') {
+        return lands[0];
+    }
+    const exactMatchs = lands.filter(land => land.colors.length === 1 && land.colors.includes(color));
+    if (exactMatchs.length > 0) {
+        return exactMatchs[0];
+    }
+    return lands.find(land => land.colors.includes(color));
 }
 
 /**
@@ -37,24 +50,15 @@ function evaluateCost(lands, cost) {
     const colorsToFind = copy(cost);
     const remainingLands = copy(lands).sort((land1, land2) => land1.colors.length - land2.colors.length);
     const usedLands = [];
-    Object.keys(cost).forEach((color) => {
+    const sortedLandsToFind = Object.keys(cost).sort((c1, c2) => c1.length - c2.length);
+    sortedLandsToFind.forEach((color) => {
         for(let i=0; i<cost[color]; i++) {
-            // look for a land that exactly match the color
-            const exactMatchs = remainingLands.filter(land => land.colors.length === 1 && land.colors.includes(color));
-            if (exactMatchs.length > 0) {
-                const foundLand = exactMatchs.pop();
-                usedLands.push(...remainingLands.splice(remainingLands.findIndex(l => l.name === foundLand.name), 1));
-                colorsToFind[color]--;
-            } else {
-                remainingLands.some((land) => {
-                    if (land.colors.includes(color)) {
-                        usedLands.push(...remainingLands.splice(remainingLands.findIndex(l => l.name === land.name), 1));
-                        colorsToFind[color]--;
-                        return true
-                    }
-                    return false;
-                });
+            const foundLand = findCorrectLand(remainingLands, color);
+            if (!foundLand) {
+                return;
             }
+            usedLands.push(...remainingLands.splice(remainingLands.findIndex(l => l.name === foundLand.name), 1));
+            colorsToFind[color]--;
         }
     });
     return Object.values(colorsToFind).every(l => l === 0) && hasUntappedLand(usedLands);
@@ -62,9 +66,11 @@ function evaluateCost(lands, cost) {
 
 function canPlaySpellOnCurve(lands, spell) {
     if (!hasCorrectColors(lands, spell)) {
+        logger.error('has no correct colors');
         return false;
     }
     if (!hasUntappedLand(lands)) {
+        logger.error('has no untapped land');
         return false;
     }
 
@@ -72,14 +78,19 @@ function canPlaySpellOnCurve(lands, spell) {
     if (comb.length === 0) {
         return false;
     }
-    logger.info(comb.length);
-    const canPlay = comb.some(comb => evaluateCost(comb, spell.cost));
-    if (!canPlay) {
-        logger.error(lands.map(l => l.name));
-    } else {
-        logger.info(lands.map(l => l.name));
-    }
-    return canPlay;
+    return comb.some(comb => evaluateCost(comb, spell.cost));
+}
+
+function cachedCanPlaySpellOnCurve(lands, spell) {
+    const key = JSON.stringify([spell.name, lands.map(l => l.name).sort()]);
+    const value = cache.has(key) ?
+        cache.get(key) :
+        canPlaySpellOnCurve(lands, spell);
+
+    cache.set(key, value);
+    return value;
+
+
 }
 
 function getManaCost(codifiedCmc) {
@@ -99,11 +110,16 @@ function getManaCost(codifiedCmc) {
     return manacost;
 }
 
+function getCache() {
+    return cache;
+}
 
 module.exports = {
     hasTypeLand,
     markEtb,
     evaluateCost,
     getManaCost,
-    canPlaySpellOnCurve,
+    cachedCanPlaySpellOnCurve,
+    hasCorrectColors,
+    getCache,
 };
