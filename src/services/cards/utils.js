@@ -66,11 +66,9 @@ function evaluateCost(lands, cost) {
 
 function canPlaySpellOnCurve(lands, spell) {
     if (!hasCorrectColors(lands, spell)) {
-        logger.error('has no correct colors');
         return false;
     }
     if (!hasUntappedLand(lands)) {
-        logger.error('has no untapped land');
         return false;
     }
 
@@ -82,7 +80,7 @@ function canPlaySpellOnCurve(lands, spell) {
 }
 
 function cachedCanPlaySpellOnCurve(lands, spell) {
-    const key = JSON.stringify([spell.name, lands.map(l => l.name).sort()]);
+    const key = JSON.stringify([spell.mana_cost, lands.map(l => l.name).sort()]);
     const value = cache.has(key) ?
         cache.get(key) :
         canPlaySpellOnCurve(lands, spell);
