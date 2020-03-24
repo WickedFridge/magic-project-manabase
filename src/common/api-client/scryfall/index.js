@@ -5,9 +5,10 @@ const AbstractApiClient = require(`../abstract`);
  * NLU API client
  */
 class ScryfallApiClient extends AbstractApiClient {
-    constructor({ baseURL }) {
+    constructor({ baseURL, cacheClientConfig }) {
         super({
             baseURL,
+            cacheClientConfig,
             baseHeaders: {
                 'Content-Type': `application/json; charset=utf-8`,
             },
@@ -28,7 +29,7 @@ class ScryfallApiClient extends AbstractApiClient {
         if (RegExp('Land').test(type_line)) {
             colors.push(...color_identity);
         }
-        return { id, name, cmc, colors, type: type_line, text: oracle_text, cost: getManaCost(mana_cost) };
+        return { id, name, cmc, colors, type: type_line, text: oracle_text, cost: getManaCost(mana_cost), mana_cost };
     }
 }
 

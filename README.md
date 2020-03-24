@@ -23,6 +23,7 @@ It has been started by Charles Wickham in February 2020.
         - [ ] handle escape
         - [ ] handle X spells
 - performance upgrades
+    - [ ] handle colorless spells
     - [ ] use reddis for the cache
     - [ ] parallelization
         - [ ] try parallel.js
