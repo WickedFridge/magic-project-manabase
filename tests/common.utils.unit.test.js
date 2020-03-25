@@ -1,4 +1,4 @@
-const { getAllCombinations, getAllCombinationsOfMaxLength, getAllPermutations } = require('../src/common/tools/utils');
+const { getAllCombinations, getAllCombinationsOfMaxLength, getAllPermutations } = require('../common/tools/utils');
 
 describe('test getAllCombinations length', () => {
     it('4 elements table', () => {

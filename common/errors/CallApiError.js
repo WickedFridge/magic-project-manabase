@@ -1,5 +1,5 @@
 /* eslint-disable semi */
-const AbstractError = require(`./AbstractError`);
+const AbstractError = require(`common/errors/AbstractError`);
 
 class CallApiError extends AbstractError {
     constructor(message) {

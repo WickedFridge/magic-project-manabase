@@ -2,7 +2,7 @@
 const ScryfallApiClient = require(`.`);
 
 /**
- * NLU API client
+ * Scryfall API client mock
  */
 class ScryfallApiClientMock extends ScryfallApiClient {
     async getCardByName(cardName) {

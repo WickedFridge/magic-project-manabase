@@ -1,4 +1,3 @@
-const config = require('config');
 const { customLogger } = require('../../common/logger');
 const { copy, getAllCombinations } = require('../../common/tools/utils');
 
@@ -87,8 +86,6 @@ function cachedCanPlaySpellOnCurve(lands, spell) {
 
     cache.set(key, value);
     return value;
-
-
 }
 
 function getManaCost(codifiedCmc) {

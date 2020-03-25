@@ -1,27 +1,30 @@
 const config = require('config');
 const bodyParser = require('body-parser');
 const express = require('express');
-const { analyzeDecklist } = require('./services/analyzeDecklist');
-const { getCache } = require('./services/cards/utils');
-const { customLogger } = require('./common/logger');
+const { getCache } = require('../decklist/cards/utils');
+const { cachedCanPlaySpellOnCurve } = require('../decklist/cards/utils');
+const { customLogger } = require('../common/logger');
 
 const logger = customLogger('index');
 
 const app = express();
 app.use(bodyParser.json({ limit: '50mb' }));
 
-app.post('/analyze', async (req, res) => {
-    const decklist = req.body.deck;
+app.post('/spell/can-play', async (req, res) => {
+    const { lands, spell } = req.body;
     try {
-        const result = await analyzeDecklist(decklist);
-        return res.json(result);
+        logger.info('called');
+        const canPlay = await cachedCanPlaySpellOnCurve(lands, spell);
+        logger.info(canPlay);
+        return res.json(canPlay);
     } catch (e) {
         logger.error(e);
         return res.status(500).json(e.message);
     }
 });
 
-app.get('/cache', async (req, res) => {
+
+app.get('/spell/cache', async (req, res) => {
     const cache = Array.from(getCache()).map(([key, value]) => [...JSON.parse(key), value]);
     res.json(cache);
 });

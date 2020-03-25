@@ -1,7 +1,7 @@
-const { cachedCanPlaySpellOnCurve, hasCorrectColors } = require('../src/services/cards/utils');
+const { cachedCanPlaySpellOnCurve, hasCorrectColors } = require('../decklist/cards/utils');
 const { forest, island, mountain, swamp, simicGuildGate, giantGrowth, growthSpiral,
         mockGrowthSpiral, mockTempleSimic, mockIsland, mockTempleGolgari, mockUro,
-        frilledMystic } = require('../src/cards');
+        frilledMystic } = require('../decklist/cards');
 
 describe('has Correct Colors unit testing', () => {
     it('handling generic mana', () => {

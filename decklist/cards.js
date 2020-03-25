@@ -1,4 +1,4 @@
-const { getManaCost } = require('./services/cards/utils');
+const { getManaCost } = require('./cards/utils');
 
 const forest = (id) => ({
     name: `Forest ${id}`,

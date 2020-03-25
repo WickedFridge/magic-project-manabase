@@ -1,12 +1,15 @@
 const config = require('config');
+const bluebird = require('bluebird');
 const Parallel = require('paralleljs');
-const { customLogger } = require('../../common/logger');
-const { hasTypeLand, markEtb, cachedCanPlaySpellOnCurve } = require('../cards/utils');
-const { getAllCombinationsOfMaxLength } = require("../../common/tools/utils");
+const { customLogger } = require('../../../common/logger');
+const { hasTypeLand, markEtb, cachedCanPlaySpellOnCurve } = require('../../cards/utils');
+const { getAllCombinationsOfMaxLength } = require("../../../common/tools/utils");
 
-const { createClient } = require('../../common/api-client/scryfall/factory');
-const scryfallApiClient = createClient(config.apiClients.scryfall);
+const { createClient: createScryfallClient } = require('../../../common/api-client/scryfall/factory');
+const { createClient: createSpellClient } = require('../../../common/api-client/spell/factory');
 
+const spellApiClient = createSpellClient(config.apiClients.spell);
+const scryfallApiClient = createScryfallClient(config.apiClients.scryfall);
 const logger = customLogger('index');
 
 async function createDeck(decklist) {
@@ -27,18 +30,21 @@ async function createDeck(decklist) {
     return deck
 }
 
-function getDeckStats(spells, landsCombinations) {
+async function getDeckStats(spells, landsCombinations) {
     const data = {};
-    spells.forEach(spell => {
-        const maxLength = Math.max(spell.cmc + 2, 5);
-        const keepable = (c) => c.length >= Math.max(spell.cmc, 2) && c.length <= maxLength;
+
+    for(const spell of spells) {
+        const keepable = (c) => c.length >= Math.max(spell.cmc, 2) && c.length <= Math.max(spell.cmc, 5);
         const NManaLandCombinations = landsCombinations.filter(keepable);
         logger.info(spell.name);
         logger.info(NManaLandCombinations.length);
-        const playableHands = NManaLandCombinations.filter(hand => cachedCanPlaySpellOnCurve(hand, spell));
+        const playableHands = NManaLandCombinations.filter(lands => cachedCanPlaySpellOnCurve(lands, spell));
         const stats = (playableHands.length / NManaLandCombinations.length * 100).toFixed(2);
         data[spell.name] = `${stats}%`;
-    });
+    }
+    // spells.forEach(spell => {
+    //
+    // });
     return data;
 }
 
@@ -54,7 +60,7 @@ async function analyzeDecklist(decklist) {
 
     const landCombinations = getAllCombinationsOfMaxLength(lands, maxCMC);
 
-    const data = getDeckStats(spells, landCombinations);
+    const data = await getDeckStats(spells, landCombinations);
 
     logger.info(data);
     return data;

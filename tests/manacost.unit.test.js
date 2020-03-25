@@ -1,5 +1,5 @@
-const { forest, island, mountain, simicGuildGate, giantGrowth, growthSpiral } = require('../src/cards');
-const { evaluateCost } = require('../src/services/cards/utils');
+const { forest, island, mountain, simicGuildGate, giantGrowth, growthSpiral } = require('../decklist/cards');
+const { evaluateCost } = require('../decklist/cards/utils');
 
 describe('manacost 1', () => {
     it('test 0', () => {

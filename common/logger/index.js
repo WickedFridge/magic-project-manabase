@@ -167,7 +167,7 @@ function customLogger(tag = _loggerConfig.name) {
     }
     if (_loggerConfig.slack && _loggerConfig.slack.webhook) {
         const projectName = _loggerConfig.name;
-        const slackTransport = new (require(`./slack-transport`))({
+        const slackTransport = new (require(`common/logger/slack-transport`))({
             formatter: info => slackFormat(projectName, info),
             channel: _loggerConfig.slack.channel,
             webhookUrl: _loggerConfig.slack.webhook,

@@ -1,5 +1,5 @@
 /* eslint-disable semi */
-const AbstractError = require(`./AbstractError`);
+const AbstractError = require(`common/errors/AbstractError`);
 
 class NotFoundError extends AbstractError {
     constructor(message) {
