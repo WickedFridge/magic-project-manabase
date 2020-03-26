@@ -1,3 +1,6 @@
+const { createClient } = require('../cache/factory');
+const cache = createClient({ type: 'memory' });
+
 function copy (obj) {
     return JSON.parse(JSON.stringify(obj));
 }
@@ -62,9 +65,31 @@ function getAllCombinationsOfMaxLength(rest, length, active = [], res = []){
     return res;
 }
 
+function cachedGetAllCombinationsOfMaxLength(array, length) {
+    const key = cache.generateCacheKey([array, length]);
+    if(cache.get(key)){
+        return cache.get(key);
+    }
+    const value = getAllCombinationsOfMaxLength(array, length);
+    cache.set(key, value);
+    return value;
+}
+
+function getAllCombinationsOfMaxLengthWithCallback(callback, rest, length, active = []){
+    if (rest.length === 0 || active.length === length){
+        callback(active);
+        return active;
+    } else {
+        getAllCombinationsOfMaxLength(rest.slice(1), length, [...active, rest[0]]);
+        getAllCombinationsOfMaxLength(rest.slice(1), length, active);
+    }
+}
+
 module.exports = {
     copy,
     getAllPermutations,
     getAllCombinations,
     getAllCombinationsOfMaxLength,
+    cachedGetAllCombinationsOfMaxLength,
+    getAllCombinationsOfMaxLengthWithCallback,
 };
