@@ -3,7 +3,7 @@ const Parallel = require('paralleljs');
 const { performance } = require('perf_hooks');
 const { customLogger } = require('../../../common/logger');
 const { hasTypeLand, markEtb, cachedCanPlaySpellOnCurve } = require('../../cards/utils');
-const { cachedGetAllCombinationsOfMaxLength } = require("../../../common/tools/utils");
+const { cachedGetAllCombinationsOfMaxLength, getAllCombinationsOfMaxLengthWithRedis } = require("../../../common/tools/utils");
 
 const { createClient: createScryfallClient } = require('../../../common/api-client/scryfall/factory');
 

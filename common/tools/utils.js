@@ -1,5 +1,10 @@
+const redis = require('redis');
+const { promisify } = require('util');
 const { createClient } = require('../cache/factory');
+
 const cache = createClient({ type: 'memory' });
+
+// const client = redis.createClient();
 
 function copy (obj) {
     return JSON.parse(JSON.stringify(obj));
@@ -75,21 +80,10 @@ function cachedGetAllCombinationsOfMaxLength(array, length) {
     return value;
 }
 
-function getAllCombinationsOfMaxLengthWithCallback(callback, rest, length, active = []){
-    if (rest.length === 0 || active.length === length){
-        callback(active);
-        return active;
-    } else {
-        getAllCombinationsOfMaxLength(rest.slice(1), length, [...active, rest[0]]);
-        getAllCombinationsOfMaxLength(rest.slice(1), length, active);
-    }
-}
-
 module.exports = {
     copy,
     getAllPermutations,
     getAllCombinations,
     getAllCombinationsOfMaxLength,
     cachedGetAllCombinationsOfMaxLength,
-    getAllCombinationsOfMaxLengthWithCallback,
 };

@@ -26,9 +26,10 @@ It has been started by Charles Wickham in February 2020.
     - [ ] handle colorless spells
     - [ ] use reddis for the cache
     - [ ] parallelization
-        - [ ] try parallel.js
-        - [ ] try multi-services archi
+        - [x] try parallel.js
+        - [x] try multi-services archi
     - architecture refactoring
+        - [ ] precalculate / cache "generic combinations"
         - [ ] "on the go calculation"
 
 ## Usage

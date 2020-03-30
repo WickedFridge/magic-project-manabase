@@ -1,6 +1,9 @@
 {
     "name": "magic-manabase-tool",
     "version": "1.0.0",
+    "scripts": {
+        "start": "node --max_old_space_size=8192 index.js"
+    },
     "dependencies": {
         "async-parallel": "^1.2.3",
         "axios": "^0.19.2",
@@ -9,7 +12,8 @@
         "config": "^3.3.0",
         "crypto": "^1.0.1",
         "express": "^4.17.1",
-        "paralleljs": "^0.2.1"
+        "paralleljs": "^0.2.1",
+        "redis": "^3.0.2"
     },
     "devDependencies": {
         "eslint": "^4.19.1",
