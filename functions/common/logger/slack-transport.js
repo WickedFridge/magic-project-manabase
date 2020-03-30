@@ -83,7 +83,7 @@ module.exports = class SlackTransport extends Transport {
         });
 
         if (callback && typeof callback === `function`) {
-            callback(null, true);
+            return callback(null, true);
         }
     }
 };
