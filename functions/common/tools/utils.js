@@ -80,10 +80,22 @@ function cachedGetAllCombinationsOfMaxLength(array, length) {
     return value;
 }
 
+function getAllCombinationsOfMinAndMaxLengthWithCallback(callback, rest, min, max, active = [], res = []){
+    if (rest.length === 0 || active.length === max){
+        if (active.length >= min) {
+            callback(active);
+        }
+        return;
+    }
+    getAllCombinationsOfMinAndMaxLengthWithCallback(callback, rest.slice(1), min, max, [...active, rest[0]], res);
+    getAllCombinationsOfMinAndMaxLengthWithCallback(callback, rest.slice(1), min, max, active, res);
+}
+
 module.exports = {
     copy,
     getAllPermutations,
     getAllCombinations,
     getAllCombinationsOfMaxLength,
-    cachedGetAllCombinationsOfMaxLength,
+    getAllCombinationsOfMinAndMaxLengthWithCallback,
+    cachedGetAllCombinationsOfMaxLength
 };

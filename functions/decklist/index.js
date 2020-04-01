@@ -26,6 +26,8 @@ app.get('/cache', async (req, res) => {
     res.json(cache);
 });
 
-app.listen(config.port, () => {
-    logger.info(`Starting "${config.name}" listening on port ${config.port}`);
-});
+// app.listen(config.port, () => {
+//     logger.info(`Starting "${config.name}" listening on port ${config.port}`);
+// });
+
+module.exports = app;

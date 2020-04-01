@@ -157,14 +157,14 @@ function customLogger(tag = _loggerConfig.name) {
             }),
         ],
     };
-    if (process.env.NODE_ENV !== `test`) {
-        const fileTransport = new transports.DailyRotateFile({
-            format: logFileFormat(formattedTag),
-            filename: `${process.env.LOG_PATH || `logs`}/%DATE%-combined.log`,
-            datePattern: `YYYY-MM-DD`,
-        });
-        loggerConfig.transports.push(fileTransport);
-    }
+    // if (process.env.NODE_ENV !== `test`) {
+    //     const fileTransport = new transports.DailyRotateFile({
+    //         format: logFileFormat(formattedTag),
+    //         filename: `${process.env.LOG_PATH || `logs`}/%DATE%-combined.log`,
+    //         datePattern: `YYYY-MM-DD`,
+    //     });
+    //     loggerConfig.transports.push(fileTransport);
+    // }
     if (_loggerConfig.slack && _loggerConfig.slack.webhook) {
         const projectName = _loggerConfig.name;
         const slackTransport = new (require(`common/logger/slack-transport`))({

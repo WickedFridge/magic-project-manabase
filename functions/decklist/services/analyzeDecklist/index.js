@@ -1,9 +1,8 @@
 const config = require('config');
-const Parallel = require('paralleljs');
 const { performance } = require('perf_hooks');
 const { customLogger } = require('../../../common/logger');
 const { hasTypeLand, markEtb, cachedCanPlaySpellOnCurve } = require('../../cards/utils');
-const { cachedGetAllCombinationsOfMaxLength, getAllCombinationsOfMaxLengthWithRedis } = require("../../../common/tools/utils");
+const { getAllCombinationsOfMinAndMaxLengthWithCallback } = require("../../../common/tools/utils");
 
 const { createClient: createScryfallClient } = require('../../../common/api-client/scryfall/factory');
 
@@ -28,24 +27,6 @@ async function createDeck(decklist) {
     return deck
 }
 
-async function getDeckStats(spells, landsCombinations) {
-    const data = {};
-
-    for(const spell of spells) {
-        const keepable = (c) => c.length >= Math.max(spell.cmc, 2) && c.length <= Math.max(spell.cmc, 5);
-        const t0 = performance.now();
-        const NManaLandCombinations = landsCombinations.filter(keepable);
-        const t1 = performance.now();
-        logger.info(`filter : ${t1-t0}`);
-        logger.info(spell.name);
-        logger.info(NManaLandCombinations.length);
-        const playableHands = NManaLandCombinations.filter(lands => cachedCanPlaySpellOnCurve(lands, spell));
-        const stats = (playableHands.length / NManaLandCombinations.length * 100).toFixed(2);
-        data[spell.name] = `${stats}%`;
-    }
-
-    return data;
-}
 
 async function analyzeDecklist(decklist) {
     const t0 = performance.now();
@@ -59,17 +40,38 @@ async function analyzeDecklist(decklist) {
     logger.info('lands marked');
     const spells = [...new Set(deck.filter(card => !hasTypeLand(card)))];
     const maxCMC = Math.max(...spells.map(s => s.cmc), 5);
+    const minCMC = Math.min(...spells.map(s => s.cmc), 2);
 
-    const landCombinations = cachedGetAllCombinationsOfMaxLength(lands, maxCMC);
+    const data = {};
+    spells.forEach(s => {
+        data[s.name] = {
+            ok: 0,
+            nok: 0,
+        };
+    });
+
+    const callback = (data, spells) => (comb) => {
+        spells.forEach(spell => {
+            const keepable = (c) => c.length >= Math.max(spell.cmc, 2) && c.length <= Math.max(spell.cmc, 5);
+            if (keepable(comb)) {
+                if (cachedCanPlaySpellOnCurve(comb, spell)) {
+                    data[spell.name].ok ++;
+                } else {
+                    data[spell.name].nok ++;
+                }
+            }
+        });
+    };
+
     const t3 = performance.now();
-    logger.info('combinations created !');
-    const data = await getDeckStats(spells, landCombinations);
-    const t5 = performance.now();
+    getAllCombinationsOfMinAndMaxLengthWithCallback(callback(data, spells), lands, minCMC, maxCMC);
+    const t4 = performance.now();
+    Object.keys(data).forEach(spellName => data[spellName].ratio = `${(100 * data[spellName].ok / (data[spellName].ok + data[spellName].nok)).toFixed(2)}%`);
     logger.info(data);
     logger.info(`create deck: ${t1-t0}`);
     logger.info(`mark Lands: ${t2-t1}`);
-    logger.info(`get combinations: ${t3-t2}`);
-    logger.info(`get Stats: ${t5-t3}`);
+    logger.info(`intermediate time: ${t3-t2}`);
+    logger.info(`get Stats: ${t4-t3}`);
     return data;
 }
 

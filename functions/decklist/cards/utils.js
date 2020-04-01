@@ -3,7 +3,7 @@ const { copy, getAllCombinations } = require('../../common/tools/utils');
 
 const logger = customLogger('utils');
 
-const cache = new Map();
+let cache = new Map();
 
 function hasTypeLand(card) {
     return RegExp('Land').test(card.type);
@@ -96,6 +96,7 @@ function getManaCost(codifiedCmc) {
     const matches = codifiedCmc.substr(1).slice(0,-1).split('}{');
 
     matches.forEach((val) => {
+        // eslint-disable-next-line no-extra-boolean-cast
         if (!!parseInt(val)) {
             manacost.generic = parseInt(val);
         } else {
