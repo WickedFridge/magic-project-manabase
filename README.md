@@ -11,7 +11,7 @@ It has been started by Charles Wickham in February 2020.
     - [x] test that everything matches
     - [x] test with mocked scryfall
 - deployment
-    - [ ] expose cloud function
+    - [x] expose cloud function
     - [ ] expose basic front
 - features
     - mana
@@ -26,16 +26,19 @@ It has been started by Charles Wickham in February 2020.
     - [ ] handle colorless spells
     - [ ] use reddis for the cache
     - [ ] parallelization
-        - [ ] try parallel.js
-        - [ ] try multi-services archi
+        - [x] try parallel.js
+        - [x] try multi-services archi
+        - [ ] try clusters
     - architecture refactoring
-        - [ ] "on the go calculation"
+        - [ ] precalculate / cache "generic combinations"
+        - [x] "on the go calculation"
 
 ## Usage
 
 ### Setup
 ```
-node src/
+cd functions/
+npm run serve
 ```
 
 ### *[POST]* /analyze
