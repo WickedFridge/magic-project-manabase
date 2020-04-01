@@ -9,8 +9,8 @@ const decklistApp = require('./decklist');
 // });
 
 const runtimeOpts = {
-    timeoutSeconds: 30,
-    memory: '2GB'
+    timeoutSeconds: 120,
+    memory: '512MB'
 };
 
 
