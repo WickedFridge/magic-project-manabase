@@ -11,6 +11,8 @@ import Box from "@material-ui/core/Box";
 import ResultTable from "./resultTable";
 import {ThemeProvider} from "@material-ui/styles";
 import axios from 'axios';
+import config from '../config';
+
 
 const defaultDeckist = "1 Baleful Strix\n" +
     "1 Imperial Recruiter\n" +
@@ -197,7 +199,7 @@ export default function AppBody() {
         console.log(data);
         axios({
             method: 'post',
-            url: 'http://localhost:5001/project-manabase/europe-west2/decklist/analyze',
+            url: config.backendUrl,
             data,
         })
             .then(res => {
