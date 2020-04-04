@@ -1,6 +1,7 @@
 const config = require('config');
 const bodyParser = require('body-parser');
 const express = require('express');
+const cors = require('cors');
 const { analyzeDecklist } = require('./services/analyzeDecklist');
 const { getCache } = require('./cards/utils');
 const { customLogger } = require('../common/logger');
@@ -8,6 +9,7 @@ const { customLogger } = require('../common/logger');
 const logger = customLogger('index');
 
 const app = express();
+app.use(cors());
 app.use(bodyParser.json({ limit: '50mb' }));
 
 app.post('/analyze', async (req, res) => {

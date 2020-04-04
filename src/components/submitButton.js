@@ -33,7 +33,6 @@ export default function SubmitButton(props) {
             <ColorButton
                 variant="contained"
                 color="primary"
-                // className={classes.margin}
                 onClick={props.onClick}
                 disabled={props.disabled}
                 classes={{

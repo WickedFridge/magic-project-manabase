@@ -53,7 +53,8 @@ export default function DecklistInput(props) {
                 variant="outlined"
                 id="custom-css-outlined-input"
                 multiline
-                defaultValue={props.defaultValue}
+                value={props.value}
+                onChange={props.onChange}
                 color="secondary"
                 rows={25}
                 InputProps={{
