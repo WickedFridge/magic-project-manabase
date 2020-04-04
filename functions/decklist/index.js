@@ -19,7 +19,7 @@ app.post('/analyze', async (req, res) => {
         return res.json(result);
     } catch (e) {
         logger.error(e);
-        return res.status(500).json(e.message);
+        return res.status(e.code || 500).json(e.message);
     }
 });
 
