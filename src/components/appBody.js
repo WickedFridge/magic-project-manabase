@@ -12,6 +12,7 @@ import ResultTable from "./resultTable";
 import {ThemeProvider} from "@material-ui/styles";
 import axios from 'axios';
 import config from '../config';
+import ErrorSnackbar from "./ErrorSnackbar";
 
 
 const defaultDeckist = "1 Baleful Strix\n" +
@@ -161,7 +162,9 @@ const defaultData = {
     }
 };
 
-const createRows = (data) => Object.entries(data).map(([key, { ratio }]) => ({ key, ratio }));
+const createRows = (data) => Object.entries(data)
+    .map(([key, { ratio }]) => ({ key, ratio }))
+    .sort((s1, s2) => parseFloat(s1.ratio) - parseFloat(s2.ratio));
 
 const defaultRows = createRows(defaultData);
 
@@ -192,6 +195,8 @@ export default function AppBody() {
     const [loading, setLoading] = React.useState(false);
     const [rows, setRows] = React.useState(defaultRows);
     const [decklist, setDecklist] = React.useState(defaultDeckist);
+    const [open, setOpen] = React.useState(false);
+    const [success, setSuccess] = React.useState(true);
 
     const handleClickSubmit = () => {
         setLoading(true);
@@ -205,15 +210,37 @@ export default function AppBody() {
             .then(res => {
                 setLoading(false);
                 setRows(createRows(res.data));
+                setOpen(true);
+                setSuccess(true);
             })
             .catch(e => {
                 setLoading(false);
+                setOpen(true);
+                setSuccess(false);
             });
+    };
+
+    const handleClick = () => {
+        setOpen(true);
+    };
+
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setOpen(false);
     };
 
     return (
         <div className={classes.root}>
             <ThemeProvider theme={theme}>
+                <ErrorSnackbar
+                    open={open}
+                    handleClick={handleClick}
+                    handleClose={handleClose}
+                    success={success}
+                />
                 <Grid container spacing={3}>
                     <Grid item xs={12}>
                         <Paper className={classes.paper}>
@@ -249,32 +276,31 @@ export default function AppBody() {
                                             justify="center"
                                             alignItems="center"
                                         >
-                                            {
-                                                loading ?
-                                                    <Fade
-                                                        in={loading}
-                                                        style={{
-                                                            transitionDelay: '500ms',
-                                                        }}
-                                                        unmountOnExit
-                                                    >
-                                                        <CircularProgress
-                                                            className={classes.circular}
-                                                            size={100}
-                                                            thickness={2}
-                                                        />
-                                                    </Fade> :
-                                                    <Fade
-                                                        in={!loading}
-                                                        unmountOnExit
-                                                        style={{
-                                                            transitionDelay: '500ms',
-                                                        }}
-                                                    >
-                                                        <ResultTable
-                                                            rows={rows}
-                                                        />
-                                                    </Fade>
+                                            { loading ?
+                                                <Fade
+                                                    in={loading}
+                                                    style={{
+                                                        transitionDelay: '500ms',
+                                                    }}
+                                                    unmountOnExit
+                                                >
+                                                    <CircularProgress
+                                                        className={classes.circular}
+                                                        size={100}
+                                                        thickness={2}
+                                                    />
+                                                </Fade> :
+                                                <Fade
+                                                    in={!loading}
+                                                    unmountOnExit
+                                                    style={{
+                                                        transitionDelay: '500ms',
+                                                    }}
+                                                >
+                                                    <ResultTable
+                                                        rows={rows}
+                                                    />
+                                                </Fade>
                                             }
                                         </Grid>
                                     </Box>
