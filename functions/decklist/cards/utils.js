@@ -9,9 +9,23 @@ function hasTypeLand(card) {
     return RegExp('Land').test(card.type);
 }
 
+function isRavland(text) {
+    return RegExp(`you may pay 2 life. If you don't, it enters the battlefield tapped.`).test(text);
+}
+
+function evaluateEtb(text) {
+    let basicEtb = RegExp('enters the battlefield tapped').test(text);
+
+    // handle ravlands
+    if (basicEtb === true && isRavland(text)) {
+        return false;
+    }
+    return basicEtb;
+}
+
 function markEtb(card) {
     return {
-        etbTapped: RegExp('enters the battlefield tapped').test(card.text),
+        etbTapped: evaluateEtb(card.text),
         ...card,
     }
 }
