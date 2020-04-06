@@ -23,14 +23,22 @@ class ScryfallApiClient extends AbstractApiClient {
                 url: `/cards/search?q=!"${cardName}"`,
                 timeTrackerLabel: `scryfall`,
             });
-            const { id, name, mana_cost, cmc, colors, color_identity, type_line, oracle_text } = results.data[0];
+            const { id, name, mana_cost, cmc, colors, color_identity, type_line, oracle_text, card_faces } = results.data[0];
             if (RegExp('Land').test(type_line) && colors.length === 0) {
                 colors.push(...color_identity);
             }
-            return { id, name, cmc, colors, type: type_line, text: oracle_text, cost: getManaCost(mana_cost), mana_cost };
+            // Dual cards handling
+            if(card_faces) {
+                card_faces.forEach(card => {
+                    card.cost = getManaCost(card.mana_cost);
+                    card.cmc = Object.values(card.cost).reduce((acc, cur) => acc + cur);
+                })
+            }
+            const cost = card_faces ? {} : getManaCost(mana_cost);
+            return { id, name, cmc, colors, type: type_line, text: oracle_text, cost, mana_cost, card_faces };
         } catch (e) {
             if (e.response.status === 404) {
-                throw new NotFoundError(`can't find card ${cardName}`);
+                throw new NotFoundError(`Can't find card ${cardName}`);
             }
             throw e;
         }

@@ -12,36 +12,67 @@ import ResultTable from "./resultTable";
 import {ThemeProvider} from "@material-ui/styles";
 import axios from 'axios';
 import config from '../config';
+import ErrorSnackbar from "./ErrorSnackbar";
 
+// const defaultDecklist = "1 Baleful Strix\n" +
+//     "1 Imperial Recruiter\n" +
+//     "1 Midnight Reaper\n" +
+//     "1 Ophiomancer\n" +
+//     "1 Bone Shredder\n" +
+//     "1 Glen Elendra Archmage\n" +
+//     "1 Shriekmaw\n" +
+//     "1 The Scarab God\n" +
+//     "1 Grave Titan\n" +
+//     "1 Duplicant\n" +
+//     "1 Underground Sea\n" +
+//     "1 Watery Grave\n" +
+//     "5 Island\n" +
+//     "8 Swamp\n" +
+//     "1 Vampiric Tutor\n" +
+//     "1 Inquisition of Kozilek\n" +
+//     "1 Collective Brutality\n" +
+//     "1 Bitterblossom\n" +
+//     "1 Exhume\n" +
+//     "1 Brazen Borrower\n" +
+//     "1 Thought Erasure\n" +
+//     "1 Recurring Nightmare\n" +
+//     "1 Liliana of the Veil\n" +
+//     "1 Compulsive Research\n" +
+//     "1 Birthing Pod\n" +
+//     "1 Mystic Confluence\n" +
+//     "1 Living Death";
 
-const defaultDeckist = "1 Baleful Strix\n" +
-    "1 Imperial Recruiter\n" +
-    "1 Midnight Reaper\n" +
-    "1 Ophiomancer\n" +
-    "1 Bone Shredder\n" +
-    "1 Glen Elendra Archmage\n" +
-    "1 Shriekmaw\n" +
-    "1 The Scarab God\n" +
-    "1 Grave Titan\n" +
-    "1 Duplicant\n" +
-    "1 Underground Sea\n" +
-    "1 Watery Grave\n" +
-    "5 Island\n" +
-    "8 Swamp\n" +
-    "1 Vampiric Tutor\n" +
-    "1 Inquisition of Kozilek\n" +
-    "1 Collective Brutality\n" +
-    "1 Bitterblossom\n" +
-    "1 Exhume\n" +
-    "1 Chart a Course\n" +
-    "1 Thought Erasure\n" +
-    "1 Recurring Nightmare\n" +
-    "1 Liliana of the Veil\n" +
-    "1 Compulsive Research\n" +
-    "1 Birthing Pod\n" +
-    "1 Mystic Confluence\n" +
-    "1 Living Death";
+const defaultDecklist = `Deck
+4 Cavalier of Thorns (M20) 167
+4 Hydroid Krasis (RNA) 183
+2 Polukranos, Unchained (THB) 224
+4 Uro, Titan of Nature's Wrath (THB) 229
+3 Nissa, Who Shakes the World (WAR) 169
+3 Aether Gust (M20) 42
+3 Casualties of War (WAR) 187
+4 Growth Spiral (RNA) 178
+4 Thought Erasure (GRN) 206
+4 Breeding Pool (RNA) 246
+4 Fabled Passage (ELD) 244
+4 Forest (ELD) 266
+2 Island (ELD) 254
+4 Overgrown Tomb (GRN) 253
+1 Swamp (ELD) 258
+3 Temple of Malady (M20) 254
+3 Temple of Mystery (M20) 255
+4 Watery Grave (GRN) 259
 
+Sideboard
+1 Aether Gust (M20) 42
+1 Cry of the Carnarium (RNA) 70
+1 Disdainful Stroke (GRN) 37
+2 Disfigure (M20) 95
+2 Epic Downfall (ELD) 85
+2 Mystical Dispute (ELD) 58
+1 Negate (RIX) 44
+3 Ritual of Soot (GRN) 84
+1 Thought Distortion (M20) 117
+1 Vraska, Golgari Queen (GRN) 213`;
 
 const defaultData = {
     "Baleful Strix": {
@@ -161,7 +192,9 @@ const defaultData = {
     }
 };
 
-const createRows = (data) => Object.entries(data).map(([key, { ratio }]) => ({ key, ratio }));
+const createRows = (data) => Object.entries(data)
+    .map(([key, { ratio }]) => ({ key, ratio }))
+    .sort((s1, s2) => parseFloat(s1.ratio) - parseFloat(s2.ratio));
 
 const defaultRows = createRows(defaultData);
 
@@ -191,11 +224,17 @@ export default function AppBody() {
     const classes = useStyles();
     const [loading, setLoading] = React.useState(false);
     const [rows, setRows] = React.useState(defaultRows);
-    const [decklist, setDecklist] = React.useState(defaultDeckist);
+    const [decklist, setDecklist] = React.useState(defaultDecklist);
+    const [open, setOpen] = React.useState(false);
+    const [querysuccess, setQuerysuccess] = React.useState(true);
+    const [errormessage, setErrormessage] = React.useState(true);
 
     const handleClickSubmit = () => {
         setLoading(true);
-        const data = { deck: decklist.split('\n') };
+        const deck = decklist.split('\n')
+            .filter(e => !!e && e !== 'Sideboard' && e !== 'Deck')
+            .map(e => e.split('(')[0]);
+        const data = { deck };
         console.log(data);
         axios({
             method: 'post',
@@ -205,15 +244,40 @@ export default function AppBody() {
             .then(res => {
                 setLoading(false);
                 setRows(createRows(res.data));
+                setOpen(true);
+                setQuerysuccess(true);
             })
             .catch(e => {
                 setLoading(false);
+                setOpen(true);
+                setQuerysuccess(false);
+                setErrormessage(e.response.data.error);
             });
+    };
+
+    const handleClick = () => {
+        setOpen(true);
+    };
+
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setOpen(false);
     };
 
     return (
         <div className={classes.root}>
             <ThemeProvider theme={theme}>
+                <ErrorSnackbar
+                    open={open}
+                    handleClick={handleClick}
+                    handleClose={handleClose}
+                    querysuccess={querysuccess}
+                    successmessage="Success !"
+                    errormessage={errormessage}
+                />
                 <Grid container spacing={3}>
                     <Grid item xs={12}>
                         <Paper className={classes.paper}>
@@ -249,32 +313,31 @@ export default function AppBody() {
                                             justify="center"
                                             alignItems="center"
                                         >
-                                            {
-                                                loading ?
-                                                    <Fade
-                                                        in={loading}
-                                                        style={{
-                                                            transitionDelay: '500ms',
-                                                        }}
-                                                        unmountOnExit
-                                                    >
-                                                        <CircularProgress
-                                                            className={classes.circular}
-                                                            size={100}
-                                                            thickness={2}
-                                                        />
-                                                    </Fade> :
-                                                    <Fade
-                                                        in={!loading}
-                                                        unmountOnExit
-                                                        style={{
-                                                            transitionDelay: '500ms',
-                                                        }}
-                                                    >
-                                                        <ResultTable
-                                                            rows={rows}
-                                                        />
-                                                    </Fade>
+                                            { loading ?
+                                                <Fade
+                                                    in={loading}
+                                                    style={{
+                                                        transitionDelay: '500ms',
+                                                    }}
+                                                    unmountOnExit
+                                                >
+                                                    <CircularProgress
+                                                        className={classes.circular}
+                                                        size={100}
+                                                        thickness={2}
+                                                    />
+                                                </Fade> :
+                                                <Fade
+                                                    in={!loading}
+                                                    unmountOnExit
+                                                    style={{
+                                                        transitionDelay: '500ms',
+                                                    }}
+                                                >
+                                                    <ResultTable
+                                                        rows={rows}
+                                                    />
+                                                </Fade>
                                             }
                                         </Grid>
                                     </Box>
