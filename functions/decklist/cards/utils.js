@@ -18,8 +18,10 @@ function evaluateEtb(text) {
 
     // handle ravlands
     if (basicEtb === true && isRavland(text)) {
+        // return () => false;
         return false;
     }
+    // return () => basicEtb;
     return basicEtb;
 }
 
@@ -37,6 +39,7 @@ function hasCorrectColors(lands, spell) {
 }
 
 function hasUntappedLand(lands) {
+    // return lands.some(l => l.etbTapped() === false);
     return lands.some(l => l.etbTapped === false);
 }
 
