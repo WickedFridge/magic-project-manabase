@@ -10,36 +10,37 @@ const scryfallApiClient = createScryfallClient(config.apiClients.scryfall);
 const logger = customLogger('index');
 
 async function createDeck(decklist) {
-    const cards = [];
-    const deck = [];
-    const cardData = {};
+    const cardCounts = {};
+    const spells = [];
+    const lands = [];
 
     (await Promise.all(decklist.map(cardCountAndName => {
         const [count, name] = cardCountAndName.split(/ (.+)/);
-        cards.push({ name, count: parseInt(count) });
+        cardCounts[name] = parseInt(count);
         return scryfallApiClient.getCardByName(name);
     })))
-        .forEach((card, i) => cardData[cards[i].name] = card);
-
-    cards.forEach(({ name, count }) => {
-        deck.push(...Array(count).fill(cardData[name]));
-    });
-    return deck
+        .forEach((cardInfo) => {
+            if (!hasTypeLand(cardInfo)) {
+                //handle spell
+                if (cardInfo.card_faces) {
+                    spells.push(...cardInfo.card_faces);
+                } else {
+                    spells.push(cardInfo)
+                }
+            } else {
+                //handle lands
+                lands.push(...Array(cardCounts[cardInfo.name]).fill(markEtb(cardInfo)));
+            }
+        });
+    return [lands, spells]
 }
-
 
 async function analyzeDecklist(decklist) {
     const t0 = performance.now();
-    const deck = await createDeck(decklist);
-    const t1 = performance.now();
+    const [lands, spells] = await createDeck(decklist);
     logger.info('deck created !');
-    const lands = deck
-        .filter(card => hasTypeLand(card))
-        .map(land => markEtb(land));
-    const t2 = performance.now();
-    logger.info('lands marked');
-    const spells = [...new Set(deck.filter(card => !hasTypeLand(card)))];
-    const maxCMC = Math.max(...spells.map(s => s.cmc), 5);
+    const t1 = performance.now();
+    const maxCMC = Math.max(...spells.map(s => s.cmc), 4);
     const minCMC = Math.min(...spells.map(s => s.cmc), 2);
 
     const data = {};
@@ -63,15 +64,14 @@ async function analyzeDecklist(decklist) {
         });
     };
 
-    const t3 = performance.now();
+    const t2 = performance.now();
     getAllCombinationsOfMinAndMaxLengthWithCallback(callback(data, spells), lands, minCMC, maxCMC);
-    const t4 = performance.now();
+    const t3 = performance.now();
     Object.keys(data).forEach(spellName => data[spellName].ratio = `${(100 * data[spellName].ok / (data[spellName].ok + data[spellName].nok)).toFixed(2)}%`);
     logger.info(data);
     logger.info(`create deck: ${t1-t0}`);
-    logger.info(`mark Lands: ${t2-t1}`);
-    logger.info(`intermediate time: ${t3-t2}`);
-    logger.info(`get Stats: ${t4-t3}`);
+    logger.info(`intermediate time: ${t2-t1}`);
+    logger.info(`get Stats: ${t3-t2}`);
     return data;
 }
 

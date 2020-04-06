@@ -34,7 +34,7 @@ const defaultDeckist = "1 Baleful Strix\n" +
     "1 Collective Brutality\n" +
     "1 Bitterblossom\n" +
     "1 Exhume\n" +
-    "1 Chart a Course\n" +
+    "1 Brazen Borrower\n" +
     "1 Thought Erasure\n" +
     "1 Recurring Nightmare\n" +
     "1 Liliana of the Veil\n" +
