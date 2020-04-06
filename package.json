@@ -1,27 +1,38 @@
 {
-  "name": "magic-manabase-tool",
-  "version": "1.0.0",
-  "devDependencies": {
-    "eslint": "^4.19.1",
-    "eslint-config-airbnb": "^17.0.0",
-    "eslint-plugin-import": "^2.12.0",
-    "eslint-plugin-jest": "^21.18.0",
-    "eslint-plugin-jsx-a11y": "^6.0.3",
-    "eslint-plugin-react": "^7.9.1",
-    "jest": "^22.4.3",
-    "jest-html-reporter": "^2.4.2",
-    "jest-junit": "^6.3.0",
-    "jest-sonar-reporter": "^2.0.0"
-  },
+  "name": "react-firestore",
+  "version": "0.1.0",
+  "private": true,
   "dependencies": {
-    "async-parallel": "^1.2.3",
+    "@material-ui/core": "^4.9.9",
+    "@material-ui/lab": "^4.0.0-alpha.48",
+    "@material-ui/styles": "^4.9.6",
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.3.2",
+    "@testing-library/user-event": "^7.1.2",
     "axios": "^0.19.2",
-    "body-parser": "^1.19.0",
-    "config": "^3.3.0",
-    "crypto": "^1.0.1",
-    "express": "^4.17.1",
-    "paralleljs": "^0.2.1",
-    "winston": "^3.2.1",
-    "winston-daily-rotate-file": "^4.4.2"
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-scripts": "3.4.1"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }

@@ -1,31 +1,17 @@
-const config = require('config');
-const bodyParser = require('body-parser');
-const express = require('express');
-const { analyzeDecklist } = require('./services/analyzeDecklist');
-const { getCache } = require('./services/cards/utils');
-const { customLogger } = require('./common/logger');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import './index.css';
+import App from './App';
+import * as serviceWorker from './serviceWorker';
 
-const logger = customLogger('index');
+ReactDOM.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+  document.getElementById('root')
+);
 
-const app = express();
-app.use(bodyParser.json({ limit: '50mb' }));
-
-app.post('/analyze', async (req, res) => {
-    const decklist = req.body.deck;
-    try {
-        const result = await analyzeDecklist(decklist);
-        return res.json(result);
-    } catch (e) {
-        logger.error(e);
-        return res.status(500).json(e.message);
-    }
-});
-
-app.get('/cache', async (req, res) => {
-    const cache = Array.from(getCache()).map(([key, value]) => [...JSON.parse(key), value]);
-    res.json(cache);
-});
-
-app.listen(config.port, () => {
-    logger.info(`Starting "${config.name}" listening on port ${config.port}`);
-});
+// If you want your app to work offline and load faster, you can change
+// unregister() to register() below. Note this comes with some pitfalls.
+// Learn more about service workers: https://bit.ly/CRA-PWA
+serviceWorker.unregister();
