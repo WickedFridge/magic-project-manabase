@@ -39,7 +39,6 @@ const useStyles = makeStyles((theme) => ({
     },
     input: {
         color: "lightgrey",
-        fontSize: 15,
     }
 }));
 
@@ -57,7 +56,7 @@ export default function DecklistInput(props) {
                 value={props.value}
                 onChange={props.onChange}
                 color="secondary"
-                rows={28}
+                rows={25}
                 InputProps={{
                     className: classes.input
                 }}

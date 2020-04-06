@@ -12,28 +12,16 @@ It has been started by Charles Wickham in February 2020.
     - [x] test with mocked scryfall
 - deployment
     - [x] expose cloud function
-    - [x] expose basic front
+    - [ ] expose basic front
 - features
-    - backEnd
-        - mana
-            - [x] handle ravlands
-            - [ ] handle phyrexian mana
-            - [ ] handle hybrid mana
-            - [ ] handle fetchlands
-            - [ ] handle checklands
-        - modal spells
-            - [x] handle splitcards
-            - [ ] handle evoke
-            - [ ] handle escape
-            - [ ] handle X spells
-    - front
-        - [ ] nice recap graph
-        - [ ] mean / median / percentiles
-        - [ ] navbar
-            - [ ] chose X spell
-            - [ ] %'s of playing spells at N+X
-        - [ ] nice sideboard input
-        
+    - mana
+        - [ ] handle ravlands
+        - [ ] handle phyrexian mana
+        - [ ] handle fetchlands
+    - modal spells
+        - [ ] handle evoke
+        - [ ] handle escape
+        - [ ] handle X spells
 - performance upgrades
     - [ ] handle colorless spells
     - [ ] use reddis for the cache
