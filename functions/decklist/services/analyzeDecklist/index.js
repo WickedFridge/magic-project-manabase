@@ -20,15 +20,19 @@ async function createDeck(decklist) {
         return scryfallApiClient.getCardByName(name);
     })))
         .forEach((cardInfo) => {
-            if (!hasTypeLand(cardInfo)) {
-                //handle spell
-                if (cardInfo.card_faces) {
-                    spells.push(...cardInfo.card_faces);
-                } else {
-                    spells.push(cardInfo)
-                }
+            if (cardInfo.card_faces) {
+                // handle splitcards
+                cardInfo.card_faces.forEach(splitcard => {
+                    if (!hasTypeLand(splitcard)) {
+                        spells.push(splitcard);
+                    }
+                })
+            }
+            else if (!hasTypeLand(cardInfo)) {
+                // handle regular spells
+                spells.push(cardInfo);
             } else {
-                //handle lands
+                // handle lands
                 lands.push(...Array(cardCounts[cardInfo.name]).fill(markEtb(cardInfo)));
             }
         });
@@ -39,6 +43,7 @@ async function createDeck(decklist) {
 async function analyzeDecklist(decklist) {
     const t0 = performance.now();
     const [lands, spells] = await createDeck(decklist);
+    logger.info(spells);
     logger.info('deck created !');
     const t1 = performance.now();
     const maxCMC = Math.max(...spells.map(s => s.cmc), 4);
@@ -51,6 +56,8 @@ async function analyzeDecklist(decklist) {
             nok: 0,
         };
     });
+
+
 
     const callback = (data, spells) => (comb) => {
         spells.forEach(spell => {
