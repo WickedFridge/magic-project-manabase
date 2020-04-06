@@ -196,11 +196,12 @@ export default function AppBody() {
     const [rows, setRows] = React.useState(defaultRows);
     const [decklist, setDecklist] = React.useState(defaultDeckist);
     const [open, setOpen] = React.useState(false);
-    const [success, setSuccess] = React.useState(true);
+    const [querysuccess, setQuerysuccess] = React.useState(true);
+    const [errormessage, setErrormessage] = React.useState(true);
 
     const handleClickSubmit = () => {
         setLoading(true);
-        const data = { deck: decklist.split('\n') };
+        const data = { deck: decklist.split('\n').filter(e => !!e && e !== 'Sideboard') };
         console.log(data);
         axios({
             method: 'post',
@@ -211,12 +212,13 @@ export default function AppBody() {
                 setLoading(false);
                 setRows(createRows(res.data));
                 setOpen(true);
-                setSuccess(true);
+                setQuerysuccess(true);
             })
             .catch(e => {
                 setLoading(false);
                 setOpen(true);
-                setSuccess(false);
+                setQuerysuccess(false);
+                setErrormessage(e.response.data.error);
             });
     };
 
@@ -239,7 +241,9 @@ export default function AppBody() {
                     open={open}
                     handleClick={handleClick}
                     handleClose={handleClose}
-                    success={success}
+                    querysuccess={querysuccess}
+                    successmessage="Success !"
+                    errormessage={errormessage}
                 />
                 <Grid container spacing={3}>
                     <Grid item xs={12}>

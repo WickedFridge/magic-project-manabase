@@ -30,7 +30,7 @@ class ScryfallApiClient extends AbstractApiClient {
             return { id, name, cmc, colors, type: type_line, text: oracle_text, cost: getManaCost(mana_cost), mana_cost };
         } catch (e) {
             if (e.response.status === 404) {
-                throw new NotFoundError(`can't find card ${cardName}`);
+                throw new NotFoundError(`Can't find card ${cardName}`);
             }
             throw e;
         }

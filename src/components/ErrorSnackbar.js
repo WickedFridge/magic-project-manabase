@@ -4,9 +4,12 @@ import MuiAlert from '@material-ui/lab/Alert';
 import { makeStyles } from '@material-ui/core/styles';
 
 function Alert(props) {
-    return props.success
-        ? <MuiAlert elevation={6} variant="filled" severity="success" {...props} />
-        : <MuiAlert elevation={6} variant="filled" severity="error" {...props} />;
+    const [severity, message] = props.querysuccess
+        ? ["success", props.successmessage]
+        : ["error", props.errormessage];
+    return <MuiAlert elevation={6} variant="filled" severity={severity} {...props} >
+        {message}
+    </MuiAlert>
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -32,9 +35,12 @@ export default function ErrorSnackbar(props) {
                 autoHideDuration={6000}
                 onClose={props.handleClose}
             >
-                <Alert onClose={props.handleClose} success={props.success}>
-                    This is a success message!
-                </Alert>
+                <Alert
+                    onClose={props.handleClose}
+                    querysuccess={props.querysuccess}
+                    successmessage={props.successmessage}
+                    errormessage={props.errormessage}
+                />
             </Snackbar>
         </div>
     );
