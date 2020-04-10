@@ -1,13 +1,37 @@
 const { cachedCanPlaySpellOnCurve, hasCorrectColors } = require('../cards/utils');
 const { forest, island, mountain, swamp, simicGuildGate, giantGrowth, growthSpiral,
         mockGrowthSpiral, mockTempleSimic, mockIsland, mockTempleGolgari, mockUro,
-        frilledMystic } = require('../cards');
+        frilledMystic, deathRite, saheeli, volcanicIsland } = require('../cards');
 
 describe('has Correct Colors unit testing', () => {
+    it('basic testing 1', () => {
+        const lands = [forest()];
+        const spell = giantGrowth();
+        expect(hasCorrectColors(lands, spell)).toBe(true);
+    });
+
+    it('basic testing 2', () => {
+        const lands = [island(), swamp()];
+        const spell = giantGrowth();
+        expect(hasCorrectColors(lands, spell)).toBe(false);
+    });
+
     it('handling generic mana', () => {
         const lands = [island(), swamp(), mockTempleGolgari()];
         const spell = mockUro();
         expect(hasCorrectColors(lands, spell)).toBe(true);
+    });
+
+    it('handling hybrid mana 1', () => {
+        const lands = [island(), swamp()];
+        const spell = deathRite();
+        expect(hasCorrectColors(lands, spell)).toBe(true);
+    });
+
+    it('handling hybrid mana 2', () => {
+        const lands = [mountain(), island()];
+        const spell = deathRite();
+        expect(hasCorrectColors(lands, spell)).toBe(false);
     });
 });
 
@@ -96,5 +120,33 @@ describe('can play spell testing - generic mana', () => {
         lands: [mockTempleGolgari(0), mockTempleGolgari(1), island(0), island(1)],
         spell: frilledMystic(),
         outcome: true,
-    }))
-})
+    }));
+});
+
+describe('can play spell testing - hybrid mana', () => {
+    it('can play Deathrite 1', testCanPlayOnCurve({
+        lands: [forest(0)],
+        spell: deathRite(0),
+        outcome: true,
+    }));
+    it('can play Deathrite 2', testCanPlayOnCurve({
+        lands: [swamp(0)],
+        spell: deathRite(0),
+        outcome: true,
+    }));
+    it('can play Saheeli 1', testCanPlayOnCurve({
+        lands: [island(0), mountain(0), mountain(1)],
+        spell: saheeli(0),
+        outcome: true,
+    }));
+    it('can play Saheeli 2', testCanPlayOnCurve({
+        lands: [volcanicIsland(0), volcanicIsland(1), swamp(0)],
+        spell: saheeli(0),
+        outcome: true,
+    }));
+    it('can not Saheeli 1', testCanPlayOnCurve({
+        lands: [volcanicIsland(0), swamp(0), swamp(1)],
+        spell: saheeli(0),
+        outcome: false,
+    }));
+});

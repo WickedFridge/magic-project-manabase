@@ -35,6 +35,13 @@ const simicGuildGate = (id) => ({
     etbTapped: true,
 });
 
+const volcanicIsland = (id) => ({
+    name: `Volcanic Island ${id}`,
+    type: 'land',
+    colors: ['U', 'R'],
+    etbTapped: false,
+});
+
 const growthSpiral = (id) => ({
     name: `Growth Spiral ${id}`,
     type: 'spell',
@@ -118,11 +125,34 @@ const frilledMystic = () => ({
     cost: { G: 2, U: 2 }
 });
 
+const deathRite = () => ({
+    name: 'Deathrite Shaman',
+    cmc: 1,
+    colors: [ 'B', 'G' ],
+    type: 'Creature — Elf Shaman',
+    text: '{T}: Exile target land card from a graveyard. Add one mana of any color.\n{B}, {T}: Exile target instant or sorcery card from a graveyard. Each opponent loses 2 life.\n{G}, {T}: Exile target creature card from a graveyard. You gain 2 life.',
+    cost: { 'B/G': 1 },
+    mana_cost: '{B/G}',
+   card_faces: undefined,
+});
+
+const saheeli = () => ({
+    name: 'Saheeli, Sublime Artificer',
+    cmc: 3,
+    colors: [ 'R', 'U' ],
+    type: 'Legendary Planeswalker — Saheeli',
+    text: 'Whenever you cast a noncreature spell, create a 1/1 colorless Servo artifact creature token.\n−2: Target artifact you control becomes a copy of another target artifact or creature you control until end of turn, except it\'s an artifact in addition to its other types.',
+    cost: { generic: 1, 'U/R': 2 },
+    mana_cost: '{1}{U/R}{U/R}',
+    card_faces: undefined,
+});
+
 module.exports = {
     forest,
     island,
     mountain,
     swamp,
+    volcanicIsland,
     simicGuildGate,
     growthSpiral,
     giantGrowth,
@@ -132,4 +162,6 @@ module.exports = {
     mockGrowthSpiral,
     mockUro,
     frilledMystic,
+    deathRite,
+    saheeli,
 };

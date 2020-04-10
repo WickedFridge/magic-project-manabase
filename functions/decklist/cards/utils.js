@@ -18,8 +18,10 @@ function evaluateEtb(text) {
 
     // handle ravlands
     if (basicEtb === true && isRavland(text)) {
+        // return () => false;
         return false;
     }
+    // return () => basicEtb;
     return basicEtb;
 }
 
@@ -31,18 +33,33 @@ function markEtb(card) {
 }
 
 function hasCorrectColors(lands, spell) {
-    return Object.keys(spell.cost).filter(color => color !== 'generic').every(color => {
-        return lands.some(l => l.colors.includes(color));
-    });
+    const findLandforEachColor = (color) => lands.some(l => l.colors.includes(color));
+    const regularColors = Object.keys(spell.cost).filter(color => color !== 'generic' && !color.includes('/'));
+    const hybridColors = [...new Set(Object.keys(spell.cost).filter(color => color.includes('/'))
+        .reduce((acc, cur) => [...acc, ...cur.split('/')], []))];
+    const foundRegularColors = regularColors.every(findLandforEachColor);
+    if (!foundRegularColors) {
+        return false;
+    }
+    if (hybridColors.length === 0) {
+        return true;
+    }
+    return hybridColors.some(findLandforEachColor)
 }
 
 function hasUntappedLand(lands) {
+    // return lands.some(l => l.etbTapped() === false);
     return lands.some(l => l.etbTapped === false);
 }
 
 function findCorrectLand(lands, color) {
     if (color === 'generic') {
         return lands[0];
+    }
+    if (color.includes('/')) {
+        return lands
+            .find(land => land.colors
+                .some(c => color.split('/').includes(c)));
     }
     const exactMatchs = lands.filter(land => land.colors.length === 1 && land.colors.includes(color));
     if (exactMatchs.length > 0) {
@@ -132,4 +149,5 @@ module.exports = {
     cachedCanPlaySpellOnCurve,
     hasCorrectColors,
     getCache,
+    findCorrectLand,
 };
