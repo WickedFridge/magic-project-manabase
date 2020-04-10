@@ -1,4 +1,4 @@
-const { forest, island, mountain, simicGuildGate, giantGrowth, growthSpiral } = require('../cards');
+const { forest, island, mountain, simicGuildGate, volcanicIsland, saheeli, giantGrowth, growthSpiral } = require('../cards');
 const { evaluateCost } = require('../cards/utils');
 
 describe('manacost 1', () => {
@@ -30,5 +30,35 @@ describe('manacost 1', () => {
         const cost = { U: 2, G: 2};
         const lands = [simicGuildGate(0), simicGuildGate(1), simicGuildGate(2), island(0)];
         expect(evaluateCost(lands, cost)).toBe(true);
+    });
+
+    it('hybrid mana 1', () => {
+        const cost = { 'B/G': 1};
+        const lands = [forest(0)];
+        expect(evaluateCost(lands, cost)).toBe(true);
+    });
+
+    it('hybrid mana 2', () => {
+        const cost = { 'B/G': 1};
+        const lands = [simicGuildGate(0)];
+        expect(evaluateCost(lands, cost)).toBe(false);
+    });
+
+    it('hybrid mana 3', () => {
+        const cost = { 'B/G': 1};
+        const lands = [mountain(0)];
+        expect(evaluateCost(lands, cost)).toBe(false);
+    });
+
+    it('hybrid mana 4', () => {
+        const cost = { 'U/R': 2, generic: 1};
+        const lands = [simicGuildGate(0), volcanicIsland(0), forest(0)];
+        expect(evaluateCost(lands, cost)).toBe(true);
+    });
+
+    it('hybrid mana 5', () => {
+        const cost = { 'U/R': 2, generic: 1};
+        const lands = [volcanicIsland(0), forest(0), forest(1)];
+        expect(evaluateCost(lands, cost)).toBe(false);
     });
 });
