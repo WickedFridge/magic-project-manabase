@@ -2,6 +2,19 @@ const { getManaCost } = require("../../../decklist/cards/utils");
 const AbstractApiClient = require(`../abstract`);
 const NotFoundError = require('../../errors/NotFoundError');
 
+function handleSplitCard(card) {
+    const cost = getManaCost(card.mana_cost);
+    return {
+        name: card.name,
+        cmc: Object.values(cost).reduce((acc, cur) => acc + cur, 0),
+        colors: card.colors,
+        type: card.type_line,
+        text: card.oracle_text,
+        cost,
+        mana_cost: card.mana_cost,
+    };
+}
+
 /**
  * Scryfall API client
  */
@@ -23,19 +36,16 @@ class ScryfallApiClient extends AbstractApiClient {
                 url: `/cards/search?q=!"${cardName}"`,
                 timeTrackerLabel: `scryfall`,
             });
-            const { id, name, mana_cost, cmc, colors, color_identity, type_line, oracle_text, card_faces } = results.data[0];
-            // Dual cards handling
+            const { name, mana_cost, cmc, colors, color_identity, type_line, oracle_text } = results.data[0];
+            let { card_faces } = results.data[0];
+
             if(card_faces) {
-                card_faces.forEach(card => {
-                    card.cost = getManaCost(card.mana_cost);
-                    card.cmc = Object.values(card.cost).reduce((acc, cur) => acc + cur, 0);
-                    card.type = card.type_line;
-                })
+                card_faces = card_faces.map(handleSplitCard);
             } else if (RegExp('Land').test(type_line) && colors.length === 0) {
                 colors.push(...color_identity);
             }
             const cost = card_faces ? {} : getManaCost(mana_cost);
-            return { id, name, cmc, colors, type: type_line, text: oracle_text, cost, mana_cost, card_faces };
+            return { name, cmc, colors, type: type_line, text: oracle_text, cost, mana_cost, card_faces };
         } catch (e) {
             console.log(e);
             if (e.response && e.response.status === 404) {
