@@ -1,7 +1,9 @@
-const { cachedCanPlaySpellOnCurve, hasCorrectColors } = require('../cards/utils');
+const { cachedCanPlaySpellOnCurve, hasCorrectColors, isCheckLand, checkLandColor } = require('../cards/utils');
 const { forest, island, mountain, swamp, simicGuildGate, giantGrowth, growthSpiral,
         mockGrowthSpiral, mockTempleSimic, mockIsland, mockTempleGolgari, mockUro,
-        frilledMystic, deathRite, saheeli, volcanicIsland } = require('../cards');
+        frilledMystic, deathRite, saheeli, volcanicIsland, irrigatedFarmland, glacialFortress,
+        meddlingMage
+} = require('../cards');
 
 describe('has Correct Colors unit testing', () => {
     it('basic testing 1', () => {
@@ -149,4 +151,85 @@ describe('can play spell testing - hybrid mana', () => {
         spell: saheeli(0),
         outcome: false,
     }));
+});
+
+
+describe('can play spell testing - checklands', () => {
+    it('can play Meddling Mage 1', testCanPlayOnCurve({
+        lands: [irrigatedFarmland(0), glacialFortress(0)],
+        spell: meddlingMage(0),
+        outcome: true,
+    }));
+    it('can play Meddling Mage 2', testCanPlayOnCurve({
+        lands: [irrigatedFarmland(0), glacialFortress(0), glacialFortress(1)],
+        spell: meddlingMage(0),
+        outcome: true,
+    }));
+    it('can play Meddling Mage 3', testCanPlayOnCurve({
+        lands: [irrigatedFarmland(0), irrigatedFarmland(1), glacialFortress(0)],
+        spell: meddlingMage(0),
+        outcome: true,
+    }));
+    it('can not play Meddling Mage 1', testCanPlayOnCurve({
+        lands: [irrigatedFarmland(0), irrigatedFarmland(1)],
+        spell: meddlingMage(0),
+        outcome: false,
+    }));
+    it('can not play Meddling Mage 2', testCanPlayOnCurve({
+        lands: [glacialFortress(0), glacialFortress(1)],
+        spell: meddlingMage(0),
+        outcome: false,
+    }));
+});
+
+describe('isCheckland testing', () => {
+    it('No checkland', () => {
+        const land = {
+            text: 'coucou',
+        };
+        expect(isCheckLand(land.text)).toBe(false);
+    });
+    it('plains', () => {
+        const land = {
+            text: 'Castle Ardenvale enters the battlefield tapped unless you control a Plains.',
+        };
+        expect(isCheckLand(land.text)).toBeTruthy();
+        expect(isCheckLand(land.text)).toEqual(['Plains']);
+    });
+    it('mountain', () => {
+        const land = {
+            text: 'Castle Embereth enters the battlefield tapped unless you control a Mountain.',
+        };
+        expect(isCheckLand(land.text)).toBeTruthy();
+        expect(isCheckLand(land.text)).toEqual(['Mountain']);
+    });
+    it('Forest', () => {
+        const land = {
+            text: 'Castle Garenbrig enters the battlefield tapped unless you control a Forest.',
+        };
+        expect(isCheckLand(land.text)).toBeTruthy();
+        expect(isCheckLand(land.text)).toEqual(['Forest']);
+    });
+    it('Swamp', () => {
+        const land = {
+            text: 'Castle Lochwain enters the battlefield tapped unless you control a Swamp.',
+        };
+        expect(isCheckLand(land.text)).toBeTruthy();
+        expect(isCheckLand(land.text)).toEqual(['Swamp']);
+    });
+    it('Island', () => {
+        const land = {
+            text: 'Castle Vantress enters the battlefield tapped unless you control a Island.',
+        };
+        expect(isCheckLand(land.text)).toBeTruthy();
+        expect(isCheckLand(land.text)).toEqual(['Island']);
+    });
+
+    it('Island Plains', () => {
+        const land = {
+            text: 'Glacial Fortress enters the battlefield tapped unless you control a Plains or an Island.',
+        };
+        expect(isCheckLand(land.text)).toBeTruthy();
+        expect(isCheckLand(land.text)).toEqual(['Plains', 'Island']);
+    });
 });

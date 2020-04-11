@@ -52,7 +52,7 @@ async function createDeck(decklist) {
 async function analyzeDecklist(decklist) {
     const t0 = performance.now();
     const [lands, spells] = await createDeck(decklist);
-    logger.info(spells);
+    logger.info(lands);
     logger.info('deck created !');
     const t1 = performance.now();
     const maxCMC = Math.max(...spells.map(s => s.cmc), 4);

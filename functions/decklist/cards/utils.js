@@ -6,19 +6,36 @@ const logger = customLogger('utils');
 let cache = new Map();
 
 function hasTypeLand(card) {
-    return RegExp('Land').test(card.type);
+    // return RegExp('Land').test(card.type);
+    return (card.type.includes('Land'));
 }
 
 function isRavland(text) {
     return RegExp(`you may pay 2 life. If you don't, it enters the battlefield tapped.`).test(text);
 }
 
+function isCheckLand(text) {
+    const test = /enters the battlefield tapped unless you control (a|an) (Plains|Island|Swamp|Mountain|Forest)( or (a|an) (Plains|Island|Swamp|Mountain|Forest))?\./;
+    const match = text.match(test);
+    if (!match) {
+        return false;
+    }
+    return [match[2], match[5]].filter(e => !!e);
+}
+
 function evaluateEtb(text) {
     const basicEtb = RegExp('enters the battlefield tapped').test(text);
-    if (basicEtb === true && isRavland(text)) {
+    if (!basicEtb) {
         return () => false;
     }
-    return () => basicEtb;
+    if (isRavland(text)) {
+        return () => false;
+    }
+    const checkLands = isCheckLand(text);
+    if (checkLands) {
+        return (lands) => !lands.some(l => checkLands.some(check => l.type.includes(check)));
+    }
+    return () => true;
 }
 
 function markEtb(card) {
@@ -44,7 +61,7 @@ function hasCorrectColors(lands, spell) {
 }
 
 function hasUntappedLand(lands) {
-    return lands.some(l => l.etbTapped() === false);
+    return lands.some(l => l.etbTapped(lands) === false);
 }
 
 function findCorrectLand(lands, color) {
@@ -146,4 +163,5 @@ module.exports = {
     hasCorrectColors,
     getCache,
     findCorrectLand,
+    isCheckLand,
 };
