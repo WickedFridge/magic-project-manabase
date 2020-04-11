@@ -7,7 +7,13 @@ const cache = createClient({ type: 'memory' });
 // const client = redis.createClient();
 
 function copy (obj) {
-    return JSON.parse(JSON.stringify(obj));
+    const output = JSON.parse(JSON.stringify(obj));
+    Object.entries(obj).forEach(([key, value]) => {
+        if (typeof value === 'function') {
+            output[key] = value;
+        }
+    });
+    return output;
 }
 
 /**

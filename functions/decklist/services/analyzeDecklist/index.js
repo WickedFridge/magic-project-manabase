@@ -9,13 +9,20 @@ const { createClient: createScryfallClient } = require('../../../common/api-clie
 const scryfallApiClient = createScryfallClient(config.apiClients.scryfall);
 const logger = customLogger('index');
 
+function splitCountAndName(input) {
+    const words = input.split(' ');
+    const count = words.shift();
+    const name = words.join(' ');
+    return [count, name];
+}
+
 async function createDeck(decklist) {
     const cardCounts = {};
     const spells = [];
     const lands = [];
 
     (await Promise.all(decklist.map(cardCountAndName => {
-        const [count, name] = cardCountAndName.split(/ (.+)/);
+        const [count, name] = splitCountAndName(cardCountAndName);
         cardCounts[name] = parseInt(count);
         return scryfallApiClient.getCardByName(name);
     })))
@@ -33,7 +40,9 @@ async function createDeck(decklist) {
                 spells.push(cardInfo);
             } else {
                 // handle lands
-                lands.push(...Array(cardCounts[cardInfo.name]).fill(markEtb(cardInfo)));
+                const count = cardCounts[cardInfo.name];
+                const landsToPush = Array(count).fill(markEtb(cardInfo));
+                lands.push(...landsToPush);
             }
         });
     return [lands, spells]
@@ -85,4 +94,5 @@ async function analyzeDecklist(decklist) {
 
 module.exports = {
     analyzeDecklist,
+    splitCountAndName,
 };

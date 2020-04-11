@@ -18,7 +18,7 @@ app.post('/analyze', async (req, res) => {
         const result = await analyzeDecklist(decklist);
         return res.json(result);
     } catch (e) {
-        logger.error(e.message);
+        logger.error(e);
         return res.status(e.code || 500).send({ error: e.message });
     }
 });

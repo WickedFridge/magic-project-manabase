@@ -14,15 +14,11 @@ function isRavland(text) {
 }
 
 function evaluateEtb(text) {
-    let basicEtb = RegExp('enters the battlefield tapped').test(text);
-
-    // handle ravlands
+    const basicEtb = RegExp('enters the battlefield tapped').test(text);
     if (basicEtb === true && isRavland(text)) {
-        // return () => false;
-        return false;
+        return () => false;
     }
-    // return () => basicEtb;
-    return basicEtb;
+    return () => basicEtb;
 }
 
 function markEtb(card) {
@@ -48,8 +44,7 @@ function hasCorrectColors(lands, spell) {
 }
 
 function hasUntappedLand(lands) {
-    // return lands.some(l => l.etbTapped() === false);
-    return lands.some(l => l.etbTapped === false);
+    return lands.some(l => l.etbTapped() === false);
 }
 
 function findCorrectLand(lands, color) {
@@ -78,7 +73,8 @@ function findCorrectLand(lands, color) {
  */
 function evaluateCost(lands, cost) {
     const colorsToFind = copy(cost);
-    const remainingLands = copy(lands).sort((land1, land2) => land1.colors.length - land2.colors.length);
+    const remainingLands = lands.map(l => copy(l))
+        .sort((land1, land2) => land1.colors.length - land2.colors.length);
     const usedLands = [];
     const sortedLandsToFind = Object.keys(cost).sort((c1, c2) => c1.length - c2.length);
     sortedLandsToFind.forEach((color) => {
