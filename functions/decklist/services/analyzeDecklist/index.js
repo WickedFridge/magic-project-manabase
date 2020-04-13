@@ -1,7 +1,7 @@
 const config = require('config');
 const { performance } = require('perf_hooks');
 const { customLogger } = require('../../../common/logger');
-const { hasTypeLand, markEtb, cachedCanPlaySpellOnCurve } = require('../../cards/utils');
+const { hasTypeLand, markEtbAndLandType, cachedCanPlaySpellOnCurve } = require('../../cards/utils');
 const { getAllCombinationsOfMinAndMaxLengthWithCallback } = require("../../../common/tools/utils");
 
 const { createClient: createScryfallClient } = require('../../../common/api-client/scryfall/factory');
@@ -14,6 +14,20 @@ function splitCountAndName(input) {
     const count = words.shift();
     const name = words.join(' ');
     return [count, name];
+}
+
+function handleFetchlands(lands) {
+    const fetchs = new Set(lands.filter(land => land.fetchland));
+    fetchs.forEach((fetch, i) => {
+        const targets = fetch.fetchland.filter(prop => ['Basic', 'Plains', 'Island', 'Swamp', 'Forest', 'Mountain'].includes(prop));
+        const colors = [];
+        lands.map(land => {
+            if (land.type.some(t => targets.includes(t))) {
+                colors.push(...land.colors);
+            }
+        });
+        fetch.colors.push(...new Set(colors));
+    })
 }
 
 async function createDeck(decklist) {
@@ -41,10 +55,11 @@ async function createDeck(decklist) {
             } else {
                 // handle lands
                 const count = cardCounts[cardInfo.name];
-                const landsToPush = Array(count).fill(markEtb(cardInfo));
+                const landsToPush = Array(count).fill(markEtbAndLandType(cardInfo));
                 lands.push(...landsToPush);
             }
         });
+    handleFetchlands(lands);
     return [lands, spells]
 }
 

@@ -6,8 +6,19 @@ const logger = customLogger('utils');
 let cache = new Map();
 
 function hasTypeLand(card) {
-    // return RegExp('Land').test(card.type);
-    return (card.type.includes('Land'));
+    return card.type.includes('Land');
+}
+
+function isFetchland(text) {
+    const test = /Search your library for an? (basic land|Plains|Island|Swamp|Mountain|Forest)(?: or )?(Plains|Island|Swamp|Mountain|Forest)? card, put it onto the battlefield\s?(tapped)?, then shuffle your library\.(?: Then if you control )?(four or more)?(?: lands, untap that land.)?/;
+    const match = text.match(test);
+    if (!match) {
+        return false;
+    }
+    if (match[1] === 'basic land') {
+        match[1] = 'Basic';
+    }
+    return match.slice(1, 5).filter(e => !!e);
 }
 
 function isRavland(text) {
@@ -15,32 +26,40 @@ function isRavland(text) {
 }
 
 function isCheckLand(text) {
-    const test = /enters the battlefield tapped unless you control (a|an) (Plains|Island|Swamp|Mountain|Forest)( or (a|an) (Plains|Island|Swamp|Mountain|Forest))?\./;
+    const test = /enters the battlefield tapped unless you control an? (Plains|Island|Swamp|Mountain|Forest)( or an? (Plains|Island|Swamp|Mountain|Forest))?\./;
     const match = text.match(test);
     if (!match) {
         return false;
     }
-    return [match[2], match[5]].filter(e => !!e);
+    return [match[1], match[3]].filter(e => !!e);
 }
 
 function evaluateEtb(text) {
-    const basicEtb = RegExp('enters the battlefield tapped').test(text);
-    if (!basicEtb) {
-        return () => false;
+    const basicEtbTapped = RegExp('(enters|onto) the battlefield tapped').test(text);
+    if (!basicEtbTapped) {
+        return { etbTapped: () => false };
     }
     if (isRavland(text)) {
-        return () => false;
+        return { etbTapped: () => false, ravland: true };
+    }
+    const fetchlandData = isFetchland(text);
+    if (isFetchland(text)) {
+        const wouldEtb = fetchlandData.includes('tapped');
+        if (fetchlandData.includes('four or more')) {
+            return { etbTapped: (lands) => lands.length < 4, fetchland: fetchlandData };
+        }
+        return { etbTapped: () => wouldEtb, fetchland: fetchlandData };
     }
     const checkLands = isCheckLand(text);
     if (checkLands) {
-        return (lands) => !lands.some(l => checkLands.some(check => l.type.includes(check)));
+        return { etbTapped: (lands) => !lands.some(l => checkLands.some(check => l.type.includes(check))), checkland: true };
     }
-    return () => true;
+    return { etbTapped: () => true };
 }
 
-function markEtb(card) {
+function markEtbAndLandType(card) {
     return {
-        etbTapped: evaluateEtb(card.text),
+        ...evaluateEtb(card.text),
         ...card,
     }
 }
@@ -156,7 +175,7 @@ function getCache() {
 
 module.exports = {
     hasTypeLand,
-    markEtb,
+    markEtbAndLandType,
     evaluateCost,
     getManaCost,
     cachedCanPlaySpellOnCurve,
@@ -164,4 +183,6 @@ module.exports = {
     getCache,
     findCorrectLand,
     isCheckLand,
+    isFetchland,
+    evaluateEtb,
 };

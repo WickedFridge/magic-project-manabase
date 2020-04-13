@@ -1,4 +1,4 @@
-const { cachedCanPlaySpellOnCurve, hasCorrectColors, isCheckLand, checkLandColor } = require('../cards/utils');
+const { cachedCanPlaySpellOnCurve, hasCorrectColors, isCheckLand, isFetchland, evaluateEtb } = require('../cards/utils');
 const { forest, island, mountain, swamp, simicGuildGate, giantGrowth, growthSpiral,
         mockGrowthSpiral, mockTempleSimic, mockIsland, mockTempleGolgari, mockUro,
         frilledMystic, deathRite, saheeli, volcanicIsland, irrigatedFarmland, glacialFortress,
@@ -231,5 +231,69 @@ describe('isCheckland testing', () => {
         };
         expect(isCheckLand(land.text)).toBeTruthy();
         expect(isCheckLand(land.text)).toEqual(['Plains', 'Island']);
+    });
+});
+
+
+describe('isFetchland testing', () => {
+    it('No Fetchland', () => {
+        const land = {
+            text: 'coucou',
+        };
+        expect(isFetchland(land.text)).toBe(false);
+    });
+    it('Fabled Passage', () => {
+        const land = {
+            text: '{T}, Sacrifice Fabled Passage: Search your library for a basic land card, put it onto the battlefield tapped, then shuffle your library. Then if you control four or more lands, untap that land.',
+        };
+        const landsUntap = ['land1', 'land2', 'land3', 'land4'];
+        const landsTap = ['land1', 'land2', 'land3'];
+        expect(isFetchland(land.text)).toBeTruthy();
+        expect(isFetchland(land.text)).toEqual(['Basic', 'tapped', 'four or more']);
+        expect(evaluateEtb(land.text).etbTapped(landsUntap)).toEqual(false);
+        expect(evaluateEtb(land.text).etbTapped(landsTap)).toEqual(true);
+    });
+    it('Prismatic Vista', () => {
+        const land = {
+            text: '{T}, Pay 1 life, Sacrifice Prismatic Vista: Search your library for a basic land card, put it onto the battlefield, then shuffle your library.',
+        };
+        expect(isFetchland(land.text)).toBeTruthy();
+        expect(isFetchland(land.text)).toEqual(['Basic']);
+        expect(evaluateEtb(land.text).etbTapped()).toEqual(false);
+    });
+    it('Misty Rainforest', () => {
+        const land = {
+            text: '{T}, Pay 1 life, Sacrifice Misty Rainforest: Search your library for a Forest or Island card, put it onto the battlefield, then shuffle your library.',
+        };
+        expect(isFetchland(land.text)).toBeTruthy();
+        expect(isFetchland(land.text)).toEqual(['Forest', 'Island']);
+        expect(evaluateEtb(land.text).etbTapped()).toEqual(false);
+    });
+
+    it('Bloodstained Mire', () => {
+        const land = {
+            text: '{T}, Pay 1 life, Sacrifice Bloodstained Mire: Search your library for a Swamp or Mountain card, put it onto the battlefield, then shuffle your library.',
+        };
+        expect(isFetchland(land.text)).toBeTruthy();
+        expect(isFetchland(land.text)).toEqual(['Swamp', 'Mountain']);
+        expect(evaluateEtb(land.text).etbTapped()).toEqual(false);
+    });
+
+    it('Marsh Flats', () => {
+        const land = {
+            text: '{T}, Pay 1 life, Sacrifice Marsh Flats: Search your library for a Plains or Swamp card, put it onto the battlefield, then shuffle your library.',
+        };
+        expect(isFetchland(land.text)).toBeTruthy();
+        expect(isFetchland(land.text)).toEqual(['Plains', 'Swamp']);
+        expect(evaluateEtb(land.text).etbTapped()).toEqual(false);
+    });
+
+    it('Evolving Wilds', () => {
+        const land = {
+            text: '{T}, Sacrifice Evolving Wilds: Search your library for a basic land card, put it onto the battlefield tapped, then shuffle your library.',
+        };
+        expect(isFetchland(land.text)).toBeTruthy();
+        expect(isFetchland(land.text)).toEqual(['Basic', 'tapped']);
+        expect(evaluateEtb(land.text).etbTapped()).toEqual(true);
     });
 });
