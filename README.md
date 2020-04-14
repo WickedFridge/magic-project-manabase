@@ -18,13 +18,14 @@ It has been started by Charles Wickham in February 2020.
         - mana
             - [x] handle ravlands
             - [ ] handle phyrexian mana
+            - [x] handle colorless mana
             - [x] handle hybrid mana
             - [x] handle fetchlands
             - [x] handle checklands
         - modal spells
             - [x] handle splitcards
-            - [ ] handle evoke
-            - [ ] handle escape
+            - [x] handle alternate costs
+            - [x] handle escape
             - [ ] handle X spells
     - front
         - [ ] nice recap graph
@@ -49,6 +50,7 @@ It has been started by Charles Wickham in February 2020.
 
 ### Setup
 ```
+npm run start
 cd functions/
 npm run serve
 ```

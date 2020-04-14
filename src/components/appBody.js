@@ -199,7 +199,7 @@ const defaultRows = createRows(defaultData);
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        width: '130vh',
+        width: '75vw',
     },
     paper: {
         padding: theme.spacing(2),

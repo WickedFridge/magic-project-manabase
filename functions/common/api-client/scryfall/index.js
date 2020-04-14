@@ -15,6 +15,35 @@ function handleSplitCard(card) {
     };
 }
 
+function handleAlternateCost(data, capacity, alternateCost) {
+    const { name, mana_cost, colors, color_identity, type_line, oracle_text } = data;
+    return [{
+        name,
+        mana_cost,
+        colors,
+        color_identity,
+        type_line,
+        oracle_text,
+    }, {
+        name: `${name} (${capacity})`,
+        mana_cost: alternateCost,
+        colors,
+        color_identity,
+        type_line,
+        oracle_text,
+    }];
+}
+
+function handleLandCard(colors, color_identity, oracle_text) {
+    colors.push(...color_identity);
+    if (oracle_text.match(/\{T}: Add \{C}/)) {
+        colors.push('C');
+    }
+    if (oracle_text.match(/\{T}(:?,.+)?: Add one mana of any color/)) {
+        colors.push('W', 'U', 'B', 'R', 'G');
+    }
+}
+
 /**
  * Scryfall API client
  */
@@ -38,11 +67,21 @@ class ScryfallApiClient extends AbstractApiClient {
             });
             const { name, mana_cost, cmc, colors, color_identity, type_line, oracle_text } = results.data[0];
             let { card_faces } = results.data[0];
-
+            if (oracle_text) {
+                const escape = oracle_text.match(/(?:Escape—)((\{\w})+)/);
+                const alternateCost = oracle_text.match(/(\w+) ((\{\w})+) (?:\(You may cast this)/);
+                if (escape) {
+                    card_faces = handleAlternateCost(results.data[0],'Escape', escape[1]);
+                }
+                if (alternateCost) {
+                    console.log(name);
+                    card_faces = handleAlternateCost(results.data[0], alternateCost[1], alternateCost[2]);
+                }
+            }
             if(card_faces) {
                 card_faces = card_faces.map(handleSplitCard);
             } else if (RegExp('Land').test(type_line) && colors.length === 0) {
-                colors.push(...color_identity);
+                handleLandCard(colors, color_identity, oracle_text);
             }
             const cost = card_faces ? {} : getManaCost(mana_cost);
             return { name, cmc, colors, type: type_line.split(' '), text: oracle_text, cost, mana_cost, card_faces };
