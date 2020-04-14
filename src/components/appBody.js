@@ -232,7 +232,7 @@ export default function AppBody() {
         setLoading(true);
         const deck = decklist.split('\n')
             .filter(e => !!e && e !== 'Sideboard' && e !== 'Deck')
-            .map(e => e.split('(')[0]);
+            .map(e => e.split(' (')[0]);
         const data = { deck };
         console.log(data);
         axios({

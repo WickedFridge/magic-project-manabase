@@ -1,7 +1,9 @@
-const { cachedCanPlaySpellOnCurve, hasCorrectColors } = require('../cards/utils');
+const { cachedCanPlaySpellOnCurve, hasCorrectColors, isCheckLand, isFetchland, evaluateEtb } = require('../cards/utils');
 const { forest, island, mountain, swamp, simicGuildGate, giantGrowth, growthSpiral,
         mockGrowthSpiral, mockTempleSimic, mockIsland, mockTempleGolgari, mockUro,
-        frilledMystic, deathRite, saheeli, volcanicIsland } = require('../cards');
+        frilledMystic, deathRite, saheeli, volcanicIsland, irrigatedFarmland, glacialFortress,
+        meddlingMage
+} = require('../cards');
 
 describe('has Correct Colors unit testing', () => {
     it('basic testing 1', () => {
@@ -149,4 +151,149 @@ describe('can play spell testing - hybrid mana', () => {
         spell: saheeli(0),
         outcome: false,
     }));
+});
+
+
+describe('can play spell testing - checklands', () => {
+    it('can play Meddling Mage 1', testCanPlayOnCurve({
+        lands: [irrigatedFarmland(0), glacialFortress(0)],
+        spell: meddlingMage(0),
+        outcome: true,
+    }));
+    it('can play Meddling Mage 2', testCanPlayOnCurve({
+        lands: [irrigatedFarmland(0), glacialFortress(0), glacialFortress(1)],
+        spell: meddlingMage(0),
+        outcome: true,
+    }));
+    it('can play Meddling Mage 3', testCanPlayOnCurve({
+        lands: [irrigatedFarmland(0), irrigatedFarmland(1), glacialFortress(0)],
+        spell: meddlingMage(0),
+        outcome: true,
+    }));
+    it('can not play Meddling Mage 1', testCanPlayOnCurve({
+        lands: [irrigatedFarmland(0), irrigatedFarmland(1)],
+        spell: meddlingMage(0),
+        outcome: false,
+    }));
+    it('can not play Meddling Mage 2', testCanPlayOnCurve({
+        lands: [glacialFortress(0), glacialFortress(1)],
+        spell: meddlingMage(0),
+        outcome: false,
+    }));
+});
+
+describe('isCheckland testing', () => {
+    it('No checkland', () => {
+        const land = {
+            text: 'coucou',
+        };
+        expect(isCheckLand(land.text)).toBe(false);
+    });
+    it('plains', () => {
+        const land = {
+            text: 'Castle Ardenvale enters the battlefield tapped unless you control a Plains.',
+        };
+        expect(isCheckLand(land.text)).toBeTruthy();
+        expect(isCheckLand(land.text)).toEqual(['Plains']);
+    });
+    it('mountain', () => {
+        const land = {
+            text: 'Castle Embereth enters the battlefield tapped unless you control a Mountain.',
+        };
+        expect(isCheckLand(land.text)).toBeTruthy();
+        expect(isCheckLand(land.text)).toEqual(['Mountain']);
+    });
+    it('Forest', () => {
+        const land = {
+            text: 'Castle Garenbrig enters the battlefield tapped unless you control a Forest.',
+        };
+        expect(isCheckLand(land.text)).toBeTruthy();
+        expect(isCheckLand(land.text)).toEqual(['Forest']);
+    });
+    it('Swamp', () => {
+        const land = {
+            text: 'Castle Lochwain enters the battlefield tapped unless you control a Swamp.',
+        };
+        expect(isCheckLand(land.text)).toBeTruthy();
+        expect(isCheckLand(land.text)).toEqual(['Swamp']);
+    });
+    it('Island', () => {
+        const land = {
+            text: 'Castle Vantress enters the battlefield tapped unless you control a Island.',
+        };
+        expect(isCheckLand(land.text)).toBeTruthy();
+        expect(isCheckLand(land.text)).toEqual(['Island']);
+    });
+
+    it('Island Plains', () => {
+        const land = {
+            text: 'Glacial Fortress enters the battlefield tapped unless you control a Plains or an Island.',
+        };
+        expect(isCheckLand(land.text)).toBeTruthy();
+        expect(isCheckLand(land.text)).toEqual(['Plains', 'Island']);
+    });
+});
+
+
+describe('isFetchland testing', () => {
+    it('No Fetchland', () => {
+        const land = {
+            text: 'coucou',
+        };
+        expect(isFetchland(land.text)).toBe(false);
+    });
+    it('Fabled Passage', () => {
+        const land = {
+            text: '{T}, Sacrifice Fabled Passage: Search your library for a basic land card, put it onto the battlefield tapped, then shuffle your library. Then if you control four or more lands, untap that land.',
+        };
+        const landsUntap = ['land1', 'land2', 'land3', 'land4'];
+        const landsTap = ['land1', 'land2', 'land3'];
+        expect(isFetchland(land.text)).toBeTruthy();
+        expect(isFetchland(land.text)).toEqual(['Basic', 'tapped', 'four or more']);
+        expect(evaluateEtb(land.text).etbTapped(landsUntap)).toEqual(false);
+        expect(evaluateEtb(land.text).etbTapped(landsTap)).toEqual(true);
+    });
+    it('Prismatic Vista', () => {
+        const land = {
+            text: '{T}, Pay 1 life, Sacrifice Prismatic Vista: Search your library for a basic land card, put it onto the battlefield, then shuffle your library.',
+        };
+        expect(isFetchland(land.text)).toBeTruthy();
+        expect(isFetchland(land.text)).toEqual(['Basic']);
+        expect(evaluateEtb(land.text).etbTapped()).toEqual(false);
+    });
+    it('Misty Rainforest', () => {
+        const land = {
+            text: '{T}, Pay 1 life, Sacrifice Misty Rainforest: Search your library for a Forest or Island card, put it onto the battlefield, then shuffle your library.',
+        };
+        expect(isFetchland(land.text)).toBeTruthy();
+        expect(isFetchland(land.text)).toEqual(['Forest', 'Island']);
+        expect(evaluateEtb(land.text).etbTapped()).toEqual(false);
+    });
+
+    it('Bloodstained Mire', () => {
+        const land = {
+            text: '{T}, Pay 1 life, Sacrifice Bloodstained Mire: Search your library for a Swamp or Mountain card, put it onto the battlefield, then shuffle your library.',
+        };
+        expect(isFetchland(land.text)).toBeTruthy();
+        expect(isFetchland(land.text)).toEqual(['Swamp', 'Mountain']);
+        expect(evaluateEtb(land.text).etbTapped()).toEqual(false);
+    });
+
+    it('Marsh Flats', () => {
+        const land = {
+            text: '{T}, Pay 1 life, Sacrifice Marsh Flats: Search your library for a Plains or Swamp card, put it onto the battlefield, then shuffle your library.',
+        };
+        expect(isFetchland(land.text)).toBeTruthy();
+        expect(isFetchland(land.text)).toEqual(['Plains', 'Swamp']);
+        expect(evaluateEtb(land.text).etbTapped()).toEqual(false);
+    });
+
+    it('Evolving Wilds', () => {
+        const land = {
+            text: '{T}, Sacrifice Evolving Wilds: Search your library for a basic land card, put it onto the battlefield tapped, then shuffle your library.',
+        };
+        expect(isFetchland(land.text)).toBeTruthy();
+        expect(isFetchland(land.text)).toEqual(['Basic', 'tapped']);
+        expect(evaluateEtb(land.text).etbTapped()).toEqual(true);
+    });
 });

@@ -8,7 +8,7 @@ function handleSplitCard(card) {
         name: card.name,
         cmc: Object.values(cost).reduce((acc, cur) => acc + cur, 0),
         colors: card.colors,
-        type: card.type_line,
+        type: card.type_line.split(' '),
         text: card.oracle_text,
         cost,
         mana_cost: card.mana_cost,
@@ -45,7 +45,7 @@ class ScryfallApiClient extends AbstractApiClient {
                 colors.push(...color_identity);
             }
             const cost = card_faces ? {} : getManaCost(mana_cost);
-            return { name, cmc, colors, type: type_line, text: oracle_text, cost, mana_cost, card_faces };
+            return { name, cmc, colors, type: type_line.split(' '), text: oracle_text, cost, mana_cost, card_faces };
         } catch (e) {
             console.log(e);
             if (e.response && e.response.status === 404) {

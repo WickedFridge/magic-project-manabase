@@ -19,8 +19,8 @@ It has been started by Charles Wickham in February 2020.
             - [x] handle ravlands
             - [ ] handle phyrexian mana
             - [x] handle hybrid mana
-            - [ ] handle fetchlands
-            - [ ] handle checklands
+            - [x] handle fetchlands
+            - [x] handle checklands
         - modal spells
             - [x] handle splitcards
             - [ ] handle evoke
