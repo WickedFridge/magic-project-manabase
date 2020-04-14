@@ -19,10 +19,12 @@ function splitCountAndName(input) {
 function handleFetchlands(lands) {
     const fetchs = new Set(lands.filter(land => land.fetchland));
     fetchs.forEach((fetch, i) => {
-        const targets = fetch.fetchland.filter(prop => ['Basic', 'Plains', 'Island', 'Swamp', 'Forest', 'Mountain'].includes(prop));
+        const landTypes = ['Basic', 'Plains', 'Island', 'Swamp', 'Forest', 'Mountain'];
+        const targets = fetch.fetchland.filter(prop => landTypes.includes(prop));
         const colors = [];
+        logger.info(`fetch ${i} : ${fetch}`);
         lands.map(land => {
-            if (land.type.some(t => targets.includes(t))) {
+            if (targets.every(t => land.type.includes(t))) {
                 colors.push(...land.colors);
             }
         });
