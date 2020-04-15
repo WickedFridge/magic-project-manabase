@@ -28,6 +28,7 @@ It has been started by Charles Wickham in February 2020.
             - [x] handle escape
             - [ ] handle X spells
     - front
+        - [ ] mobile overlay
         - [ ] nice recap graph
         - [ ] mean / median / percentiles
         - [ ] navbar
