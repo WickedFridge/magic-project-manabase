@@ -37,10 +37,23 @@ const useStyles = makeStyles((theme) => ({
 
 export default function MobileBody (props) {
     const classes = useStyles();
+    const [index, setIndex] = React.useState(0);
+
+    const handleChangeIndex = index => {
+        setIndex(index)
+    };
+
+    const handleClickSubmit = callback => () => {
+        setIndex(1);
+        callback();
+    };
 
     return (
         <div className={classes.root}>
-            <SwipeableViews>
+            <SwipeableViews
+                index={index}
+                onChangeIndex={handleChangeIndex}
+            >
                 <div className={classes.slide1}>
                     <DecklistInput
                         isMobile
@@ -48,7 +61,7 @@ export default function MobileBody (props) {
                         onChange={props.handleDecklistChange}
                     />
                     <MobileSubmitButton
-                        onClick={props.handleClickSubmit}
+                        onClick={handleClickSubmit(props.handleClickSubmit)}
                         disabled={props.loading}
                     />
                 </div>
