@@ -48,6 +48,13 @@ It has been started by Charles Wickham in February 2020.
 
 ## Usage
 
+### Prerequisites
+As this project relies on Firebase, you need to install it on your local environment in order to start the backend.
+[See more about installing firebase.](https://firebase.google.com/docs/cli)
+```
+npm install -g firebase-tools
+```
+
 ### Setup
 ```
 npm run start
