@@ -2,28 +2,28 @@ const { getManaCost } = require('./cards/utils');
 
 const forest = (id) => ({
     name: `Forest ${id}`,
-    type: ['Land', 'Forest'],
+    type: ['Basic', 'Land', '—', 'Forest'],
     colors: ['G'],
     etbTapped: () => false
 });
 
 const island = (id) => ({
     name: `Island ${id}`,
-    type: ['Land', 'Island'],
+    type: ['Basic', 'Land', '—', 'Island'],
     colors: ['U'],
     etbTapped: () => false
 });
 
 const swamp = (id) => ({
     name: `Swamp ${id}`,
-    type: ['Land', 'Swamp'],
+    type: ['Basic', 'Land', '—', 'Swamp'],
     colors: ['B'],
     etbTapped: () => false
 });
 
 const mountain = (id) => ({
     name: `Mountain ${id}`,
-    type: ['Land', 'Mountain'],
+    type: ['Basic', 'Land', '—', 'Mountain'],
     colors: ['R'],
     etbTapped: () => false
 });
@@ -40,6 +40,48 @@ const volcanicIsland = (id) => ({
     type: ['Land', 'Island', 'Mountain'],
     colors: ['U', 'R'],
     etbTapped: () => false,
+});
+
+const fabledPassage = (id) => ({
+    name: `Fabled Passage ${id}`,
+    type: ['Land'],
+    colors: [],
+    text: '{T}, Sacrifice Fabled Passage: Search your library for a basic land card, put it onto the battlefield tapped, then shuffle your library. Then if you control four or more lands, untap that land.',
+});
+
+const prismaticVista = (id) => ({
+    name: `Prismatic Vista ${id}`,
+    type: ['Land'],
+    colors: [],
+    text: '{T}, Pay 1 life, Sacrifice Prismatic Vista: Search your library for a basic land card, put it onto the battlefield, then shuffle your library.',
+});
+
+const mistyRainforest = (id) => ({
+    name: `Misty Rainforest ${id}`,
+    type: ['Land'],
+    colors: [],
+    text: '{T}, Pay 1 life, Sacrifice Misty Rainforest: Search your library for a Forest or Island card, put it onto the battlefield, then shuffle your library.',
+});
+
+const bloodstainedMire = (id) => ({
+    name: `Bloodstained Mire ${id}`,
+    type: ['Land'],
+    colors: [],
+    text: '{T}, Pay 1 life, Sacrifice Bloodstained Mire: Search your library for a Swamp or Mountain card, put it onto the battlefield, then shuffle your library.',
+});
+
+const marshFlats = (id) => ({
+    name: `Marsh Flats ${id}`,
+    type: ['Land'],
+    colors: [],
+    text: '{T}, Pay 1 life, Sacrifice Marsh Flats: Search your library for a Plains or Swamp card, put it onto the battlefield, then shuffle your library.',
+});
+
+const evolvingWilds = (id) => ({
+    name: `Evolving Wilds ${id}`,
+    type: ['Land'],
+    colors: [],
+    text: '{T}, Sacrifice Evolving Wilds: Search your library for a basic land card, put it onto the battlefield tapped, then shuffle your library.',
 });
 
 const growthSpiral = (id) => ({
@@ -194,6 +236,12 @@ module.exports = {
     swamp,
     volcanicIsland,
     simicGuildGate,
+    fabledPassage,
+    evolvingWilds,
+    prismaticVista,
+    mistyRainforest,
+    bloodstainedMire,
+    marshFlats,
     growthSpiral,
     giantGrowth,
     mockIsland,

@@ -1,8 +1,9 @@
 const { cachedCanPlaySpellOnCurve, hasCorrectColors, isCheckLand, isFetchland, evaluateEtb } = require('../cards/utils');
+const { handleFetchlands } = require('../services/analyzeDecklist');
 const { forest, island, mountain, swamp, simicGuildGate, giantGrowth, growthSpiral,
         mockGrowthSpiral, mockTempleSimic, mockIsland, mockTempleGolgari, mockUro,
         frilledMystic, deathRite, saheeli, volcanicIsland, irrigatedFarmland, glacialFortress,
-        meddlingMage
+        meddlingMage, marshFlats, bloodstainedMire, mistyRainforest, prismaticVista, evolvingWilds, fabledPassage,
 } = require('../cards');
 
 describe('has Correct Colors unit testing', () => {
@@ -241,59 +242,102 @@ describe('isFetchland testing', () => {
             text: 'coucou',
         };
         expect(isFetchland(land.text)).toBe(false);
+        expect(evaluateEtb(land.text).fetchland).toBeFalsy();
     });
     it('Fabled Passage', () => {
-        const land = {
-            text: '{T}, Sacrifice Fabled Passage: Search your library for a basic land card, put it onto the battlefield tapped, then shuffle your library. Then if you control four or more lands, untap that land.',
-        };
-        const landsUntap = ['land1', 'land2', 'land3', 'land4'];
-        const landsTap = ['land1', 'land2', 'land3'];
+        const land = fabledPassage(0);
+        const landsUntap = [forest(0), forest(1), forest(2), mountain(3)];
+        const landsTap = [forest(0), forest(1), island(2)];
         expect(isFetchland(land.text)).toBeTruthy();
         expect(isFetchland(land.text)).toEqual(['Basic', 'tapped', 'four or more']);
+        expect(evaluateEtb(land.text).fetchland).toBeTruthy();
         expect(evaluateEtb(land.text).etbTapped(landsUntap)).toEqual(false);
         expect(evaluateEtb(land.text).etbTapped(landsTap)).toEqual(true);
     });
     it('Prismatic Vista', () => {
-        const land = {
-            text: '{T}, Pay 1 life, Sacrifice Prismatic Vista: Search your library for a basic land card, put it onto the battlefield, then shuffle your library.',
-        };
+        const land = prismaticVista(0);
         expect(isFetchland(land.text)).toBeTruthy();
         expect(isFetchland(land.text)).toEqual(['Basic']);
+        expect(evaluateEtb(land.text).fetchland).toBeTruthy();
         expect(evaluateEtb(land.text).etbTapped()).toEqual(false);
     });
     it('Misty Rainforest', () => {
-        const land = {
-            text: '{T}, Pay 1 life, Sacrifice Misty Rainforest: Search your library for a Forest or Island card, put it onto the battlefield, then shuffle your library.',
-        };
+        const land = mistyRainforest(0);
         expect(isFetchland(land.text)).toBeTruthy();
         expect(isFetchland(land.text)).toEqual(['Forest', 'Island']);
+        expect(evaluateEtb(land.text).fetchland).toBeTruthy();
         expect(evaluateEtb(land.text).etbTapped()).toEqual(false);
     });
 
     it('Bloodstained Mire', () => {
-        const land = {
-            text: '{T}, Pay 1 life, Sacrifice Bloodstained Mire: Search your library for a Swamp or Mountain card, put it onto the battlefield, then shuffle your library.',
-        };
+        const land = bloodstainedMire(0);
         expect(isFetchland(land.text)).toBeTruthy();
         expect(isFetchland(land.text)).toEqual(['Swamp', 'Mountain']);
+        expect(evaluateEtb(land.text).fetchland).toBeTruthy();
         expect(evaluateEtb(land.text).etbTapped()).toEqual(false);
     });
 
     it('Marsh Flats', () => {
-        const land = {
-            text: '{T}, Pay 1 life, Sacrifice Marsh Flats: Search your library for a Plains or Swamp card, put it onto the battlefield, then shuffle your library.',
-        };
+        const land = marshFlats(0);
         expect(isFetchland(land.text)).toBeTruthy();
         expect(isFetchland(land.text)).toEqual(['Plains', 'Swamp']);
+        expect(evaluateEtb(land.text).fetchland).toBeTruthy();
         expect(evaluateEtb(land.text).etbTapped()).toEqual(false);
     });
 
     it('Evolving Wilds', () => {
-        const land = {
-            text: '{T}, Sacrifice Evolving Wilds: Search your library for a basic land card, put it onto the battlefield tapped, then shuffle your library.',
-        };
+        const land = evolvingWilds(0);
         expect(isFetchland(land.text)).toBeTruthy();
         expect(isFetchland(land.text)).toEqual(['Basic', 'tapped']);
+        expect(evaluateEtb(land.text).fetchland).toBeTruthy();
         expect(evaluateEtb(land.text).etbTapped()).toEqual(true);
+    });
+});
+
+describe('handle Fetchland', () => {
+    it('Fabled Passage', () => {
+        const land = fabledPassage(0);
+        land.fetchland = isFetchland(land.text);
+        const lands = [forest(0), mountain(0), volcanicIsland(0), land];
+        handleFetchlands(lands);
+        expect(land.colors).toEqual(['G', 'R']);
+    });
+    it('Prismatic Vista', () => {
+        const land = prismaticVista(0);
+        land.fetchland = isFetchland(land.text);
+        const lands = [swamp(0), mountain(0), volcanicIsland(0), land];
+        handleFetchlands(lands);
+        expect(land.colors).toEqual(['B', 'R']);
+    });
+    it('Misty Rainforest', () => {
+        const land = mistyRainforest(0);
+        land.fetchland = isFetchland(land.text);
+        const lands = [swamp(0), mountain(0), volcanicIsland(0), land];
+        handleFetchlands(lands);
+        expect(land.colors).toEqual(['U', 'R']);
+    });
+
+    it('Bloodstained Mire', () => {
+        const land = bloodstainedMire(0);
+        land.fetchland = isFetchland(land.text);
+        const lands = [swamp(0), mountain(0), volcanicIsland(0), land];
+        handleFetchlands(lands);
+        expect(land.colors).toEqual(['B', 'R', 'U']);
+    });
+
+    it('Marsh Flats', () => {
+        const land = marshFlats(0);
+        land.fetchland = isFetchland(land.text);
+        const lands = [swamp(0), mountain(0), volcanicIsland(0), land];
+        handleFetchlands(lands);
+        expect(land.colors).toEqual(['B']);
+    });
+
+    it('Evolving Wilds', () => {
+        const land = prismaticVista(0);
+        land.fetchland = isFetchland(land.text);
+        const lands = [swamp(0), forest(0), volcanicIsland(0), land];
+        handleFetchlands(lands);
+        expect(land.colors).toEqual(['B', 'G']);
     });
 });

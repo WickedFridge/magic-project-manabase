@@ -19,11 +19,12 @@ function splitCountAndName(input) {
 function handleFetchlands(lands) {
     const fetchs = new Set(lands.filter(land => land.fetchland));
     fetchs.forEach((fetch, i) => {
+        logger.info(`fetch ${i}: ${fetch.name}`);
         const landTypes = ['Basic', 'Plains', 'Island', 'Swamp', 'Forest', 'Mountain'];
         const targets = fetch.fetchland.filter(prop => landTypes.includes(prop));
         const colors = [];
         lands.map(land => {
-            if (targets.every(t => land.type.includes(t))) {
+            if (targets.some(t => land.type.includes(t))) {
                 colors.push(...land.colors);
             }
         });
@@ -69,7 +70,7 @@ async function analyzeDecklist(decklist) {
     const t0 = performance.now();
     const [lands, spells] = await createDeck(decklist);
     // logger.info(lands);
-    logger.info(spells);
+    // logger.info(spells);
     logger.info('deck created !');
     const t1 = performance.now();
     const maxCMC = Math.max(...spells.map(s => s.cmc), 4);
@@ -112,4 +113,5 @@ async function analyzeDecklist(decklist) {
 module.exports = {
     analyzeDecklist,
     splitCountAndName,
+    handleFetchlands
 };
