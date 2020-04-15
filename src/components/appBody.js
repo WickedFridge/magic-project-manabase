@@ -1,22 +1,22 @@
 import React from 'react';
 import DecklistInput from "./decklistInput";
 import SubmitButton from "./submitButton";
-import {makeStyles} from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Paper from "@material-ui/core/Paper";
-import {orange, green} from "@material-ui/core/colors";
-import {CircularProgress, createMuiTheme} from "@material-ui/core";
+import { orange, green } from "@material-ui/core/colors";
+import { CircularProgress, createMuiTheme } from "@material-ui/core";
 import Fade from "@material-ui/core/Fade";
 import Box from "@material-ui/core/Box";
 import ResultTable from "./resultTable";
-import {ThemeProvider} from "@material-ui/styles";
+import { ThemeProvider } from "@material-ui/styles";
 import axios from 'axios';
 import config from '../config';
 import ErrorSnackbar from "./ErrorSnackbar";
-import {defaultDecklist, defaultResults} from "../data/defaultInputs";
+import { defaultDecklist, defaultResults } from "../data/defaultInputs";
 
 const createRows = (data) => Object.entries(data)
-    .map(([key, {ratio}]) => ({key, ratio}))
+    .map(([key, { ratio }]) => ({ key, ratio }))
     .sort((s1, s2) => parseFloat(s1.ratio) - parseFloat(s2.ratio));
 
 const defaultRows = createRows(defaultResults);
@@ -57,7 +57,7 @@ export default function AppBody() {
         const deck = decklist.split('\n')
             .filter(e => !!e && e !== 'Sideboard' && e !== 'Deck')
             .map(e => e.split(' (')[0]);
-        const data = {deck};
+        const data = { deck };
         console.log(data);
         axios({
             method: 'post',
@@ -126,7 +126,7 @@ export default function AppBody() {
                             <Grid item xs={12}>
                                 <Paper className={classes.paper}>
                                     <Box
-                                        style={{height: '53.25vh'}}
+                                        style={{ height: '53.25vh' }}
                                         display="flex"
                                         alignItems="center"
                                     >
