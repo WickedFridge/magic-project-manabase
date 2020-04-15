@@ -45,6 +45,9 @@ const useStyles = makeStyles((theme) => ({
 
 export default function DecklistInput(props) {
     const classes = useStyles();
+    const maxRows = props.isMobile
+        ? 30
+        : 28;
 
     return (
         <form className={classes.root} noValidate>
@@ -57,7 +60,7 @@ export default function DecklistInput(props) {
                 value={props.value}
                 onChange={props.onChange}
                 color="secondary"
-                rows={28}
+                rows={maxRows}
                 InputProps={{
                     className: classes.input
                 }}

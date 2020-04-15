@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import DecklistInput from "./decklistInput";
-import SubmitButton from "./submitButton";
+import SubmitButton from "./desktop/submitButton";
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Paper from "@material-ui/core/Paper";
@@ -13,6 +13,8 @@ import { ThemeProvider } from "@material-ui/styles";
 import axios from 'axios';
 import config from '../config';
 import ErrorSnackbar from "./ErrorSnackbar";
+import DesktopBody from "./desktop/desktopBody";
+import MobileBody from "./mobile/mobileBody";
 import { defaultDecklist, defaultResults } from "../data/defaultInputs";
 
 const createRows = (data) => Object.entries(data)
@@ -21,30 +23,47 @@ const createRows = (data) => Object.entries(data)
 
 const defaultRows = createRows(defaultResults);
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-        width: '75vw',
-    },
-    paper: {
-        padding: theme.spacing(2),
-        textAlign: 'center',
-        color: green[700],
-        // backgroundColor: '#341700',
-        backgroundColor: '#1b222b',
-    },
-    circular: {
-        color: green[700],
-    }
-}));
-
 const theme = createMuiTheme({
     palette: {
         type: "dark"
     }
 });
 
+const getWidth = () => window.innerWidth
+    || document.documentElement.clientWidth
+    || document.body.clientWidth;
+
+function useCurrentWitdh() {
+    // save current window width in the state object
+    let [width, setWidth] = React.useState(getWidth());
+
+    // in this case useEffect will execute only once because
+    // it does not have any dependencies.
+    useEffect(() => {
+        // timeoutId for debounce mechanism
+        let timeoutId = null;
+        const resizeListener = () => {
+            // prevent execution of previous setTimeout
+            clearTimeout(timeoutId);
+            // change width from the state object after 150 milliseconds
+            timeoutId = setTimeout(() => setWidth(getWidth()), 150);
+        };
+        // set resize listener
+        window.addEventListener('resize', resizeListener);
+
+        // clean up function
+        return () => {
+            // remove resize listener
+            window.removeEventListener('resize', resizeListener);
+        }
+    }, []);
+
+    return width;
+}
+
 export default function AppBody() {
-    const classes = useStyles();
+    let width = useCurrentWitdh();
+    const isMobile = width <= 500;
     const [loading, setLoading] = React.useState(false);
     const [rows, setRows] = React.useState(defaultRows);
     const [decklist, setDecklist] = React.useState(defaultDecklist);
@@ -91,7 +110,7 @@ export default function AppBody() {
     };
 
     return (
-        <div className={classes.root}>
+        <div>
             <ThemeProvider theme={theme}>
                 <ErrorSnackbar
                     open={open}
@@ -101,82 +120,23 @@ export default function AppBody() {
                     successmessage="Success !"
                     errormessage={errormessage}
                 />
-                <Grid container spacing={3}>
-                    <Grid item xs={12}>
-                        <Paper className={classes.paper}>
-                            <p>Paste your decklist in the field below then press Submit</p>
-                        </Paper>
-                    </Grid>
-                    <Grid item xs={4}>
-                        <Paper className={classes.paper}>
-                            <DecklistInput
-                                value={decklist}
-                                onChange={(event) => setDecklist(event.target.value)}
-                            />
-                        </Paper>
-                    </Grid>
-                    <Grid item xs={8}>
-                        <Grid
-                            container
-                            direction="column"
-                            justify="space-evenly"
-                            alignItems="stretch"
-                            spacing={3}
-                        >
-                            <Grid item xs={12}>
-                                <Paper className={classes.paper}>
-                                    <Box
-                                        style={{ height: '53.25vh' }}
-                                        display="flex"
-                                        alignItems="center"
-                                    >
-                                        <Grid
-                                            container
-                                            direction="column"
-                                            justify="center"
-                                            alignItems="center"
-                                        >
-                                            {loading ?
-                                                <Fade
-                                                    in={loading}
-                                                    style={{
-                                                        transitionDelay: '500ms',
-                                                    }}
-                                                    unmountOnExit
-                                                >
-                                                    <CircularProgress
-                                                        className={classes.circular}
-                                                        size={100}
-                                                        thickness={2}
-                                                    />
-                                                </Fade> :
-                                                <Fade
-                                                    in={!loading}
-                                                    unmountOnExit
-                                                    style={{
-                                                        transitionDelay: '500ms',
-                                                    }}
-                                                >
-                                                    <ResultTable
-                                                        rows={rows}
-                                                    />
-                                                </Fade>
-                                            }
-                                        </Grid>
-                                    </Box>
-                                </Paper>
-                            </Grid>
-                            <Grid item xs={12}>
-                                <Paper className={classes.paper}>
-                                    <SubmitButton
-                                        onClick={handleClickSubmit}
-                                        disabled={loading}
-                                    />
-                                </Paper>
-                            </Grid>
-                        </Grid>
-                    </Grid>
-                </Grid>
+                { isMobile ?
+                    <MobileBody
+                        decklist={decklist}
+                        handleDecklistChange={(event) => setDecklist(event.target.value)}
+                        handleClickSubmit={handleClickSubmit}
+                        loading={loading}
+                        rows={rows}
+                    /> :
+                    <DesktopBody
+                        decklist={decklist}
+                        handleDecklistChange={(event) => setDecklist(event.target.value)}
+                        handleClickSubmit={handleClickSubmit}
+                        loading={loading}
+                        rows={rows}
+                    />
+
+                }
             </ThemeProvider>
         </div>
     );

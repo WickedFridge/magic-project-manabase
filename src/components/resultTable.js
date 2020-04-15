@@ -28,7 +28,17 @@ const StyledTableRow = withStyles((theme) => ({
     },
 }))(TableRow);
 
-const useStyles = makeStyles({
+const useStylesMobile = makeStyles({
+    table: {
+        maxWidth: '100%',
+        maxHeight: '80vh',
+    },
+    row: {
+        maxHeight: '10px',
+    },
+});
+
+const useStylesDesktop = makeStyles({
     table: {
         maxWidth: '70%',
         maxHeight: 400,
@@ -41,7 +51,7 @@ const useStyles = makeStyles({
 const getBackgroundColor = (value) => {
     let backgroundColor;
     const val = parseInt(value);
-    if (val < 50) {
+    if (val < 60) {
         return { backgroundColor : red[800] };
     }
     [
@@ -63,7 +73,11 @@ const getBackgroundColor = (value) => {
 };
 
 export default function ResultTable(props) {
-    const classes = useStyles();
+    const desktopClasses = useStylesDesktop();
+    const mobileClasses = useStylesMobile();
+    const classes = props.isMobile
+        ? mobileClasses
+        : desktopClasses;
 
     return (
         <TableContainer className={classes.table} component={Paper}>
