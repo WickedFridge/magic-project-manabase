@@ -12,6 +12,7 @@ import {green} from "@material-ui/core/colors";
 import XSlider from "../xSlider";
 
 
+
 const useStyles = makeStyles((theme) => ({
     root: {
         maxWidth: '75vw',

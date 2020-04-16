@@ -5,6 +5,7 @@ import {
 } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import { green, cyan } from '@material-ui/core/colors';
+import { defaultDecklist } from "../data/defaultInputs";
 
 const CssTextField = withStyles({
     root: {
@@ -67,6 +68,7 @@ export default function DecklistInput(props) {
                 InputLabelProps={{
                     className: classes.input
                 }}
+                placeholder={defaultDecklist}
             />
         </form>
     );
