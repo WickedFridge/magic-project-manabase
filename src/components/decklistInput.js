@@ -5,6 +5,7 @@ import {
 } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import { green, cyan } from '@material-ui/core/colors';
+import { defaultDecklist } from "../data/defaultInputs";
 
 const CssTextField = withStyles({
     root: {
@@ -45,6 +46,9 @@ const useStyles = makeStyles((theme) => ({
 
 export default function DecklistInput(props) {
     const classes = useStyles();
+    const maxRows = props.isMobile
+        ? 30
+        : 28;
 
     return (
         <form className={classes.root} noValidate>
@@ -57,13 +61,14 @@ export default function DecklistInput(props) {
                 value={props.value}
                 onChange={props.onChange}
                 color="secondary"
-                rows={28}
+                rows={maxRows}
                 InputProps={{
                     className: classes.input
                 }}
                 InputLabelProps={{
                     className: classes.input
                 }}
+                placeholder={defaultDecklist}
             />
         </form>
     );

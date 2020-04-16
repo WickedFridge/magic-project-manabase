@@ -13,9 +13,9 @@ app.use(cors());
 app.use(bodyParser.json({ limit: '50mb' }));
 
 app.post('/analyze', async (req, res) => {
-    const decklist = req.body.deck;
+    const { deck, xValue } = req.body;
     try {
-        const result = await analyzeDecklist(decklist);
+        const result = await analyzeDecklist(deck, xValue);
         return res.json(result);
     } catch (e) {
         logger.error(e);

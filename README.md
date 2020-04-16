@@ -18,15 +18,17 @@ It has been started by Charles Wickham in February 2020.
         - mana
             - [x] handle ravlands
             - [ ] handle phyrexian mana
+            - [x] handle colorless mana
             - [x] handle hybrid mana
             - [x] handle fetchlands
             - [x] handle checklands
         - modal spells
             - [x] handle splitcards
-            - [ ] handle evoke
-            - [ ] handle escape
+            - [x] handle alternate costs
+            - [x] handle escape
             - [ ] handle X spells
     - front
+        - [ ] mobile overlay
         - [ ] nice recap graph
         - [ ] mean / median / percentiles
         - [ ] navbar
@@ -47,8 +49,16 @@ It has been started by Charles Wickham in February 2020.
 
 ## Usage
 
+### Prerequisites
+As this project relies on Firebase, you need to install it on your local environment in order to start the backend.
+[See more about installing firebase.](https://firebase.google.com/docs/cli)
+```
+npm install -g firebase-tools
+```
+
 ### Setup
 ```
+npm run start
 cd functions/
 npm run serve
 ```
@@ -63,6 +73,7 @@ npm run serve
         "2 Mountain",
         "1 Frilled Mystic",
         "2 Growth Spiral"
-    ]
+    ],
+    "xValue": 2
 }
 ```

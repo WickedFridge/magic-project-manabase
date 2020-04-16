@@ -35,13 +35,6 @@ function isCheckLand(text) {
 }
 
 function evaluateEtb(text) {
-    const basicEtbTapped = RegExp('(enters|onto) the battlefield tapped').test(text);
-    if (!basicEtbTapped) {
-        return { etbTapped: () => false };
-    }
-    if (isRavland(text)) {
-        return { etbTapped: () => false, ravland: true };
-    }
     const fetchlandData = isFetchland(text);
     if (isFetchland(text)) {
         const wouldEtb = fetchlandData.includes('tapped');
@@ -49,6 +42,13 @@ function evaluateEtb(text) {
             return { etbTapped: (lands) => lands.length < 4, fetchland: fetchlandData };
         }
         return { etbTapped: () => wouldEtb, fetchland: fetchlandData };
+    }
+    const basicEtbTapped = RegExp('(enters|onto) the battlefield tapped').test(text);
+    if (!basicEtbTapped) {
+        return { etbTapped: () => false };
+    }
+    if (isRavland(text)) {
+        return { etbTapped: () => false, ravland: true };
     }
     const checkLands = isCheckLand(text);
     if (checkLands) {
