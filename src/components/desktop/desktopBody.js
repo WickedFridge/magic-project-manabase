@@ -9,7 +9,7 @@ import SubmitButton from "./submitButton";
 import React from "react";
 import {makeStyles} from "@material-ui/core/styles";
 import {green} from "@material-ui/core/colors";
-import XSlider from "./xSlider";
+import XSlider from "../xSlider";
 
 
 const useStyles = makeStyles((theme) => ({

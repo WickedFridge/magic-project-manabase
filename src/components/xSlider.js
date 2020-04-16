@@ -7,9 +7,6 @@ const useStyles = makeStyles({
     root: {
         width: 200,
     },
-    rail: {
-        color: 'green',
-    },
 });
 
 export default function XSlider(props) {
@@ -17,9 +14,6 @@ export default function XSlider(props) {
 
     return (
         <div className={classes.root}>
-            <Typography id="discrete-slider" gutterBottom>
-                X Value
-            </Typography>
             <Slider
                 defaultValue={2}
                 aria-labelledby="discrete-slider"
@@ -31,6 +25,9 @@ export default function XSlider(props) {
                 value={props.value}
                 onChange={props.handleChange}
             />
+            <Typography id="discrete-slider" gutterBottom>
+                X Value
+            </Typography>
         </div>
     );
 }

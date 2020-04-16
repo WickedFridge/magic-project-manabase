@@ -9,8 +9,9 @@ import Fade from "@material-ui/core/Fade";
 import {CircularProgress} from "@material-ui/core";
 import ResultTable from "../resultTable";
 import Paper from "@material-ui/core/Paper";
-import MobileSubmitButton from "./mobileSubmitButton";
+import MobileSubmitActions from "./mobileSubmitActions";
 import SubmitButton from "../desktop/submitButton";
+import XSlider from "../xSlider";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -60,9 +61,11 @@ export default function MobileBody (props) {
                         value={props.decklist}
                         onChange={props.handleDecklistChange}
                     />
-                    <MobileSubmitButton
+                    <MobileSubmitActions
                         onClick={handleClickSubmit(props.handleClickSubmit)}
                         disabled={props.loading}
+                        xValue={props.xValue}
+                        handleChangeXValue={props.handleChangeXValue}
                     />
                 </div>
                 <div className={classes.slide2}>

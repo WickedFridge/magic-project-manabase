@@ -131,8 +131,8 @@ export default function AppBody() {
                         handleClickSubmit={handleClickSubmit}
                         loading={loading}
                         rows={rows}
-                        // xValue={xValue}
-                        // handleChangeXValue={handleChangeXValue}
+                        xValue={xValue}
+                        handleChangeXValue={handleChangeXValue}
                     /> :
                     <DesktopBody
                         decklist={decklist}
