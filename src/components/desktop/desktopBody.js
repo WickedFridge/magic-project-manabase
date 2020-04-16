@@ -9,6 +9,7 @@ import SubmitButton from "./submitButton";
 import React from "react";
 import {makeStyles} from "@material-ui/core/styles";
 import {green} from "@material-ui/core/colors";
+import XSlider from "./xSlider";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -100,10 +101,20 @@ export default function DesktopBody(props) {
                         </Grid>
                         <Grid item xs={12}>
                             <Paper className={classes.paper}>
-                                <SubmitButton
-                                    onClick={props.handleClickSubmit}
-                                    disabled={props.loading}
-                                />
+                                <Grid container justify="center" spacing={4}>
+                                    <Grid item>
+                                        <XSlider
+                                            value={props.xValue}
+                                            handleChange={props.handleChangeXValue}
+                                        />
+                                    </Grid>
+                                    <Grid item>
+                                        <SubmitButton
+                                            onClick={props.handleClickSubmit}
+                                            disabled={props.loading}
+                                        />
+                                    </Grid>
+                                </Grid>
                             </Paper>
                         </Grid>
                     </Grid>

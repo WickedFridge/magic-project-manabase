@@ -70,13 +70,14 @@ export default function AppBody() {
     const [open, setOpen] = React.useState(false);
     const [querysuccess, setQuerysuccess] = React.useState(true);
     const [errormessage, setErrormessage] = React.useState(true);
+    const [xValue, setXValue] = React.useState(2);
 
     const handleClickSubmit = () => {
         setLoading(true);
         const deck = decklist.split('\n')
             .filter(e => !!e && e !== 'Sideboard' && e !== 'Deck')
             .map(e => e.split(' (')[0]);
-        const data = { deck, xValue: 2 };
+        const data = { deck, xValue };
         console.log(data);
         axios({
             method: 'post',
@@ -105,8 +106,11 @@ export default function AppBody() {
         if (reason === 'clickaway') {
             return;
         }
-
         setOpen(false);
+    };
+
+    const handleChangeXValue = (event, newValue) => {
+        setXValue(newValue);
     };
 
     return (
@@ -127,6 +131,8 @@ export default function AppBody() {
                         handleClickSubmit={handleClickSubmit}
                         loading={loading}
                         rows={rows}
+                        // xValue={xValue}
+                        // handleChangeXValue={handleChangeXValue}
                     /> :
                     <DesktopBody
                         decklist={decklist}
@@ -134,6 +140,8 @@ export default function AppBody() {
                         handleClickSubmit={handleClickSubmit}
                         loading={loading}
                         rows={rows}
+                        xValue={xValue}
+                        handleChangeXValue={handleChangeXValue}
                     />
 
                 }
