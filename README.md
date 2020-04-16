@@ -73,6 +73,7 @@ npm run serve
         "2 Mountain",
         "1 Frilled Mystic",
         "2 Growth Spiral"
-    ]
+    ],
+    "xValue": 2
 }
 ```

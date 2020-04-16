@@ -76,7 +76,7 @@ export default function AppBody() {
         const deck = decklist.split('\n')
             .filter(e => !!e && e !== 'Sideboard' && e !== 'Deck')
             .map(e => e.split(' (')[0]);
-        const data = { deck };
+        const data = { deck, xValue: 2 };
         console.log(data);
         axios({
             method: 'post',

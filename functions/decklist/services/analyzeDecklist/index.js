@@ -16,10 +16,19 @@ function splitCountAndName(input) {
     return [count, name];
 }
 
+function handleXSpell(card, xValue) {
+    if (!card.cost.X) {
+        return;
+    }
+    card.cost.generic = card.cost.X * xValue;
+    card.cmc += card.cost.X * xValue;
+    delete card.cost.X;
+}
+
 function handleFetchlands(lands) {
     const fetchs = new Set(lands.filter(land => land.fetchland));
-    fetchs.forEach((fetch, i) => {
-        logger.info(`fetch ${i}: ${fetch.name}`);
+    fetchs.forEach(fetch => {
+        logger.info(`fetch : ${fetch.name}`);
         const landTypes = ['Basic', 'Plains', 'Island', 'Swamp', 'Forest', 'Mountain'];
         const targets = fetch.fetchland.filter(prop => landTypes.includes(prop));
         const colors = [];
@@ -32,7 +41,7 @@ function handleFetchlands(lands) {
     })
 }
 
-async function createDeck(decklist) {
+async function createDeck(decklist, xValue) {
     const cardCounts = {};
     const spells = [];
     const lands = [];
@@ -53,6 +62,7 @@ async function createDeck(decklist) {
             }
             else if (!hasTypeLand(cardInfo)) {
                 // handle regular spells
+                handleXSpell(cardInfo, xValue);
                 spells.push(cardInfo);
             } else {
                 // handle lands
@@ -66,9 +76,9 @@ async function createDeck(decklist) {
 }
 
 
-async function analyzeDecklist(decklist) {
+async function analyzeDecklist(decklist, xValue = 2) {
     const t0 = performance.now();
-    const [lands, spells] = await createDeck(decklist);
+    const [lands, spells] = await createDeck(decklist, xValue);
     // logger.info(lands);
     // logger.info(spells);
     logger.info('deck created !');
@@ -83,8 +93,6 @@ async function analyzeDecklist(decklist) {
             nok: 0,
         };
     });
-
-
 
     const callback = (data, spells) => (comb) => {
         spells.forEach(spell => {
