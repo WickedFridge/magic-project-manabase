@@ -75,7 +75,7 @@ export default function AppBody() {
     const handleClickSubmit = () => {
         setLoading(true);
         const deck = decklist.split('\n')
-            .filter(e => !!e && e !== 'Sideboard' && e !== 'Deck')
+            .filter(e => !!e && !['Sideboard', 'Deck', 'Companion'].includes(e))
             .map(e => e.split(' (')[0]);
         const data = { deck, xValue };
         console.log(data);
