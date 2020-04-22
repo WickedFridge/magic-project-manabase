@@ -3,7 +3,6 @@ import {makeStyles, withStyles} from '@material-ui/core/styles';
 import Fab from '@material-ui/core/Fab';
 import CheckIcon from '@material-ui/icons/Check';
 import {green, orange, yellow} from "@material-ui/core/colors";
-import Button from "@material-ui/core/Button";
 import XSlider from "../xSlider";
 import Grid from "@material-ui/core/Grid";
 

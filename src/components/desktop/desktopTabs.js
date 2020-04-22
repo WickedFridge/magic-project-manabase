@@ -6,7 +6,8 @@ import Tab from '@material-ui/core/Tab';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-import {green} from "@material-ui/core/colors";
+import HelpIcon from "@material-ui/icons/Help";
+import PlaylistAddCheckIcon from "@material-ui/icons/PlaylistAddCheck";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -14,8 +15,10 @@ const useStyles = makeStyles((theme) => ({
     },
     paper: {
         textAlign: 'center',
-        color: green[700],
         backgroundColor: '#1b222b',
+    },
+    indicator: {
+        background: 'darkorange',
     },
 }));
 
@@ -56,12 +59,11 @@ export default function DesktopTabs(props) {
                 <Tabs
                     value={value}
                     onChange={handleChange}
-                    indicatorColor="primary"
-                    textColor="primary"
                     centered
+                    classes={{ indicator: classes.indicator }}
                 >
-                    <Tab label="Analyze" />
-                    <Tab label="Help" />
+                    <Tab icon={<PlaylistAddCheckIcon/>} label="Analyze" />
+                    <Tab icon={<HelpIcon/>}  label="Help" />
                 </Tabs>
             </Paper>
             <TabPanel value={value} index={0}>

@@ -13,8 +13,6 @@ import XSlider from "../xSlider";
 import DesktopTabs from "./desktopTabs";
 import HelpText from "../helpText";
 
-
-
 const useStyles = makeStyles((theme) => ({
     root: {
         maxWidth: '75vw',
@@ -22,7 +20,6 @@ const useStyles = makeStyles((theme) => ({
     paper: {
         padding: theme.spacing(2),
         textAlign: 'center',
-        color: green[700],
         backgroundColor: '#1b222b',
     },
     results: {
