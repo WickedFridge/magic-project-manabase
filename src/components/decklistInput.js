@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
 export default function DecklistInput(props) {
     const classes = useStyles();
     const maxRows = props.isMobile
-        ? 30
+        ? 29
         : 28;
 
     return (
