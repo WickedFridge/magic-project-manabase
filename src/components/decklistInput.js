@@ -4,8 +4,8 @@ import {
     makeStyles,
 } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
-import { green, cyan } from '@material-ui/core/colors';
 import { defaultDecklist } from "../data/defaultInputs";
+import {useCurrentHeight} from "../utils/width";
 
 const CssTextField = withStyles({
     root: {
@@ -44,10 +44,17 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
+function getMobileRow(height) {
+    // this formula was handmade calculated
+    return Math.round((height-242.4)/17.6);
+}
+
 export default function DecklistInput(props) {
     const classes = useStyles();
+    let height = useCurrentHeight();
+
     const maxRows = props.isMobile
-        ? 29
+        ? getMobileRow(height)
         : 28;
 
     return (

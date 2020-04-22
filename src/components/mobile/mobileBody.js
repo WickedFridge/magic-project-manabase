@@ -1,5 +1,4 @@
 import React from 'react';
-import SwipeableViews from 'react-swipeable-views';
 import {makeStyles} from "@material-ui/core/styles";
 import {green} from "@material-ui/core/colors";
 import DecklistInput from "../decklistInput";
@@ -8,26 +7,13 @@ import Grid from "@material-ui/core/Grid";
 import Fade from "@material-ui/core/Fade";
 import {CircularProgress} from "@material-ui/core";
 import ResultTable from "../resultTable";
-import Paper from "@material-ui/core/Paper";
 import MobileSubmitActions from "./mobileSubmitActions";
-import EqualizerIcon from '@material-ui/icons/Equalizer';
-import PlaylistAddCheckIcon from '@material-ui/icons/PlaylistAddCheck';import HelpIcon from '@material-ui/icons/Help';
 import HelpText from "../helpText";
-import Tabs from "@material-ui/core/Tabs";
-import Tab from '@material-ui/core/Tab';
+import MobileTabs from "./mobileTabs";
 
 const useStyles = makeStyles((theme) => ({
     root: {
         width: '100vw',
-    },
-    slide1: {
-        padding: 10,
-    },
-    slide2: {
-        padding: '5px 25px',
-    },
-    slide3: {
-        // padding: '5px 25px',
     },
     menu: {
         background: '#323a46',
@@ -53,14 +39,6 @@ export default function MobileBody (props) {
     const classes = useStyles();
     const [index, setIndex] = React.useState(1);
 
-    const handleChange = (event, newIndex) => {
-        setIndex(newIndex);
-    };
-
-    const handleChangeIndex = index => {
-        setIndex(index)
-    };
-
     const handleClickSubmit = callback => () => {
         setIndex(1);
         callback();
@@ -68,44 +46,33 @@ export default function MobileBody (props) {
 
     return (
         <div className={classes.root}>
-            <Paper square className={classes.menu}>
-                <Tabs
-                    value={index}
-                    onChange={handleChange}
-                    variant="fullWidth"
-                    classes={{ indicator: classes.indicator}}
-                >
-                    <Tab icon={<HelpIcon/>} aria-label="help" classes={{ selected: classes.selected }} />
-                    <Tab icon={<PlaylistAddCheckIcon fontSize="large"/>} aria-label="input" classes={{ selected: classes.selected }} />
-                    <Tab icon={<EqualizerIcon/>} aria-label="numbers" classes={{ selected: classes.selected }} />
-                </Tabs>
-            </Paper>
-            <SwipeableViews
+            <MobileTabs
                 index={index}
-                onChangeIndex={handleChangeIndex}
-            >
-                <div className={classes.slide1}>
+                setIndex={setIndex}
+                help={
                     <Box
                         className={classes.background}
                         textAlign="left"
                     >
                         <HelpText/>
                     </Box>
-                </div>
-                <div className={classes.slide2}>
-                    <DecklistInput
-                        isMobile
-                        value={props.decklist}
-                        onChange={props.handleDecklistChange}
-                    />
-                    <MobileSubmitActions
-                        onClick={handleClickSubmit(props.handleClickSubmit)}
-                        disabled={props.loading}
-                        xValue={props.xValue}
-                        handleChangeXValue={props.handleChangeXValue}
-                    />
-                </div>
-                <div className={classes.slide3}>
+                }
+                main={
+                    <div>
+                        <DecklistInput
+                            isMobile
+                            value={props.decklist}
+                            onChange={props.handleDecklistChange}
+                        />
+                        <MobileSubmitActions
+                            onClick={handleClickSubmit(props.handleClickSubmit)}
+                            disabled={props.loading}
+                            xValue={props.xValue}
+                            handleChangeXValue={props.handleChangeXValue}
+                        />
+                    </div>
+                }
+                results={
                     <Box
                         className={classes.results}
                         display="flex"
@@ -146,8 +113,8 @@ export default function MobileBody (props) {
                             }
                         </Grid>
                     </Box>
-                </div>
-            </SwipeableViews>
+                }
+            />
         </div>
     )
 }
