@@ -13,40 +13,11 @@ body {
   color: white;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header > h1 {
-  margin: 0.5em;
-}
-
-.App-header > h4 > a {
+a {
   color: orange;
-  margin: 0.5em;
   text-decoration: none;
 }
 
-.App-header > h4 > a:hover {
+a:hover {
   color: #eaeb06;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
 }
