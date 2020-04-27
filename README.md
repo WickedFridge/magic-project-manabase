@@ -22,17 +22,18 @@ It has been started by Charles Wickham in February 2020.
             - [x] handle hybrid mana
             - [x] handle fetchlands
             - [x] handle checklands
+            - [x] handle fastlands
         - modal spells
             - [x] handle splitcards
             - [x] handle alternate costs
             - [x] handle escape
-            - [ ] handle X spells
+            - [x] handle X spells
     - front
-        - [ ] mobile overlay
+        - [x] mobile overlay
         - [ ] nice recap graph
         - [ ] mean / median / percentiles
         - [ ] navbar
-            - [ ] chose X spell
+            - [x] chose X spell
             - [ ] %'s of playing spells at N+X
         - [ ] nice sideboard input
         

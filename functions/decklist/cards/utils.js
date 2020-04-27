@@ -9,6 +9,10 @@ function hasTypeLand(card) {
     return card.type.includes('Land');
 }
 
+function isFastland(text) {
+    return RegExp(/enters the battlefield tapped unless you control two or fewer other lands./).test(text);
+}
+
 function isFetchland(text) {
     const test = /Search your library for an? (basic land|Plains|Island|Swamp|Mountain|Forest)(?: or )?(Plains|Island|Swamp|Mountain|Forest)? card, put it onto the battlefield\s?(tapped)?, then shuffle your library\.(?: Then if you control )?(four or more)?(?: lands, untap that land.)?/;
     const match = text.match(test);
@@ -47,6 +51,9 @@ function evaluateEtb(text) {
     if (!basicEtbTapped) {
         return { etbTapped: () => false };
     }
+    if (isFastland(text)) {
+        return { etbTapped: (lands, cmc) => lands.length > 3 && cmc > 3 };
+    }
     if (isRavland(text)) {
         return { etbTapped: () => false, ravland: true };
     }
@@ -79,8 +86,8 @@ function hasCorrectColors(lands, spell) {
     return hybridColors.some(findLandforEachColor)
 }
 
-function hasUntappedLand(lands) {
-    return lands.some(l => l.etbTapped(lands) === false);
+function hasUntappedLand(lands, spell) {
+    return lands.some(l => l.etbTapped(lands, spell.cmc) === false);
 }
 
 function findCorrectLand(lands, color) {
@@ -105,9 +112,10 @@ function findCorrectLand(lands, color) {
  * return true if it can be paid
  * @param lands
  * @param cost
+ * @param cmc
  * @returns {boolean}
  */
-function evaluateCost(lands, cost) {
+function evaluateCost(lands, cost, cmc) {
     const colorsToFind = copy(cost);
     const remainingLands = lands.map(l => copy(l))
         .sort((land1, land2) => land1.colors.length - land2.colors.length);
@@ -123,14 +131,14 @@ function evaluateCost(lands, cost) {
             colorsToFind[color]--;
         }
     });
-    return Object.values(colorsToFind).every(l => l === 0) && hasUntappedLand(usedLands);
+    return Object.values(colorsToFind).every(l => l === 0) && hasUntappedLand(usedLands, cmc);
 }
 
 function canPlaySpellOnCurve(lands, spell) {
     if (!hasCorrectColors(lands, spell)) {
         return false;
     }
-    if (!hasUntappedLand(lands)) {
+    if (!hasUntappedLand(lands, spell)) {
         return false;
     }
 
@@ -138,7 +146,7 @@ function canPlaySpellOnCurve(lands, spell) {
     if (comb.length === 0) {
         return false;
     }
-    return comb.some(comb => evaluateCost(comb, spell.cost));
+    return comb.some(comb => evaluateCost(comb, spell.cost, spell.cmc));
 }
 
 function cachedCanPlaySpellOnCurve(lands, spell) {
@@ -184,5 +192,6 @@ module.exports = {
     findCorrectLand,
     isCheckLand,
     isFetchland,
+    isFastland,
     evaluateEtb,
 };

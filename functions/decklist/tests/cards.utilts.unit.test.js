@@ -1,9 +1,10 @@
-const { cachedCanPlaySpellOnCurve, hasCorrectColors, isCheckLand, isFetchland, evaluateEtb } = require('../cards/utils');
+const { cachedCanPlaySpellOnCurve, hasCorrectColors, isCheckLand, isFetchland, isFastland, evaluateEtb } = require('../cards/utils');
 const { handleFetchlands } = require('../services/analyzeDecklist');
 const { forest, island, mountain, swamp, simicGuildGate, giantGrowth, growthSpiral,
         mockGrowthSpiral, mockTempleSimic, mockIsland, mockTempleGolgari, mockUro,
         frilledMystic, deathRite, saheeli, volcanicIsland, irrigatedFarmland, glacialFortress,
         meddlingMage, marshFlats, bloodstainedMire, mistyRainforest, prismaticVista, evolvingWilds, fabledPassage,
+        bloomingMarsh, maelstromPulse,
 } = require('../cards');
 
 describe('has Correct Colors unit testing', () => {
@@ -38,7 +39,7 @@ describe('has Correct Colors unit testing', () => {
     });
 });
 
-const testCanPlayOnCurve = ({ text, lands, spell, outcome }) => () => {
+const testCanPlayOnCurve = ({ lands, spell, outcome }) => () => {
     expect(cachedCanPlaySpellOnCurve(lands, spell)).toBe(outcome);
 };
 
@@ -235,7 +236,6 @@ describe('isCheckland testing', () => {
     });
 });
 
-
 describe('isFetchland testing', () => {
     it('No Fetchland', () => {
         const land = {
@@ -340,4 +340,36 @@ describe('handle Fetchland', () => {
         handleFetchlands(lands);
         expect(land.colors).toEqual(['B', 'G']);
     });
+});
+
+describe('fastland testing', () => {
+    it('Blooming marsh', () => {
+        const land = bloomingMarsh(0);
+        expect(isFastland(land.text)).toBe(true);
+    });
+    it('can play giant growth', () => {
+        const landsUntap = [bloomingMarsh(0), bloomingMarsh(1), bloomingMarsh(2)];
+        const landsTap = [simicGuildGate(0), simicGuildGate(1), bloomingMarsh(0), bloomingMarsh(1)];
+        const land = {
+            text: 'Blooming Marsh enters the battlefield tapped unless you control two or fewer other lands.\n{T}: Add {B} or {G}.',
+        };
+        expect(evaluateEtb(land.text).etbTapped(landsTap, 4)).toBe(true);
+        expect(evaluateEtb(land.text).etbTapped(landsTap, 2)).toBe(false);
+        expect(evaluateEtb(land.text).etbTapped(landsUntap, 3)).toBe(false);
+    });
+    it('can play giantGrowth with 3 fastlands', testCanPlayOnCurve({
+        lands: [bloomingMarsh(0), bloomingMarsh(1), bloomingMarsh(2)],
+        spell: giantGrowth(0),
+        outcome: true,
+    }));
+    it('can not play frilled Mystic with 2 fastlands and 2 guildgate', testCanPlayOnCurve({
+        lands: [simicGuildGate(0), simicGuildGate(1), bloomingMarsh(0), bloomingMarsh(1)],
+        spell: frilledMystic(0),
+        outcome: false,
+    }));
+    it('can play Maelstrom Pulse with 3 fastlands', testCanPlayOnCurve({
+        lands: [bloomingMarsh(0), bloomingMarsh(1), bloomingMarsh(2)],
+        spell: maelstromPulse(0),
+        outcome: true,
+    }));
 });
