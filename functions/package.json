@@ -13,9 +13,7 @@
     "node": "10"
   },
   "dependencies": {
-    "async-parallel": "^1.2.3",
     "axios": "^0.19.2",
-    "bluebird": "^3.7.2",
     "body-parser": "^1.19.0",
     "config": "^3.3.0",
     "cors": "^2.8.5",
