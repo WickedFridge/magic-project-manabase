@@ -30,6 +30,10 @@ It has been started by Charles Wickham in February 2020.
             - [x] handle X spells
     - front
         - [x] mobile overlay
+        - [ ] non-conditional probability
+        - [ ] add contact page
+        - [ ] rework placeholder
+            - [x] basic replacement
         - [ ] nice recap graph
         - [ ] mean / median / percentiles
         - [ ] navbar
@@ -39,7 +43,7 @@ It has been started by Charles Wickham in February 2020.
         
 - performance upgrades
     - [ ] handle colorless spells
-    - [ ] use reddis for the cache
+    - [x] use reddis for the cache
     - [ ] parallelization
         - [x] try parallel.js
         - [x] try multi-services archi
@@ -47,6 +51,7 @@ It has been started by Charles Wickham in February 2020.
     - architecture refactoring
         - [ ] precalculate / cache "generic combinations"
         - [x] "on the go calculation"
+    - search each CMC only once
 
 ## Usage
 
