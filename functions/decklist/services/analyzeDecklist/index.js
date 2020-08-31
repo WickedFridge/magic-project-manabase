@@ -41,6 +41,12 @@ function handleFetchlands(lands) {
     })
 }
 
+function handleNotManaProducingLands(lands) {
+    lands.forEach(land => {
+        land.producesMana = land.colors.length > 0;
+    })
+}
+
 async function createDeck(decklist, xValue) {
     const cardCounts = {};
     const spells = [];
@@ -72,6 +78,7 @@ async function createDeck(decklist, xValue) {
             }
         });
     handleFetchlands(lands);
+    handleNotManaProducingLands(lands);
     return [lands, spells]
 }
 
@@ -97,12 +104,17 @@ async function analyzeDecklist(decklist, xValue = 2) {
     const callback = (data, spells) => (comb) => {
         spells.forEach(spell => {
             const keepable = (c) => c.length >= Math.max(spell.cmc, 2) && c.length <= Math.max(spell.cmc, 5);
-            if (keepable(comb)) {
-                if (cachedCanPlaySpellOnCurve(comb, spell)) {
-                    data[spell.name].ok ++;
-                } else {
-                    data[spell.name].nok ++;
-                }
+            if (!keepable(comb)) {
+                return;
+            }
+            if (!comb.every(land => land.producesMana)) {
+                data[spell.name].nok ++;
+                return;
+            }
+            if (cachedCanPlaySpellOnCurve(comb, spell)) {
+                data[spell.name].ok ++;
+            } else {
+                data[spell.name].nok ++;
             }
         });
     };

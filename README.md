@@ -13,6 +13,8 @@ It has been started by Charles Wickham in February 2020.
 - deployment
     - [x] expose cloud function
     - [x] expose basic front
+- known bugs
+    - [ ] X amounts in cycling isn't working
 - features
     - backEnd
         - mana

@@ -21,6 +21,13 @@ const swamp = (id) => ({
     etbTapped: () => false
 });
 
+const plains = (id) => ({
+    name: `Plains ${id}`,
+    type: ['Basic', 'Land', '—', 'Plains'],
+    colors: ['W'],
+    etbTapped: () => false
+});
+
 const mountain = (id) => ({
     name: `Mountain ${id}`,
     type: ['Basic', 'Land', '—', 'Mountain'],
@@ -256,6 +263,7 @@ module.exports = {
     island,
     mountain,
     swamp,
+    plains,
     volcanicIsland,
     simicGuildGate,
     fabledPassage,

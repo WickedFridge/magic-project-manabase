@@ -1,6 +1,6 @@
 const { cachedCanPlaySpellOnCurve, hasCorrectColors, isCheckLand, isFetchland, isFastland, evaluateEtb } = require('../cards/utils');
 const { handleFetchlands } = require('../services/analyzeDecklist');
-const { forest, island, mountain, swamp, simicGuildGate, giantGrowth, growthSpiral,
+const { forest, island, mountain, swamp, plains, simicGuildGate, giantGrowth, growthSpiral,
         mockGrowthSpiral, mockTempleSimic, mockIsland, mockTempleGolgari, mockUro,
         frilledMystic, deathRite, saheeli, volcanicIsland, irrigatedFarmland, glacialFortress,
         meddlingMage, marshFlats, bloodstainedMire, mistyRainforest, prismaticVista, evolvingWilds, fabledPassage,
@@ -334,13 +334,45 @@ describe('handle Fetchland', () => {
     });
 
     it('Evolving Wilds', () => {
-        const land = prismaticVista(0);
+        const land = evolvingWilds(0);
         land.fetchland = isFetchland(land.text);
         const lands = [swamp(0), forest(0), volcanicIsland(0), land];
         handleFetchlands(lands);
         expect(land.colors).toEqual(['B', 'G']);
     });
+
+    it('No Target', () => {
+        const land = prismaticVista(0);
+        land.fetchland = isFetchland(land.text);
+        const lands = [evolvingWilds(0), bloodstainedMire(0), land];
+        handleFetchlands(lands);
+        expect(land.colors).toEqual([]);
+    });
 });
+
+
+describe('can play spell testing - fetchlands', () => {
+    it('can play Meddling Mage 1', () => {
+        const fetch = marshFlats(0);
+        fetch.fetchland = isFetchland(fetch.text);
+        fetch.etbTapped = evaluateEtb(fetch.text).etbTapped;
+        const lands = [fetch, island(0), plains(0)];
+        handleFetchlands(lands);
+        const landsInHand = [fetch, island(0)];
+        expect(cachedCanPlaySpellOnCurve(landsInHand, meddlingMage(0))).toBe(true);
+    });
+
+    it('can not play Meddling Mage 1', () => {
+        const fetch = marshFlats(0);
+        fetch.fetchland = isFetchland(fetch.text);
+        fetch.etbTapped = evaluateEtb(fetch.text).etbTapped;
+        const lands = [fetch, island(0), swamp(0)];
+        handleFetchlands(lands);
+        const landsInHand = [fetch, island(0)];
+        expect(cachedCanPlaySpellOnCurve(landsInHand, meddlingMage(0))).toBe(false);
+    });
+});
+
 
 describe('fastland testing', () => {
     it('Blooming marsh', () => {
