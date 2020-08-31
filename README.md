@@ -13,6 +13,8 @@ It has been started by Charles Wickham in February 2020.
 - deployment
     - [x] expose cloud function
     - [x] expose basic front
+- known bugs
+    - [ ] X amounts in cycling isn't working
 - features
     - backEnd
         - mana
@@ -22,23 +24,28 @@ It has been started by Charles Wickham in February 2020.
             - [x] handle hybrid mana
             - [x] handle fetchlands
             - [x] handle checklands
+            - [x] handle fastlands
         - modal spells
             - [x] handle splitcards
             - [x] handle alternate costs
             - [x] handle escape
-            - [ ] handle X spells
+            - [x] handle X spells
     - front
-        - [ ] mobile overlay
+        - [x] mobile overlay
+        - [ ] non-conditional probability
+        - [ ] add contact page
+        - [ ] rework placeholder
+            - [x] basic replacement
         - [ ] nice recap graph
         - [ ] mean / median / percentiles
         - [ ] navbar
-            - [ ] chose X spell
+            - [x] chose X spell
             - [ ] %'s of playing spells at N+X
         - [ ] nice sideboard input
         
 - performance upgrades
     - [ ] handle colorless spells
-    - [ ] use reddis for the cache
+    - [x] use reddis for the cache
     - [ ] parallelization
         - [x] try parallel.js
         - [x] try multi-services archi
@@ -46,6 +53,7 @@ It has been started by Charles Wickham in February 2020.
     - architecture refactoring
         - [ ] precalculate / cache "generic combinations"
         - [x] "on the go calculation"
+    - search each CMC only once
 
 ## Usage
 

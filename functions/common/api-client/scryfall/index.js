@@ -64,17 +64,17 @@ class ScryfallApiClient extends AbstractApiClient {
                 method: `get`,
                 url: `/cards/search?q=!"${cardName}"`,
                 timeTrackerLabel: `scryfall`,
+                cacheKey: cardName,
             });
             const { name, mana_cost, cmc, colors, color_identity, type_line, oracle_text } = results.data[0];
             let { card_faces } = results.data[0];
             if (oracle_text) {
                 const escape = oracle_text.match(/(?:Escape—)((\{\w})+)/);
-                const alternateCost = oracle_text.match(/(\w+) ((\{\w})+) (?:\(You may cast this)/);
+                const alternateCost = oracle_text.match(/(\w+) ((\{\w})+) (?:\()/);
                 if (escape) {
                     card_faces = handleAlternateCost(results.data[0],'Escape', escape[1]);
                 }
                 if (alternateCost) {
-                    console.log(name);
                     card_faces = handleAlternateCost(results.data[0], alternateCost[1], alternateCost[2]);
                 }
             }

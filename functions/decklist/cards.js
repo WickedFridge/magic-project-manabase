@@ -21,6 +21,13 @@ const swamp = (id) => ({
     etbTapped: () => false
 });
 
+const plains = (id) => ({
+    name: `Plains ${id}`,
+    type: ['Basic', 'Land', '—', 'Plains'],
+    colors: ['W'],
+    etbTapped: () => false
+});
+
 const mountain = (id) => ({
     name: `Mountain ${id}`,
     type: ['Basic', 'Land', '—', 'Mountain'],
@@ -229,11 +236,34 @@ const meddlingMage = () => ({
     card_faces: undefined,
 });
 
+const bloomingMarsh = () => ({
+    etbTapped: (lands, cmc) => lands.length > 4 && cmc > 3,
+    name: 'Blooming Marsh',
+    cmc: 0,
+    colors: [ 'B', 'G' ],
+    type: [ 'Land' ],
+    text: 'Blooming Marsh enters the battlefield tapped unless you control two or fewer other lands.\n{T}: Add {B} or {G}.',
+    cost: {},
+    mana_cost: '',
+    card_faces: undefined,
+});
+
+const maelstromPulse = () => ({ name: 'Maelstrom Pulse',
+      cmc: 3,
+      colors: [ 'B', 'G' ],
+      type: [ 'Sorcery' ],
+      text: 'Destroy target nonland permanent and all other permanents with the same name as that permanent.',
+      cost: { generic: 1, B: 1, G: 1 },
+      mana_cost: '{1}{B}{G}',
+      card_faces: undefined,
+});
+
 module.exports = {
     forest,
     island,
     mountain,
     swamp,
+    plains,
     volcanicIsland,
     simicGuildGate,
     fabledPassage,
@@ -255,4 +285,6 @@ module.exports = {
     irrigatedFarmland,
     glacialFortress,
     meddlingMage,
+    bloomingMarsh,
+    maelstromPulse
 };

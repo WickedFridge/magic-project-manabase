@@ -99,11 +99,11 @@ class AbstractApiClient {
     async _axiosCall({ headers = {}, logLevel, errorLevels = {}, cacheTtl, ...axiosParams }) {
         let cacheKey = null;
         if (this.cache) {
-            cacheKey = generateCacheKey(axiosParams);
-            const cached = this.cache.get(cacheKey);
+            cacheKey = axiosParams.cacheKey || generateCacheKey(axiosParams);
+            const cached = await this.cache.get(cacheKey);
             if (cached) {
                 this.logger.debug(`Cache hit ${cacheKey}`);
-                return cached;
+                return JSON.parse(cached);
             }
             this.logger.debug(`Cache miss ${cacheKey}`);
         }
@@ -121,8 +121,7 @@ class AbstractApiClient {
             const response = await axios.request(params);
             // logSuccess(this.logger, params, response, logLevel || this.logLevel);
             if (cacheKey) {
-                this.logger.debug(`Cache set ${cacheKey}`);
-                this.cache.set(cacheKey, response.data, cacheTtl);
+                this.cache.set(cacheKey, JSON.stringify(response.data));
             }
             return response.data;
         } catch (err) {

@@ -153,7 +153,9 @@ function customLogger(tag = _loggerConfig.name) {
         transports: [
             new transports.Console({
                 prettyPrint: true,
-                format: consoleFormat(colorizedFormattedTag),
+                format: process.env.NODE_ENV === 'production'
+                    ? logFileFormat(colorizedFormattedTag)
+                    : consoleFormat(colorizedFormattedTag),
             }),
         ],
     };

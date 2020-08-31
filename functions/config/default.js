@@ -3,8 +3,8 @@ module.exports = {
         scryfall: {
             baseURL: 'https://api.scryfall.com',
             cacheClientConfig: {
-                type: 'memory',
-                defaultTtl: null,
+                type: 'redis',
+                // defaultTtl: null,
             },
         },
         spell: {
