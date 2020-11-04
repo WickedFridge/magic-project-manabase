@@ -6,12 +6,12 @@ import config from '../config';
 import ErrorSnackbar from "./ErrorSnackbar";
 import DesktopBody from "./desktop/desktopBody";
 import MobileBody from "./mobile/mobileBody";
-import { defaultResults } from "../data/defaultInputs";
+import {defaultDecklist, defaultResults} from "../data/defaultInputs";
 import { useCurrentWitdh } from "../utils/width";
 
 const createRows = (data) => Object.entries(data)
-    .map(([key, { ratio }]) => ({ key, ratio }))
-    .sort((s1, s2) => parseFloat(s1.ratio) - parseFloat(s2.ratio));
+    .map(([key, { p1, p2 }]) => ({ key, p1, p2 }))
+    .sort((s1, s2) => s1.p2 - s2.p2);
 
 const defaultRows = createRows(defaultResults);
 
@@ -26,7 +26,7 @@ export default function AppBody() {
     const isMobile = width <= 500;
     const [loading, setLoading] = React.useState(false);
     const [rows, setRows] = React.useState(defaultRows);
-    const [decklist, setDecklist] = React.useState('');
+    const [decklistInput, setDecklist] = React.useState('');
     const [open, setOpen] = React.useState(false);
     const [querysuccess, setQuerysuccess] = React.useState(true);
     const [errormessage, setErrormessage] = React.useState(true);
@@ -34,10 +34,26 @@ export default function AppBody() {
 
     const handleClickSubmit = () => {
         setLoading(true);
-        const deck = decklist.split('\n')
-            .filter(e => !!e && !['Sideboard', 'Deck', 'Companion'].includes(e))
-            .map(e => e.split(' (')[0]);
-        const data = { deck, xValue };
+
+        const decklist = {
+            companion: [],
+            commander: [],
+            deck: [],
+            sideboard: [],
+        };
+
+        const cleanDeck = decklistInput.split('\n')
+            .filter(e => !!e);
+        let currentCategory = 'deck';
+        cleanDeck.forEach(row => {
+            if (['Sideboard', 'Deck', 'Companion', 'Commander'].includes(row)) {
+                currentCategory = row.toLowerCase();
+            } else {
+                decklist[currentCategory].push(row.split(' (')[0]);
+            }
+        });
+
+        const data = { decklist, xValue };
         console.log(data);
         axios({
             method: 'post',
@@ -86,7 +102,7 @@ export default function AppBody() {
                 />
                 { isMobile ?
                     <MobileBody
-                        decklist={decklist}
+                        decklist={decklistInput}
                         handleDecklistChange={(event) => setDecklist(event.target.value)}
                         handleClickSubmit={handleClickSubmit}
                         loading={loading}
@@ -95,7 +111,7 @@ export default function AppBody() {
                         handleChangeXValue={handleChangeXValue}
                     /> :
                     <DesktopBody
-                        decklist={decklist}
+                        decklist={decklistInput}
                         handleDecklistChange={(event) => setDecklist(event.target.value)}
                         handleClickSubmit={handleClickSubmit}
                         loading={loading}

@@ -85,16 +85,18 @@ export default function ResultTable(props) {
                 <TableHead>
                     <TableRow>
                         <StyledTableCell align="left">Card</StyledTableCell>
-                        <StyledTableCell align="center">Ratio</StyledTableCell>
+                        <StyledTableCell align="center">P1</StyledTableCell>
+                        <StyledTableCell align="center">P2</StyledTableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody className={classes.data}>
                     {props.rows.map((row) => (
-                        <StyledTableRow className={classes.row} key={row.key} style={getBackgroundColor(row.ratio)}>
+                        <StyledTableRow className={classes.row} key={row.key} style={getBackgroundColor(row.p2)}>
                             <StyledTableCell className={classes.row} component="th" scope="row" align="left">
                                 {row.key}
                             </StyledTableCell>
-                            <StyledTableCell align="center">{row.ratio}</StyledTableCell>
+                            <StyledTableCell align="center">{`${row.p1.toFixed(2)}%`}</StyledTableCell>
+                            <StyledTableCell align="center">{`${row.p2.toFixed(2)}%`}</StyledTableCell>
                         </StyledTableRow>
                     ))}
                 </TableBody>

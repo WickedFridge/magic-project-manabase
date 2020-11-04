@@ -14,6 +14,7 @@ It has been started by Charles Wickham in February 2020.
     - [x] expose cloud function
     - [x] expose basic front
 - known bugs
+    - [ ] Lands in sideboard are counted as mana sources
     - [ ] X amounts in cycling isn't working
 - features
     - backEnd
@@ -27,14 +28,15 @@ It has been started by Charles Wickham in February 2020.
             - [x] handle fastlands
         - modal spells
             - [x] handle splitcards
+            - [ ] handle MDFC
             - [x] handle alternate costs
             - [x] handle escape
             - [x] handle X spells
     - front
         - [x] mobile overlay
-        - [ ] non-conditional probability
+        - [x] non-conditional probability
         - [ ] add contact page
-        - [ ] rework placeholder
+        - [x] rework placeholder
             - [x] basic replacement
         - [ ] nice recap graph
         - [ ] mean / median / percentiles
@@ -42,6 +44,7 @@ It has been started by Charles Wickham in February 2020.
             - [x] chose X spell
             - [ ] %'s of playing spells at N+X
         - [ ] nice sideboard input
+        - [ ] French version
         
 - performance upgrades
     - [ ] handle colorless spells
@@ -62,13 +65,22 @@ As this project relies on Firebase, you need to install it on your local environ
 [See more about installing firebase.](https://firebase.google.com/docs/cli)
 ```
 npm install -g firebase-tools
+firebase login
+```
+
+You also need Node version 10 to make the cloud function work.
+```
+nvm install 10
+nvm use 10y
 ```
 
 ### Setup
 ```
-npm run start
+yarn
+yarn start
 cd functions/
-npm run serve
+yarn
+yarn serve
 ```
 
 ### *[POST]* /analyze

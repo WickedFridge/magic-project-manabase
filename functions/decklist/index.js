@@ -13,9 +13,9 @@ app.use(cors());
 app.use(bodyParser.json({ limit: '50mb' }));
 
 app.post('/analyze', async (req, res) => {
-    const { deck, xValue } = req.body;
+    const { decklist, xValue } = req.body;
     try {
-        const result = await analyzeDecklist(deck, xValue);
+        const result = await analyzeDecklist(decklist, xValue);
         return res.json(result);
     } catch (e) {
         logger.error(e);
@@ -27,9 +27,5 @@ app.get('/cache', async (req, res) => {
     const cache = Array.from(getCache()).map(([key, value]) => [...JSON.parse(key), value]);
     res.json(cache);
 });
-
-// app.listen(config.port, () => {
-//     logger.info(`Starting "${config.name}" listening on port ${config.port}`);
-// });
 
 module.exports = app;
