@@ -97,3 +97,9 @@ yarn serve
     "xValue": 2
 }
 ```
+
+### Deploy
+```
+yarn build
+firebase deploy
+```

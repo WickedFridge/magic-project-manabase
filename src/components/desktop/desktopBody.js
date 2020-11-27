@@ -96,6 +96,7 @@ export default function DesktopBody(props) {
                                                             <ResultTable
                                                                 isMobile={false}
                                                                 rows={props.rows}
+                                                                sort={props.sort}
                                                             />
                                                         </Fade>
                                                     }

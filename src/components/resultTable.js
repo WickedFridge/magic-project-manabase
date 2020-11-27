@@ -6,8 +6,10 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import Tooltip from "@material-ui/core/Tooltip";
 import Paper from '@material-ui/core/Paper';
 import { red, blueGrey } from "@material-ui/core/colors";
+import {defaultDecklist} from "../data/defaultInputs";
 
 const StyledTableCell = withStyles((theme) => ({
     head: {
@@ -72,12 +74,27 @@ const getBackgroundColor = (value) => {
     };
 };
 
+const BigTooltip = withStyles((theme) => ({
+    tooltip: {
+        fontSize: 14,
+    },
+}))(Tooltip);
+
 export default function ResultTable(props) {
     const desktopClasses = useStylesDesktop();
     const mobileClasses = useStylesMobile();
+    const sortFunctions = props.sort;
+    const fields = ['p2', 'p1'];
+    const [selectedField, setSelectedField] = React.useState(0);
+    const sortFunction = sortFunctions[selectedField];
+    const sortedRows = sortFunction(props.rows);
     const classes = props.isMobile
         ? mobileClasses
         : desktopClasses;
+
+    const selectFieldToSort = (field) => () => {
+        setSelectedField(field);
+    }
 
     return (
         <TableContainer className={classes.table} component={Paper}>
@@ -85,13 +102,17 @@ export default function ResultTable(props) {
                 <TableHead>
                     <TableRow>
                         <StyledTableCell align="left">Card</StyledTableCell>
-                        <StyledTableCell align="center">P1</StyledTableCell>
-                        <StyledTableCell align="center">P2</StyledTableCell>
+                        <BigTooltip title="Assuming you hit all your landdrops" placement="top" arrow>
+                            <StyledTableCell align="center" onClick={selectFieldToSort(0)}>P1</StyledTableCell>
+                        </BigTooltip>
+                        <BigTooltip title="True probability" placement="top" arrow>
+                            <StyledTableCell align="center" onClick={selectFieldToSort(1)}>P2</StyledTableCell>
+                        </BigTooltip>
                     </TableRow>
                 </TableHead>
                 <TableBody className={classes.data}>
-                    {props.rows.map((row) => (
-                        <StyledTableRow className={classes.row} key={row.key} style={getBackgroundColor(row.p2)}>
+                    {sortedRows.map((row) => (
+                        <StyledTableRow className={classes.row} key={row.key} style={getBackgroundColor(row[fields[selectedField]])}>
                             <StyledTableCell className={classes.row} component="th" scope="row" align="left">
                                 {row.key}
                             </StyledTableCell>

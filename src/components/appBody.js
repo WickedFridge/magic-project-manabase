@@ -9,9 +9,11 @@ import MobileBody from "./mobile/mobileBody";
 import {defaultDecklist, defaultResults} from "../data/defaultInputs";
 import { useCurrentWitdh } from "../utils/width";
 
+const orderRowsByP2 = (data) => data.sort((s1, s2) => s1.p2 - s2.p2);
+const orderRowsByP1 = (data) => data.sort((s1, s2) => s1.p1 - s2.p1);
+
 const createRows = (data) => Object.entries(data)
-    .map(([key, { p1, p2 }]) => ({ key, p1, p2 }))
-    .sort((s1, s2) => s1.p2 - s2.p2);
+    .map(([key, { p1, p2 }]) => ({ key, p1, p2 }));
 
 const defaultRows = createRows(defaultResults);
 
@@ -26,7 +28,7 @@ export default function AppBody() {
     const isMobile = width <= 500;
     const [loading, setLoading] = React.useState(false);
     const [rows, setRows] = React.useState(defaultRows);
-    const [decklistInput, setDecklist] = React.useState('');
+    const [decklistInput, setDecklist] = React.useState(defaultDecklist);
     const [open, setOpen] = React.useState(false);
     const [querysuccess, setQuerysuccess] = React.useState(true);
     const [errormessage, setErrormessage] = React.useState(true);
@@ -118,6 +120,7 @@ export default function AppBody() {
                         rows={rows}
                         xValue={xValue}
                         handleChangeXValue={handleChangeXValue}
+                        sort={[orderRowsByP2, orderRowsByP1]}
                     />
 
                 }
