@@ -101,5 +101,6 @@ yarn serve
 ### Deploy
 ```
 yarn build
+cd functions/
 firebase deploy
 ```

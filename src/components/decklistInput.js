@@ -49,13 +49,19 @@ function getMobileRow(height) {
     return Math.round((height-242.4)/17.6);
 }
 
+function getDesktopRow(height) {
+    console.log(height);
+    // this formula was handmade calculated
+    return height * 0.0346 + 0.069;
+}
+
 export default function DecklistInput(props) {
     const classes = useStyles();
     let height = useCurrentHeight();
 
     const maxRows = props.isMobile
         ? getMobileRow(height)
-        : 28;
+        : getDesktopRow(height);
 
     return (
         <form className={classes.root} noValidate>

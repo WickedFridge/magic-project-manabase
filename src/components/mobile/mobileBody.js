@@ -40,7 +40,7 @@ export default function MobileBody (props) {
     const [index, setIndex] = React.useState(1);
 
     const handleClickSubmit = callback => () => {
-        setIndex(1);
+        setIndex(2);
         callback();
     };
 
@@ -108,6 +108,7 @@ export default function MobileBody (props) {
                                     <ResultTable
                                         isMobile={true}
                                         rows={props.rows}
+                                        sort={props.sort}
                                     />
                                 </Fade>
                             }

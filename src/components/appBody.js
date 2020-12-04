@@ -28,7 +28,7 @@ export default function AppBody() {
     const isMobile = width <= 500;
     const [loading, setLoading] = React.useState(false);
     const [rows, setRows] = React.useState(defaultRows);
-    const [decklistInput, setDecklist] = React.useState(defaultDecklist);
+    const [decklistInput, setDecklist] = React.useState('');
     const [open, setOpen] = React.useState(false);
     const [querysuccess, setQuerysuccess] = React.useState(true);
     const [errormessage, setErrormessage] = React.useState(true);
@@ -111,6 +111,7 @@ export default function AppBody() {
                         rows={rows}
                         xValue={xValue}
                         handleChangeXValue={handleChangeXValue}
+                        sort={[orderRowsByP1, orderRowsByP2]}
                     /> :
                     <DesktopBody
                         decklist={decklistInput}
@@ -120,7 +121,7 @@ export default function AppBody() {
                         rows={rows}
                         xValue={xValue}
                         handleChangeXValue={handleChangeXValue}
-                        sort={[orderRowsByP2, orderRowsByP1]}
+                        sort={[orderRowsByP1, orderRowsByP2]}
                     />
 
                 }
