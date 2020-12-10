@@ -1,7 +1,7 @@
 const config = require('config');
 const { performance } = require('perf_hooks');
 const { customLogger } = require('../../../common/logger');
-const { hasTypeLand, markEtbAndLandType, cachedCanPlaySpellOnCurve } = require('../../cards/utils');
+const { hasTypeLand, markEtbAndLandType, cachedCanPlaySpellOnCurve, isDFC, isMDFC } = require('../../cards/utils');
 const { getAllCombinationsOfMinAndMaxLengthWithCallback } = require("../../../common/tools/utils");
 const { getLandNOnCurveProba, getAverageLandCountInHand } = require('../../../common/tools/hypergeometric');
 
@@ -59,11 +59,17 @@ async function fetchCardInfo(decklist, xValue) {
         return scryfallApiClient.getCardByName(name);
     })))
         .forEach((cardInfo) => {
-            if (cardInfo.card_faces) {
-                // handle splitcards
+            // handle splitcards
+            if (isDFC(cardInfo)) {
                 cardInfo.card_faces.forEach(splitcard => {
                     if (!hasTypeLand(splitcard)) {
                         spells.push(splitcard);
+                    } else if (isMDFC(cardInfo)) {
+                        const cardname = Object.keys(cardsCount)
+                            .find(key => key.includes(cardInfo.name) || cardInfo.name.includes(key));
+                        const count = cardsCount[cardname];
+                        const landsToPush = Array(count).fill(markEtbAndLandType(splitcard));
+                        lands.push(...landsToPush);
                     }
                 })
             }
@@ -109,7 +115,8 @@ async function analyzeDecklist(decklist, xValue = 2) {
     const [lands, spells, deckSize] = await createDeck(decklist, xValue);
     const averageLandCount = getAverageLandCountInHand(deckSize, lands.length);
     logger.info(`lands : ${lands.length}`);
-    // logger.info(`spells : ${spells.length}`);
+    logger.info(spells);
+    logger.info(`spells : ${spells.length}`);
     logger.info(`deckSize : ${deckSize}`);
     logger.info('deck created !');
     const t1 = performance.now();
@@ -149,9 +156,9 @@ async function analyzeDecklist(decklist, xValue = 2) {
     getAllCombinationsOfMinAndMaxLengthWithCallback(callback(data, spells), lands, minCMC, maxCMC);
     const t3 = performance.now();
     Object.entries(data).forEach(([spellName, spellData]) => {
-        spellData.p1 = 100 * spellData.ok / (spellData.ok + spellData.nok);
+        spellData.p1 = 100 * spellData.ok / (spellData.ok + spellData.nok) || 0;
         // spellData.p3 = 100 * getLandNOnCurveProba(deckSize - sideboardSize, lands.length, spellData.cmc);
-        spellData.p2 = 100 * spellData.ok / (spellData.ok + spellData.nok) * getLandNOnCurveProba(deckSize, lands.length, spellData.cmc);
+        spellData.p2 = 100 * spellData.ok / (spellData.ok + spellData.nok) * getLandNOnCurveProba(deckSize, lands.length, spellData.cmc) || 0;
     });
     logger.info(data);
     logger.info(`create deck: ${t1-t0}`);

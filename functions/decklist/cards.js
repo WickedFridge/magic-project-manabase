@@ -248,14 +248,71 @@ const bloomingMarsh = () => ({
     card_faces: undefined,
 });
 
-const maelstromPulse = () => ({ name: 'Maelstrom Pulse',
-      cmc: 3,
-      colors: [ 'B', 'G' ],
-      type: [ 'Sorcery' ],
-      text: 'Destroy target nonland permanent and all other permanents with the same name as that permanent.',
-      cost: { generic: 1, B: 1, G: 1 },
-      mana_cost: '{1}{B}{G}',
-      card_faces: undefined,
+const maelstromPulse = () => ({
+    name: 'Maelstrom Pulse',
+    cmc: 3,
+    colors: [ 'B', 'G' ],
+    type: [ 'Sorcery' ],
+    text: 'Destroy target nonland permanent and all other permanents with the same name as that permanent.',
+    cost: { generic: 1, B: 1, G: 1 },
+    mana_cost: '{1}{B}{G}',
+    card_faces: undefined,
+});
+
+const delver = () => ({
+    name: 'Delver of Secrets // Insectile Aberration',
+    cmc: 1,
+    colors: undefined,
+    type: [ 'Creature', '—', 'Human', 'Wizard', '//', 'Creature', '—', 'Human', 'Insect' ],
+    text: undefined,
+    cost: {},
+    mana_cost: undefined,
+    card_faces: [{
+        name: 'Delver of Secrets',
+        cmc: 1,
+        colors: [ 'U' ],
+        type: [ 'Creature', '—', 'Human', 'Wizard' ],
+        text:
+            'At the beginning of your upkeep, look at the top card of your library. You may reveal that card. If an instant or sorcery card is revealed this way, transform Delver of Secrets.',
+        cost: { U: 1 },
+        mana_cost: '{U}',
+    }, {
+        name: 'Insectile Aberration',
+        cmc: 0,
+        colors: [ 'U' ],
+        type: [ 'Creature', '—', 'Human', 'Insect' ],
+        text: 'Flying',
+        cost: {},
+        mana_cost: '',
+    }],
+})
+
+const kazanduMammoth = () => ({
+    name: 'Kazandu Mammoth // Kazandu Valley',
+    cmc: 3,
+    colors: undefined,
+    type: [ 'Creature', '—', 'Elephant', '//', 'Land' ],
+    text: undefined,
+    cost: {},
+    mana_cost: undefined,
+    card_faces: [{
+        name: 'Kazandu Mammoth',
+        cmc: 3,
+        colors: [ 'G' ],
+        type: [ 'Creature', '—', 'Elephant' ],
+        text:
+            'Landfall — Whenever a land enters the battlefield under your control, Kazandu Mammoth gets +2/+2 until end of turn.',
+        cost: { generic: 1, G: 2 },
+        mana_cost: '{1}{G}{G}'
+    }, {
+        name: 'Kazandu Valley',
+        cmc: 0,
+        colors: [],
+        type: [ 'Land' ],
+        text: 'Kazandu Valley enters the battlefield tapped.\n{T}: Add {G}.',
+        cost: {},
+        mana_cost: '',
+    }],
 });
 
 module.exports = {
@@ -286,5 +343,7 @@ module.exports = {
     glacialFortress,
     meddlingMage,
     bloomingMarsh,
-    maelstromPulse
+    maelstromPulse,
+    delver,
+    kazanduMammoth,
 };

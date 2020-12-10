@@ -1,10 +1,10 @@
-const { cachedCanPlaySpellOnCurve, hasCorrectColors, isCheckLand, isFetchland, isFastland, evaluateEtb } = require('../cards/utils');
+const { cachedCanPlaySpellOnCurve, hasCorrectColors, isCheckLand, isFetchland, isFastland, evaluateEtb, isDFC, isMDFC, isTransformableCard } = require('../cards/utils');
 const { handleFetchlands } = require('../services/analyzeDecklist');
 const { forest, island, mountain, swamp, plains, simicGuildGate, giantGrowth, growthSpiral,
         mockGrowthSpiral, mockTempleSimic, mockIsland, mockTempleGolgari, mockUro,
         frilledMystic, deathRite, saheeli, volcanicIsland, irrigatedFarmland, glacialFortress,
         meddlingMage, marshFlats, bloodstainedMire, mistyRainforest, prismaticVista, evolvingWilds, fabledPassage,
-        bloomingMarsh, maelstromPulse,
+        bloomingMarsh, maelstromPulse, delver, kazanduMammoth,
 } = require('../cards');
 
 describe('has Correct Colors unit testing', () => {
@@ -404,4 +404,25 @@ describe('fastland testing', () => {
         spell: maelstromPulse(0),
         outcome: true,
     }));
+});
+
+describe('double-face cards testing', () => {
+    it('is Double-Face Card testing', () => {
+        const doubleFaceCards = [delver(), kazanduMammoth()];
+        const singleFaceCards = [bloodstainedMire(), deathRite()];
+        doubleFaceCards.forEach(card => {
+            expect(isDFC(card)).toBe(true);
+        });
+        singleFaceCards.forEach(card => {
+            expect(isDFC(card)).toBe(false);
+        });
+    });
+    it('can Transform card test', () => {
+        expect(isTransformableCard(delver())).toBe(true);
+        expect(isTransformableCard(kazanduMammoth())).toBe(false);
+    });
+    it('MDFC card test', () => {
+        expect(isMDFC(delver())).toBe(false);
+        expect(isMDFC(kazanduMammoth())).toBe(true);
+    });
 });

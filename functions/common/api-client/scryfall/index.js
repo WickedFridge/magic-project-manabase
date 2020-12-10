@@ -2,14 +2,30 @@ const { getManaCost } = require("../../../decklist/cards/utils");
 const AbstractApiClient = require(`../abstract`);
 const NotFoundError = require('../../errors/NotFoundError');
 
+function getManaProduced(color_identity, oracle_text) {
+    const colors = color_identity;
+    if (oracle_text.match(/\{T}: Add \{C}/)) {
+        colors.push('C');
+    }
+    if (oracle_text.match(/\{T}(:?,.+)?: Add one mana of any color/)) {
+        colors.push('W', 'U', 'B', 'R', 'G');
+    }
+    return colors;
+}
+
 function handleSplitCard(card) {
     const cost = getManaCost(card.mana_cost);
+    const type = card.type_line.split(' ');
+    const colors = type.includes('Land') && card.colors.length === 0 ?
+        getManaProduced(card.color_identity, card.oracle_text) :
+        card.colors;
+
     return {
         name: card.name,
         cmc: Object.values(cost).reduce((acc, cur) => acc + cur, 0),
-        colors: card.colors,
-        type: card.type_line.split(' '),
+        colors,
         text: card.oracle_text,
+        type,
         cost,
         mana_cost: card.mana_cost,
     };
@@ -32,16 +48,6 @@ function handleAlternateCost(data, capacity, alternateCost) {
         type_line,
         oracle_text,
     }];
-}
-
-function handleLandCard(colors, color_identity, oracle_text) {
-    colors.push(...color_identity);
-    if (oracle_text.match(/\{T}: Add \{C}/)) {
-        colors.push('C');
-    }
-    if (oracle_text.match(/\{T}(:?,.+)?: Add one mana of any color/)) {
-        colors.push('W', 'U', 'B', 'R', 'G');
-    }
 }
 
 /**
@@ -79,9 +85,9 @@ class ScryfallApiClient extends AbstractApiClient {
                 }
             }
             if(card_faces) {
-                card_faces = card_faces.map(handleSplitCard);
+                card_faces = card_faces.map(splitcard => handleSplitCard({ ...splitcard, color_identity }));
             } else if (RegExp('Land').test(type_line) && colors.length === 0) {
-                handleLandCard(colors, color_identity, oracle_text);
+                colors.push(...getManaProduced(color_identity, oracle_text));
             }
             const cost = card_faces ? {} : getManaCost(mana_cost);
             return { name, cmc, colors, type: type_line.split(' '), text: oracle_text, cost, mana_cost, card_faces };

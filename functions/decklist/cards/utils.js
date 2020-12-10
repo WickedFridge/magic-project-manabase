@@ -5,6 +5,28 @@ const logger = customLogger('utils');
 
 let cache = new Map();
 
+function isDFC(card) {
+    return Boolean(card.card_faces);
+}
+
+function canTransform(splitcard) {
+    return splitcard.text.includes(`transform ${splitcard.name}`);
+}
+
+function isTransformableCard(card) {
+    if (!isDFC(card)) {
+        return false;
+    }
+    return card.card_faces.some(splitcard => canTransform(splitcard));
+}
+
+function isMDFC(card) {
+    if (!isDFC(card)) {
+        return false;
+    }
+    return !isTransformableCard(card)
+}
+
 function hasTypeLand(card) {
     return card.type.includes('Land');
 }
@@ -26,7 +48,7 @@ function isFetchland(text) {
 }
 
 function isRavland(text) {
-    return RegExp(`you may pay 2 life. If you don't, it enters the battlefield tapped.`).test(text);
+    return RegExp(`you may pay \\d life. If you don't, it enters the battlefield tapped.`).test(text);
 }
 
 function isCheckLand(text) {
@@ -194,4 +216,8 @@ module.exports = {
     isFetchland,
     isFastland,
     evaluateEtb,
+    isDFC,
+    canTransform,
+    isTransformableCard,
+    isMDFC,
 };
