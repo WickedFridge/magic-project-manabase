@@ -5,6 +5,17 @@ const logger = customLogger('utils');
 
 let cache = new Map();
 
+function getArrayOfCards(cardsCount, card, name) {
+    const cardname = Object.keys(cardsCount)
+        .find(key => key.includes(name) || name.includes(key));
+    const count = cardsCount[cardname];
+    return Array(count).fill(markEtbAndLandType(card));
+}
+
+function calculateCMC(cost) {
+    return Object.values(cost).reduce((acc, cur) => acc + cur, 0);
+}
+
 function isDFC(card) {
     return Boolean(card.card_faces);
 }
@@ -29,6 +40,12 @@ function isMDFC(card) {
 
 function hasTypeLand(card) {
     return card.type.includes('Land');
+}
+
+function isPathway(card) {
+    return card.card_faces.every(splitcard => {
+        return splitcard.type.includes('Land');
+    });
 }
 
 function isFastland(text) {
@@ -217,7 +234,9 @@ module.exports = {
     isFastland,
     evaluateEtb,
     isDFC,
-    canTransform,
     isTransformableCard,
     isMDFC,
+    isPathway,
+    getArrayOfCards,
+    calculateCMC,
 };

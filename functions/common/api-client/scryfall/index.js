@@ -1,4 +1,4 @@
-const { getManaCost } = require("../../../decklist/cards/utils");
+const { getManaCost, calculateCMC } = require("../../../decklist/cards/utils");
 const AbstractApiClient = require(`../abstract`);
 const NotFoundError = require('../../errors/NotFoundError');
 
@@ -15,6 +15,7 @@ function getManaProduced(color_identity, oracle_text) {
 
 function handleSplitCard(card) {
     const cost = getManaCost(card.mana_cost);
+    const cmc = calculateCMC(cost);
     const type = card.type_line.split(' ');
     const colors = type.includes('Land') && card.colors.length === 0 ?
         getManaProduced(card.color_identity, card.oracle_text) :
@@ -22,7 +23,7 @@ function handleSplitCard(card) {
 
     return {
         name: card.name,
-        cmc: Object.values(cost).reduce((acc, cur) => acc + cur, 0),
+        cmc,
         colors,
         text: card.oracle_text,
         type,
@@ -45,7 +46,7 @@ function handleAlternateCost(data, capacity, alternateCost) {
         mana_cost: alternateCost,
         colors,
         color_identity,
-        type_line,
+        type_line : 'Ability',
         oracle_text,
     }];
 }

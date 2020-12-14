@@ -1,7 +1,7 @@
 const config = require('config');
 const { performance } = require('perf_hooks');
 const { customLogger } = require('../../../common/logger');
-const { hasTypeLand, markEtbAndLandType, cachedCanPlaySpellOnCurve, isDFC, isMDFC } = require('../../cards/utils');
+const { hasTypeLand, markEtbAndLandType, cachedCanPlaySpellOnCurve, isDFC, isMDFC, isPathway, getArrayOfCards, calculateCMC } = require('../../cards/utils');
 const { getAllCombinationsOfMinAndMaxLengthWithCallback } = require("../../../common/tools/utils");
 const { getLandNOnCurveProba, getAverageLandCountInHand } = require('../../../common/tools/hypergeometric');
 
@@ -22,8 +22,8 @@ function handleXSpell(card, xValue) {
         return;
     }
     card.cost.generic = card.cost.X * xValue;
-    card.cmc += card.cost.X * xValue;
     delete card.cost.X;
+    card.cmc = calculateCMC(card.cost);
 }
 
 function handleFetchlands(lands) {
@@ -33,7 +33,7 @@ function handleFetchlands(lands) {
         const landTypes = ['Basic', 'Plains', 'Island', 'Swamp', 'Forest', 'Mountain'];
         const targets = fetch.fetchland.filter(prop => landTypes.includes(prop));
         const colors = [];
-        lands.map(land => {
+        lands.forEach(land => {
             if (targets.some(t => land.type.includes(t))) {
                 colors.push(...land.colors);
             }
@@ -48,6 +48,29 @@ function handleNotManaProducingLands(lands) {
     })
 }
 
+function handleSplitCard(card, splitcard, xValue, cardsCount) {
+    const spells = [];
+    const lands = [];
+    if (!hasTypeLand(splitcard)) {
+        handleXSpell(splitcard, xValue);
+        spells.push(splitcard);
+        return [spells, lands];
+    }
+    if (isMDFC(card)) {
+        lands.push(...getArrayOfCards(cardsCount, splitcard, card.name))
+        return [spells, lands];
+    }
+}
+
+function handlePathway(card, cardsCount) {
+    const colors = [...new Set(card.card_faces
+        .reduce((acc, splitcard) => [...acc, ...splitcard.colors], []))];
+    const text = card.card_faces.reduce((acc, splitcard) => `${acc} ${splitcard.text}`, '');
+    card.colors = colors;
+    card.text = text;
+    return getArrayOfCards(cardsCount, card, card.name);
+}
+
 async function fetchCardInfo(decklist, xValue) {
     const spells = [];
     const lands = [];
@@ -58,29 +81,28 @@ async function fetchCardInfo(decklist, xValue) {
         cardsCount[name] = parseInt(count);
         return scryfallApiClient.getCardByName(name);
     })))
-        .forEach((cardInfo) => {
+        .forEach((card) => {
+            logger.info(card);
             // handle splitcards
-            if (isDFC(cardInfo)) {
-                cardInfo.card_faces.forEach(splitcard => {
-                    if (!hasTypeLand(splitcard)) {
-                        spells.push(splitcard);
-                    } else if (isMDFC(cardInfo)) {
-                        const cardname = Object.keys(cardsCount)
-                            .find(key => key.includes(cardInfo.name) || cardInfo.name.includes(key));
-                        const count = cardsCount[cardname];
-                        const landsToPush = Array(count).fill(markEtbAndLandType(splitcard));
-                        lands.push(...landsToPush);
-                    }
-                })
+            if (isDFC(card)) {
+                if (isPathway(card)) {
+                    lands.push(...handlePathway(card, cardsCount));
+                } else {
+                    card.card_faces.forEach(splitcard => {
+                        const [addedSpells, addedLands] = handleSplitCard(card, splitcard, xValue, cardsCount);
+                        spells.push(...addedSpells);
+                        lands.push(...addedLands);
+                    })
+                }
             }
-            else if (!hasTypeLand(cardInfo)) {
+            else if (!hasTypeLand(card)) {
                 // handle regular spells
-                handleXSpell(cardInfo, xValue);
-                spells.push(cardInfo);
+                handleXSpell(card, xValue);
+                spells.push(card);
             } else {
                 // handle lands
-                const count = cardsCount[cardInfo.name];
-                const landsToPush = Array(count).fill(markEtbAndLandType(cardInfo));
+                const count = cardsCount[card.name];
+                const landsToPush = Array(count).fill(markEtbAndLandType(card));
                 lands.push(...landsToPush);
             }
         });
@@ -115,8 +137,8 @@ async function analyzeDecklist(decklist, xValue = 2) {
     const [lands, spells, deckSize] = await createDeck(decklist, xValue);
     const averageLandCount = getAverageLandCountInHand(deckSize, lands.length);
     logger.info(`lands : ${lands.length}`);
-    logger.info(spells);
     logger.info(`spells : ${spells.length}`);
+    logger.info(spells);
     logger.info(`deckSize : ${deckSize}`);
     logger.info('deck created !');
     const t1 = performance.now();
