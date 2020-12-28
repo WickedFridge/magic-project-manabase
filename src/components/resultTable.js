@@ -12,6 +12,8 @@ import { red, blueGrey, grey } from "@material-ui/core/colors";
 import {TableSortLabel} from "@material-ui/core";
 import {useCurrentHeight} from "../utils/width";
 
+const capitalize = name => name.charAt(0).toUpperCase() + name.slice(1);
+
 const StyledTableCell = withStyles((theme) => ({
     head: {
         backgroundColor: theme.palette.common.black,
@@ -139,7 +141,7 @@ export default function ResultTable(props) {
                     {sortedRows.map((row) => (
                         <StyledTableRow hover className={classes.row} key={row.key} style={getRowBackgroundColor(row[fields[selectedField]])}>
                             <TableCell className={classes.row} component="th" scope="row" align="left">
-                                {row.key}
+                                {capitalize(row.key)}
                             </TableCell>
                             <TableCell align="center">{`${row.p1.toFixed(2)}%`}</TableCell>
                             <TableCell align="center">{`${row.p2.toFixed(2)}%`}</TableCell>

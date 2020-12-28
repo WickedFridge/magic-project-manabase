@@ -1,7 +1,7 @@
 const config = require('config');
 const { performance } = require('perf_hooks');
 const { customLogger } = require('../../../common/logger');
-const { hasTypeLand, markEtbAndLandType, cachedCanPlaySpellOnCurve, isDFC, isMDFC, isPathway, getArrayOfCards, calculateCMC } = require('../../cards/utils');
+const { hasTypeLand, markEtbAndLandType, cachedCanPlaySpellOnCurve, isDFC, isMDFC, isPathway, getArrayOfCards, calculateCMC, isTransformableCard } = require('../../cards/utils');
 const { getAllCombinationsOfMinAndMaxLengthWithCallback } = require("../../../common/tools/utils");
 const { getLandNOnCurveProba, getAverageLandCountInHand } = require('../../../common/tools/hypergeometric');
 
@@ -13,7 +13,7 @@ const logger = customLogger('index');
 function splitCountAndName(input) {
     const words = input.split(' ');
     const count = words.shift();
-    const name = words.join(' ');
+    const name = words.join(' ').toLowerCase();
     return [count, name];
 }
 
@@ -82,9 +82,13 @@ async function fetchCardInfo(decklist, xValue) {
         return scryfallApiClient.getCardByName(name);
     })))
         .forEach((card) => {
-            logger.info(card);
             // handle splitcards
             if (isDFC(card)) {
+                if (isTransformableCard(card)) {
+                    logger.info('coucou');
+                    card.card_faces.pop();
+                    logger.info(card.card_faces);
+                }
                 if (isPathway(card)) {
                     lands.push(...handlePathway(card, cardsCount));
                 } else {
@@ -112,12 +116,11 @@ async function fetchCardInfo(decklist, xValue) {
 
 async function createDeck(decklist, xValue) {
 
-    const [deckCardsCount, deckSpells, deckLands] = await fetchCardInfo(decklist.deck, xValue);
+    const [deckCardsCount, deckSpells, lands] = await fetchCardInfo(decklist.deck, xValue);
     const [sideCardsCount, sideSpells, sideLands] = await fetchCardInfo(decklist.sideboard, xValue);
     const [commanderCardsCount, commander] = await fetchCardInfo(decklist.commander, xValue);
 
     const spells = [...deckSpells, ...sideSpells, ...commander];
-    const lands = [...deckLands];
 
     const cardCounts = {
         deck: deckCardsCount,
@@ -135,9 +138,16 @@ async function createDeck(decklist, xValue) {
 async function analyzeDecklist(decklist, xValue = 2) {
     const t0 = performance.now();
     const [lands, spells, deckSize] = await createDeck(decklist, xValue);
+    const landNames = [];
+    lands.forEach((land) => {
+        if(!landNames.includes(land.name)) {
+            landNames.push(land.name);
+        }
+    })
     const averageLandCount = getAverageLandCountInHand(deckSize, lands.length);
     logger.info(`lands : ${lands.length}`);
     logger.info(`spells : ${spells.length}`);
+    logger.info(`unique land names : `);
     logger.info(spells);
     logger.info(`deckSize : ${deckSize}`);
     logger.info('deck created !');
@@ -145,31 +155,46 @@ async function analyzeDecklist(decklist, xValue = 2) {
     const maxCMC = Math.max(...spells.map(s => s.cmc), 4);
     const minCMC = Math.min(...spells.map(s => s.cmc), 2);
 
-    const data = {};
+    const data = {
+        spells: {},
+        lands: {},
+    };
     spells.forEach(s => {
-        data[s.name] = {
+        data.spells[s.name] = {
             cmc: s.cmc,
             ok: 0,
             nok: 0,
         };
     });
 
+    landNames.forEach(l => {
+        data.lands[l] = {};
+        spells.forEach(s => {
+            data.lands[l][s.name] = {
+                ok: 0,
+                nok: 0,
+            };
+        });
+    });
+
     const callback = (data, spells) => (comb) => {
         spells.forEach(spell => {
             const keepable = (c) => c.length >= Math.max(spell.cmc, 2)
                 && c.length <= Math.max(2, Math.max(spell.cmc, averageLandCount));
-            // const keepable = (c) => c.length === Math.max(spell.cmc, 2);
             if (!keepable(comb)) {
                 return;
             }
             if (!comb.every(land => land.producesMana)) {
-                data[spell.name].nok ++;
+                data.spells[spell.name].nok ++;
+                comb.forEach(land => data.lands[land.name][spell.name].nok ++);
                 return;
             }
             if (cachedCanPlaySpellOnCurve(comb, spell)) {
-                data[spell.name].ok ++;
+                data.spells[spell.name].ok ++;
+                comb.forEach(land => data.lands[land.name][spell.name].ok ++);
             } else {
-                data[spell.name].nok ++;
+                data.spells[spell.name].nok ++;
+                comb.forEach(land => data.lands[land.name][spell.name].nok ++);
             }
         });
     };
@@ -177,16 +202,21 @@ async function analyzeDecklist(decklist, xValue = 2) {
     const t2 = performance.now();
     getAllCombinationsOfMinAndMaxLengthWithCallback(callback(data, spells), lands, minCMC, maxCMC);
     const t3 = performance.now();
-    Object.entries(data).forEach(([spellName, spellData]) => {
+    Object.entries(data.spells).forEach(([spellName, spellData]) => {
         spellData.p1 = 100 * spellData.ok / (spellData.ok + spellData.nok) || 0;
-        // spellData.p3 = 100 * getLandNOnCurveProba(deckSize - sideboardSize, lands.length, spellData.cmc);
         spellData.p2 = 100 * spellData.ok / (spellData.ok + spellData.nok) * getLandNOnCurveProba(deckSize, lands.length, spellData.cmc) || 0;
+        // spellData.p3 = 100 * getLandNOnCurveProba(deckSize - sideboardSize, lands.length, spellData.cmc);
+    });
+    Object.entries(data.lands).forEach(([landName, landData]) => {
+        Object.entries(landData).forEach(([spellName, spellData]) => {
+            spellData.p1 = 100 * spellData.ok / (spellData.ok + spellData.nok) || 0;
+        });
     });
     logger.info(data);
     logger.info(`create deck: ${t1-t0}`);
     logger.info(`intermediate time: ${t2-t1}`);
     logger.info(`get Stats: ${t3-t2}`);
-    return data;
+    return data.spells;
 }
 
 module.exports = {

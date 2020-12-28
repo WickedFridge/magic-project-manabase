@@ -22,7 +22,7 @@ function handleSplitCard(card) {
         card.colors;
 
     return {
-        name: card.name,
+        name: card.name.toLowerCase(),
         cmc,
         colors,
         text: card.oracle_text,
@@ -91,7 +91,7 @@ class ScryfallApiClient extends AbstractApiClient {
                 colors.push(...getManaProduced(color_identity, oracle_text));
             }
             const cost = card_faces ? {} : getManaCost(mana_cost);
-            return { name, cmc, colors, type: type_line.split(' '), text: oracle_text, cost, mana_cost, card_faces };
+            return { name: name.toLowerCase(), cmc, colors, type: type_line.split(' '), text: oracle_text, cost, mana_cost, card_faces };
         } catch (e) {
             console.log(e);
             if (e.response && e.response.status === 404) {
