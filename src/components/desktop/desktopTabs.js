@@ -10,9 +10,6 @@ import HelpIcon from "@material-ui/icons/Help";
 import PlaylistAddCheckIcon from "@material-ui/icons/PlaylistAddCheck";
 
 const useStyles = makeStyles((theme) => ({
-    root: {
-        width: '75vw',
-    },
     paper: {
         textAlign: 'center',
         backgroundColor: '#1b222b',
@@ -54,7 +51,7 @@ export default function DesktopTabs(props) {
     };
 
     return (
-        <div  className={classes.root}>
+        <div>
             <Paper className={classes.paper}>
                 <Tabs
                     value={value}

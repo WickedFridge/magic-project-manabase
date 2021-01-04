@@ -115,7 +115,6 @@ async function fetchCardInfo(decklist, xValue) {
 
 
 async function createDeck(decklist, xValue) {
-
     const [deckCardsCount, deckSpells, lands] = await fetchCardInfo(decklist.deck, xValue);
     const [sideCardsCount, sideSpells, sideLands] = await fetchCardInfo(decklist.sideboard, xValue);
     const [commanderCardsCount, commander] = await fetchCardInfo(decklist.commander, xValue);
@@ -131,13 +130,35 @@ async function createDeck(decklist, xValue) {
     handleFetchlands(lands);
     handleNotManaProducingLands(lands);
     const deckSize = Object.values(cardCounts.deck).reduce((acc, cur) => acc + cur);
-    return [lands, spells, deckSize];
+    return [lands, spells, deckSize, cardCounts];
 }
 
+function processOutputData(data, deckSize, lands, cardCounts) {
+    Object.entries(data.spells).forEach(([spellName, spellData]) => {
+        spellData.p1 = 100 * spellData.ok / (spellData.ok + spellData.nok) || 0;
+        spellData.p2 = 100 * spellData.ok / (spellData.ok + spellData.nok) * getLandNOnCurveProba(deckSize, lands.length, spellData.cmc) || 0;
+        // spellData.p3 = 100 * getLandNOnCurveProba(deckSize - sideboardSize, lands.length, spellData.cmc);
+    });
+    Object.entries(data.lands).forEach(([landName, landData]) => {
+        Object.entries(landData).forEach(([spellName, spellData]) => {
+            spellData.p1 = 100 * spellData.ok / (spellData.ok + spellData.nok) || 0;
+        });
+        let count = 0;
+        landData.p1 = Object.entries(landData)
+            .reduce((acc, [key, val]) => {
+                if (!cardCounts.deck[key]) {
+                    return acc;
+                }
+                count += cardCounts.deck[key];
+                return acc + cardCounts.deck[key] * landData[key].p1;
+            }, 0)
+        landData.p1 /= count;
+    });
+}
 
 async function analyzeDecklist(decklist, xValue = 2) {
     const t0 = performance.now();
-    const [lands, spells, deckSize] = await createDeck(decklist, xValue);
+    const [lands, spells, deckSize, cardCounts] = await createDeck(decklist, xValue);
     const landNames = [];
     lands.forEach((land) => {
         if(!landNames.includes(land.name)) {
@@ -202,21 +223,12 @@ async function analyzeDecklist(decklist, xValue = 2) {
     const t2 = performance.now();
     getAllCombinationsOfMinAndMaxLengthWithCallback(callback(data, spells), lands, minCMC, maxCMC);
     const t3 = performance.now();
-    Object.entries(data.spells).forEach(([spellName, spellData]) => {
-        spellData.p1 = 100 * spellData.ok / (spellData.ok + spellData.nok) || 0;
-        spellData.p2 = 100 * spellData.ok / (spellData.ok + spellData.nok) * getLandNOnCurveProba(deckSize, lands.length, spellData.cmc) || 0;
-        // spellData.p3 = 100 * getLandNOnCurveProba(deckSize - sideboardSize, lands.length, spellData.cmc);
-    });
-    Object.entries(data.lands).forEach(([landName, landData]) => {
-        Object.entries(landData).forEach(([spellName, spellData]) => {
-            spellData.p1 = 100 * spellData.ok / (spellData.ok + spellData.nok) || 0;
-        });
-    });
+    processOutputData(data, deckSize, lands, cardCounts);
     logger.info(data);
     logger.info(`create deck: ${t1-t0}`);
     logger.info(`intermediate time: ${t2-t1}`);
     logger.info(`get Stats: ${t3-t2}`);
-    return data.spells;
+    return data;
 }
 
 module.exports = {

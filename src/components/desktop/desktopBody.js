@@ -4,7 +4,7 @@ import DecklistInput from "../decklistInput";
 import Box from "@material-ui/core/Box";
 import Fade from "@material-ui/core/Fade";
 import {CircularProgress} from "@material-ui/core";
-import ResultTable from "../resultTable";
+import ResultTableSpells from "../resultTableSpells";
 import SubmitButton from "./submitButton";
 import React from "react";
 import {makeStyles} from "@material-ui/core/styles";
@@ -15,7 +15,8 @@ import HelpText from "../helpText";
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        maxWidth: '75vw',
+        width: '85vw',
+        // maxWidth: '1300px',
     },
     paper: {
         padding: theme.spacing(2),
@@ -42,89 +43,109 @@ export default function DesktopBody(props) {
         <div className={classes.root}>
             <DesktopTabs
                 main={
-                    <Grid container spacing={3}>
-                            <Grid item xs={4}>
-                                <Paper className={classes.paper}>
-                                    <DecklistInput
-                                        value={props.decklist}
-                                        onChange={props.handleDecklistChange}
-                                    />
-                                </Paper>
-                            </Grid>
-                            <Grid item xs={8}>
-                                <Grid
-                                    container
-                                    direction="column"
-                                    justify="space-evenly"
-                                    alignItems="stretch"
-                                    spacing={3}
-                                >
-                                    <Grid item xs={12}>
-                                        <Paper className={classes.paper}>
-                                            <Box
-                                                className={classes.results}
-                                                display="flex"
+                    <Grid container spacing={2}>
+                        <Grid item xs={3}>
+                            <Paper className={classes.paper}>
+                                <DecklistInput
+                                    value={props.decklist}
+                                    onChange={props.handleDecklistChange}
+                                />
+                            </Paper>
+                        </Grid>
+                        <Grid item xs={9}>
+                            <Grid
+                                container
+                                direction="column"
+                                justify="space-evenly"
+                                alignItems="stretch"
+                                spacing={2}
+                            >
+                                <Grid item xs={12}>
+                                    <Paper className={classes.paper}>
+                                        <Box
+                                            className={classes.results}
+                                            display="flex"
+                                            alignItems="center"
+                                        >
+                                            <Grid
+                                                container
+                                                direction="column"
+                                                justify="center"
                                                 alignItems="center"
                                             >
-                                                <Grid
-                                                    container
-                                                    direction="column"
-                                                    justify="center"
-                                                    alignItems="center"
-                                                >
-                                                    { props.loading ?
-                                                        <Fade
-                                                            in={props.loading}
-                                                            style={{
-                                                                transitionDelay: '500ms',
-                                                            }}
-                                                            unmountOnExit
+                                                { props.loading ?
+                                                    <Fade
+                                                        in={props.loading}
+                                                        style={{
+                                                            transitionDelay: '500ms',
+                                                        }}
+                                                        unmountOnExit
+                                                    >
+                                                        <CircularProgress
+                                                            className={classes.circular}
+                                                            size={100}
+                                                            thickness={2}
+                                                        />
+                                                    </Fade> :
+                                                    <Fade
+                                                        in={!props.loading}
+                                                        unmountOnExit
+                                                        style={{
+                                                            transitionDelay: '500ms',
+                                                        }}
+                                                    >
+                                                        <Grid
+                                                            container
+                                                            justify="center"
+                                                            alignItems="center"
+                                                            spacing={2}
                                                         >
-                                                            <CircularProgress
-                                                                className={classes.circular}
-                                                                size={100}
-                                                                thickness={2}
-                                                            />
-                                                        </Fade> :
-                                                        <Fade
-                                                            in={!props.loading}
-                                                            unmountOnExit
-                                                            style={{
-                                                                transitionDelay: '500ms',
-                                                            }}
-                                                        >
-                                                            <ResultTable
-                                                                isMobile={false}
-                                                                rows={props.rows}
-                                                                sort={props.sort}
-                                                            />
-                                                        </Fade>
-                                                    }
-                                                </Grid>
-                                            </Box>
-                                        </Paper>
-                                    </Grid>
-                                    <Grid item xs={12}>
-                                        <Paper className={classes.paper}>
-                                            <Grid container justify="center" spacing={4}>
-                                                <Grid item>
-                                                    <XSlider
-                                                        value={props.xValue}
-                                                        handleChange={props.handleChangeXValue}
-                                                    />
-                                                </Grid>
-                                                <Grid item>
-                                                    <SubmitButton
-                                                        onClick={props.handleClickSubmit}
-                                                        disabled={props.loading}
-                                                    />
-                                                </Grid>
+                                                            <Grid item xs={8}>
+                                                                <ResultTableSpells
+                                                                    isMobile={false}
+                                                                    rows={props.spells}
+                                                                    sort={props.sort}
+                                                                    fields={2}
+                                                                    selected={1}
+                                                                />
+                                                            </Grid>
+                                                            <Grid item xs={4}>
+                                                                <ResultTableSpells
+                                                                    isMobile={false}
+                                                                    rows={props.lands}
+                                                                    sort={props.sort}
+                                                                    fields={1}
+                                                                    selected={0}
+                                                                />
+                                                            </Grid>
+                                                        </Grid>
+                                                    </Fade>
+                                                }
                                             </Grid>
-                                        </Paper>
-                                    </Grid>
+                                        </Box>
+                                    </Paper>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <Paper className={classes.paper}>
+                                        <Grid container justify="center" spacing={4}>
+                                            <Grid item>
+                                                <XSlider
+                                                    value={props.xValue}
+                                                    handleChange={props.handleChangeXValue}
+                                                />
+                                            </Grid>
+                                            <Grid item>
+                                                <SubmitButton
+                                                    onClick={props.handleClickSubmit}
+                                                    disabled={props.loading}
+                                                />
+                                            </Grid>
+                                        </Grid>
+                                    </Paper>
                                 </Grid>
                             </Grid>
                         </Grid>
+                    </Grid>
                 }
                 help={
                     <Paper className={classes.paper}>

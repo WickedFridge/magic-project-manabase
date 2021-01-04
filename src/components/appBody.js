@@ -27,7 +27,8 @@ export default function AppBody() {
     let width = useCurrentWitdh();
     const isMobile = width <= 500;
     const [loading, setLoading] = React.useState(false);
-    const [rows, setRows] = React.useState(defaultRows);
+    const [spells, setSpells] = React.useState(defaultRows);
+    const [lands, setLands] = React.useState(defaultRows);
     const [decklistInput, setDecklist] = React.useState('');
     const [open, setOpen] = React.useState(false);
     const [querysuccess, setQuerysuccess] = React.useState(true);
@@ -64,7 +65,8 @@ export default function AppBody() {
         })
             .then(res => {
                 setLoading(false);
-                setRows(createRows(res.data));
+                setSpells(createRows(res.data.spells));
+                setLands(createRows(res.data.lands));
                 setOpen(true);
                 setQuerysuccess(true);
             })
@@ -108,7 +110,7 @@ export default function AppBody() {
                         handleDecklistChange={(event) => setDecklist(event.target.value)}
                         handleClickSubmit={handleClickSubmit}
                         loading={loading}
-                        rows={rows}
+                        rows={spells}
                         xValue={xValue}
                         handleChangeXValue={handleChangeXValue}
                         sort={[orderRowsByP1, orderRowsByP2]}
@@ -118,7 +120,8 @@ export default function AppBody() {
                         handleDecklistChange={(event) => setDecklist(event.target.value)}
                         handleClickSubmit={handleClickSubmit}
                         loading={loading}
-                        rows={rows}
+                        spells={spells}
+                        lands={lands}
                         xValue={xValue}
                         handleChangeXValue={handleChangeXValue}
                         sort={[orderRowsByP1, orderRowsByP2]}
