@@ -97,22 +97,16 @@ const HeaderTableCell = (props) => {
     </TableCell>
 }
 
-export default function ResultTableSpells(props) {
+export default function ResultTable({ isMobile, rows, sortFunctions, fields, selected, tooltips, title }) {
     let height = useCurrentHeight();
     const desktopClasses = useStylesDesktop(height);
     const mobileClasses = useStylesMobile();
-    const sortFunctions = props.sort;
-    const fields = ['p1', 'p2'].slice(0, props.fields);
-    const [selectedField, setSelectedField] = React.useState(props.selected);
+    const [selectedField, setSelectedField] = React.useState(selected);
     const sortFunction = sortFunctions[selectedField];
-    const sortedRows = sortFunction(props.rows);
-    const classes = props.isMobile
+    const sortedRows = sortFunction(rows);
+    const classes = isMobile
         ? mobileClasses
         : desktopClasses;
-    const tooltips = [
-        'Assuming you hit all your landdrops',
-        'True probability',
-    ];
 
     const selectFieldToSort = (field) => () => {
         setSelectedField(field);
@@ -123,7 +117,7 @@ export default function ResultTableSpells(props) {
             <Table size="small" aria-label="customized table">
                 <TableHead>
                     <TableRow>
-                        <StyledTableCell align="left">Card</StyledTableCell>
+                        <StyledTableCell align="left">{title}</StyledTableCell>
                         {fields.map((f, i) => <HeaderTableCell
                             id={i}
                             label={f.toUpperCase()}

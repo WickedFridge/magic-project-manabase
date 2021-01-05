@@ -4,7 +4,6 @@ import DecklistInput from "../decklistInput";
 import Box from "@material-ui/core/Box";
 import Fade from "@material-ui/core/Fade";
 import {CircularProgress} from "@material-ui/core";
-import ResultTableSpells from "../resultTableSpells";
 import SubmitButton from "./submitButton";
 import React from "react";
 import {makeStyles} from "@material-ui/core/styles";
@@ -12,11 +11,11 @@ import {green} from "@material-ui/core/colors";
 import XSlider from "../xSlider";
 import DesktopTabs from "./desktopTabs";
 import HelpText from "../helpText";
+import DesktopResults from "./desktopResults";
 
 const useStyles = makeStyles((theme) => ({
     root: {
         width: '85vw',
-        // maxWidth: '1300px',
     },
     paper: {
         padding: theme.spacing(2),
@@ -36,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function DesktopBody(props) {
+export default function DesktopBody({ decklist, handleDecklistChange, loading, spells, lands, sort, xValue, handleChangeXValue, handleClickSubmit }) {
     const classes = useStyles();
 
     return (
@@ -47,8 +46,8 @@ export default function DesktopBody(props) {
                         <Grid item xs={3}>
                             <Paper className={classes.paper}>
                                 <DecklistInput
-                                    value={props.decklist}
-                                    onChange={props.handleDecklistChange}
+                                    value={decklist}
+                                    onChange={handleDecklistChange}
                                 />
                             </Paper>
                         </Grid>
@@ -73,9 +72,9 @@ export default function DesktopBody(props) {
                                                 justify="center"
                                                 alignItems="center"
                                             >
-                                                { props.loading ?
+                                                { loading ?
                                                     <Fade
-                                                        in={props.loading}
+                                                        in={loading}
                                                         style={{
                                                             transitionDelay: '500ms',
                                                         }}
@@ -88,37 +87,17 @@ export default function DesktopBody(props) {
                                                         />
                                                     </Fade> :
                                                     <Fade
-                                                        in={!props.loading}
+                                                        in={!loading}
                                                         unmountOnExit
                                                         style={{
                                                             transitionDelay: '500ms',
                                                         }}
                                                     >
-                                                        <Grid
-                                                            container
-                                                            justify="center"
-                                                            alignItems="center"
-                                                            spacing={2}
-                                                        >
-                                                            <Grid item xs={8}>
-                                                                <ResultTableSpells
-                                                                    isMobile={false}
-                                                                    rows={props.spells}
-                                                                    sort={props.sort}
-                                                                    fields={2}
-                                                                    selected={1}
-                                                                />
-                                                            </Grid>
-                                                            <Grid item xs={4}>
-                                                                <ResultTableSpells
-                                                                    isMobile={false}
-                                                                    rows={props.lands}
-                                                                    sort={props.sort}
-                                                                    fields={1}
-                                                                    selected={0}
-                                                                />
-                                                            </Grid>
-                                                        </Grid>
+                                                        <DesktopResults
+                                                            spells={spells}
+                                                            lands={lands}
+                                                            sort={sort}
+                                                        />
                                                     </Fade>
                                                 }
                                             </Grid>
@@ -130,14 +109,14 @@ export default function DesktopBody(props) {
                                         <Grid container justify="center" spacing={4}>
                                             <Grid item>
                                                 <XSlider
-                                                    value={props.xValue}
-                                                    handleChange={props.handleChangeXValue}
+                                                    value={xValue}
+                                                    handleChange={handleChangeXValue}
                                                 />
                                             </Grid>
                                             <Grid item>
                                                 <SubmitButton
-                                                    onClick={props.handleClickSubmit}
-                                                    disabled={props.loading}
+                                                    onClick={handleClickSubmit}
+                                                    disabled={loading}
                                                 />
                                             </Grid>
                                         </Grid>

@@ -6,7 +6,7 @@ import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
 import Fade from "@material-ui/core/Fade";
 import {CircularProgress} from "@material-ui/core";
-import ResultTableSpells from "../resultTableSpells";
+import ResultTable from "../resultTable";
 import MobileSubmitActions from "./mobileSubmitActions";
 import HelpText from "../helpText";
 import MobileTabs from "./mobileTabs";
@@ -105,7 +105,7 @@ export default function MobileBody (props) {
                                         transitionDelay: '500ms',
                                     }}
                                 >
-                                    <ResultTableSpells
+                                    <ResultTable
                                         isMobile={true}
                                         rows={props.rows}
                                         sort={props.sort}
