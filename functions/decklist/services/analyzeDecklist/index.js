@@ -176,11 +176,22 @@ async function analyzeDecklist(decklist, xValue = 2) {
     const maxCMC = Math.max(...spells.map(s => s.cmc), 4);
     const minCMC = Math.min(...spells.map(s => s.cmc), 2);
 
+    const zeroSpells = spells.filter(s => s.cmc === 0);
+    const nonZeroSpells = spells.filter(s => s.cmc > 0);
+
     const data = {
         spells: {},
         lands: {},
     };
-    spells.forEach(s => {
+    zeroSpells.forEach(s => {
+        data.spells[s.name] = {
+            cmc: 0,
+            ok: 1,
+            nok: 0,
+        };
+    })
+
+    nonZeroSpells.forEach(s => {
         data.spells[s.name] = {
             cmc: s.cmc,
             ok: 0,
@@ -190,7 +201,7 @@ async function analyzeDecklist(decklist, xValue = 2) {
 
     landNames.forEach(l => {
         data.lands[l] = {};
-        spells.forEach(s => {
+        nonZeroSpells.forEach(s => {
             data.lands[l][s.name] = {
                 ok: 0,
                 nok: 0,
@@ -221,7 +232,7 @@ async function analyzeDecklist(decklist, xValue = 2) {
     };
 
     const t2 = performance.now();
-    getAllCombinationsOfMinAndMaxLengthWithCallback(callback(data, spells), lands, minCMC, maxCMC);
+    getAllCombinationsOfMinAndMaxLengthWithCallback(callback(data, nonZeroSpells), lands, minCMC, maxCMC);
     const t3 = performance.now();
     processOutputData(data, deckSize, lands, cardCounts);
     logger.info(data);

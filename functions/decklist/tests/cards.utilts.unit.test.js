@@ -1,4 +1,4 @@
-const { cachedCanPlaySpellOnCurve, hasCorrectColors, isCheckLand, isFetchland, isFastland, evaluateEtb, isDFC, isMDFC, isTransformableCard } = require('../cards/utils');
+const { cachedCanPlaySpellOnCurve, hasCorrectColors, isCheckLand, isFetchland, isFastland, evaluateEtb, isDFC, isMDFC, isTransformableCard, getManaCost } = require('../cards/utils');
 const { handleFetchlands } = require('../services/analyzeDecklist');
 const { forest, island, mountain, swamp, plains, simicGuildGate, giantGrowth, growthSpiral,
         mockGrowthSpiral, mockTempleSimic, mockIsland, mockTempleGolgari, mockUro,
@@ -426,3 +426,32 @@ describe('double-face cards testing', () => {
         expect(isMDFC(kazanduMammoth())).toBe(true);
     });
 });
+
+describe('mana cost testing', () => {
+    it('basic test', () => {
+        const codifiedcmc = '{1}{U}';
+        const expected = {
+            generic: 1,
+            U: 1,
+        };
+        expect(getManaCost(codifiedcmc)).toEqual(expected);
+    });
+
+    it('X test', () => {
+        const codifiedcmc = '{X}{U}{R}';
+        const expected = {
+            X: 1,
+            U: 1,
+            R:1
+        };
+        expect(getManaCost(codifiedcmc)).toEqual(expected);
+    });
+
+    it('0 test', () => {
+        const codifiedcmc = '{0}';
+        const expected = {
+            0: 1,
+        };
+        expect(getManaCost(codifiedcmc)).toEqual(expected);
+    })
+})
