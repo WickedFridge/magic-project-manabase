@@ -22,7 +22,7 @@ function isDFC(card) {
 
 function canTransform(splitcard) {
     return splitcard.text.includes(`transform ${splitcard.name}`) ||
-        splitcard.text.match(/exile [\w, ']+, then return (him|her|them) to the battlefield transformed under (his|her|their) owner's control/);
+        splitcard.text.match(/[Ee]xile [\w, ']+, then return (him|her|them) to the battlefield transformed under (his|her|their) owner's control/);
 }
 
 function isTransformableCard(card) {
