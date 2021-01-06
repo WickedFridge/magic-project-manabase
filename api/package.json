@@ -1,5 +1,5 @@
 {
-  "name": "functions",
+  "name": "project-manabase-api",
   "description": "Cloud Functions for Firebase",
   "scripts": {
     "lint": "eslint .",

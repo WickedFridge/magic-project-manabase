@@ -1,5 +1,5 @@
 {
-  "name": "react-firestore",
+  "name": "project-manabase-front",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -20,7 +20,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "deploy": "react-scripts build && cd api/ && firebase deploy"
   },
   "eslintConfig": {
     "extends": "react-app"

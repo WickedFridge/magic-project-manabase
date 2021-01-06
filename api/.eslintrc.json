@@ -107,7 +107,7 @@
     // Warn against string concatenation with __dirname and __filename
     "no-path-concat": 1,
 
-    // Prefer using arrow functions for callbacks
+    // Prefer using arrow api for callbacks
     "prefer-arrow-callback": 1,
 
     // Return inside each then() to create readable and reusable Promise chains.
