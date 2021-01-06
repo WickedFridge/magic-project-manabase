@@ -35,11 +35,11 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function MobileBody (props) {
+export default function MobileBody ({ decklist, handleDecklistChange, loading, spells, lands, sort, xValue, handleChangeXValue, handleClickSubmit }) {
     const classes = useStyles();
     const [index, setIndex] = React.useState(1);
 
-    const handleClickSubmit = callback => () => {
+    const handleClick = callback => () => {
         setIndex(2);
         callback();
     };
@@ -61,18 +61,18 @@ export default function MobileBody (props) {
                     <div>
                         <DecklistInput
                             isMobile
-                            value={props.decklist}
-                            onChange={props.handleDecklistChange}
+                            value={decklist}
+                            onChange={handleDecklistChange}
                         />
                         <MobileSubmitActions
-                            onClick={handleClickSubmit(props.handleClickSubmit)}
-                            disabled={props.loading}
-                            xValue={props.xValue}
-                            handleChangeXValue={props.handleChangeXValue}
+                            onClick={handleClick(handleClickSubmit)}
+                            disabled={loading}
+                            xValue={xValue}
+                            handleChangeXValue={handleChangeXValue}
                         />
                     </div>
                 }
-                results={
+                spellResults={
                     <Box
                         className={classes.results}
                         display="flex"
@@ -84,9 +84,9 @@ export default function MobileBody (props) {
                             justify="center"
                             alignItems="center"
                         >
-                            { props.loading ?
+                            { loading ?
                                 <Fade
-                                    in={props.loading}
+                                    in={loading}
                                     style={{
                                         transitionDelay: '500ms',
                                     }}
@@ -99,16 +99,72 @@ export default function MobileBody (props) {
                                     />
                                 </Fade> :
                                 <Fade
-                                    in={!props.loading}
+                                    in={!loading}
                                     unmountOnExit
                                     style={{
                                         transitionDelay: '500ms',
                                     }}
                                 >
                                     <ResultTable
+                                        title={"Spells"}
                                         isMobile={true}
-                                        rows={props.rows}
-                                        sort={props.sort}
+                                        rows={spells}
+                                        sortFunctions={sort}
+                                        fields={['p1', 'p2']}
+                                        tooltips={[
+                                            'Assuming you hit all your landdrops',
+                                            'True probability',
+                                        ]}
+                                        selected={1}
+                                    />
+                                </Fade>
+                            }
+                        </Grid>
+                    </Box>
+                }
+                landResults={
+                    <Box
+                        className={classes.results}
+                        display="flex"
+                        alignItems="center"
+                    >
+                        <Grid
+                            container
+                            direction="column"
+                            justify="center"
+                            alignItems="center"
+                        >
+                            { loading ?
+                                <Fade
+                                    in={loading}
+                                    style={{
+                                        transitionDelay: '500ms',
+                                    }}
+                                    unmountOnExit
+                                >
+                                    <CircularProgress
+                                        className={classes.circular}
+                                        size={100}
+                                        thickness={2}
+                                    />
+                                </Fade> :
+                                <Fade
+                                    in={!loading}
+                                    unmountOnExit
+                                    style={{
+                                        transitionDelay: '500ms',
+                                    }}
+                                >
+                                    <ResultTable
+                                        title="Lands"
+                                        isMobile={false}
+                                        rows={lands}
+                                        sortFunctions={sort}
+                                        fields={['p1']}
+                                        tooltips={[
+                                            'Land Quality',
+                                        ]}
+                                        selected={0}
                                     />
                                 </Fade>
                             }

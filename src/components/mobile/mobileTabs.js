@@ -18,6 +18,9 @@ const useStyles = makeStyles((theme) => ({
     slide3: {
         // padding: '5px 25px',
     },
+    slide4: {
+        // padding: '5px 25px',
+    },
     menu: {
         background: '#323a46',
     },
@@ -49,9 +52,10 @@ export default function MobileTabs(props) {
                     variant="fullWidth"
                     classes={{ indicator: classes.indicator}}
                 >
-                    <Tab icon={<HelpIcon/>} aria-label="help" classes={{ selected: classes.selected }} />
-                    <Tab icon={<PlaylistAddCheckIcon fontSize="large"/>} aria-label="input" classes={{ selected: classes.selected }} />
-                    <Tab icon={<EqualizerIcon/>} aria-label="numbers" classes={{ selected: classes.selected }} />
+                    <Tab icon={<HelpIcon/>} aria-label="help"label="Help"  classes={{ selected: classes.selected }} />
+                    <Tab icon={<PlaylistAddCheckIcon fontSize="large"/>} aria-label="input" label="Decklist" classes={{ selected: classes.selected }} />
+                    <Tab icon={<EqualizerIcon/>} aria-label="numbers" label="Spells" classes={{ selected: classes.selected }} />
+                    <Tab icon={<EqualizerIcon/>} aria-label="numbers" label="Lands" classes={{ selected: classes.selected }} />
                 </Tabs>
             </Paper>
             <SwipeableViews
@@ -65,7 +69,10 @@ export default function MobileTabs(props) {
                     {props.main}
                 </div>
                 <div className={classes.slide3}>
-                    {props.results}
+                    {props.spellResults}
+                </div>
+                <div className={classes.slide4}>
+                    {props.landResults}
                 </div>
             </SwipeableViews>
         </div>

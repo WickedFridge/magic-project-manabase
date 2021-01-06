@@ -110,7 +110,8 @@ export default function AppBody() {
                         handleDecklistChange={(event) => setDecklist(event.target.value)}
                         handleClickSubmit={handleClickSubmit}
                         loading={loading}
-                        rows={spells}
+                        spells={spells}
+                        lands={lands}
                         xValue={xValue}
                         handleChangeXValue={handleChangeXValue}
                         sort={[orderRowsByP1, orderRowsByP2]}
