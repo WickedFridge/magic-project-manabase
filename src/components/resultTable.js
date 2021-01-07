@@ -19,10 +19,6 @@ const StyledTableCell = withStyles((theme) => ({
         backgroundColor: theme.palette.common.black,
         color: theme.palette.common.white,
     },
-    body: {
-        fontSize: 13,
-        color: theme.palette.grey,
-    },
 }))(TableCell);
 
 const useStylesMobile = makeStyles({
@@ -38,10 +34,8 @@ const useStylesMobile = makeStyles({
 const useStylesDesktop = (height) => makeStyles({
     table: {
         maxWidth: '100%',
-        maxHeight: 0.61 * height -82,
-    },
-    row: {
-        maxHeight: '10px',
+        height: 0.85 * height -230,
+        backgroundColor: '#1b222b',
     },
 })();
 
@@ -127,7 +121,7 @@ export default function ResultTable({ isMobile, rows, sortFunctions, fields, sel
                         />)}
                     </TableRow>
                 </TableHead>
-                <TableBody className={classes.data}>
+                <TableBody>
                     {sortedRows.map((row) => (
                         <TableRow hover className={classes.row} key={row.key} style={getRowBackgroundColor(row[fields[selectedField]])}>
                             <TableCell className={classes.row} component="th" scope="row" align="left">

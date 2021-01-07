@@ -28,7 +28,7 @@ It has been started by Charles Wickham in February 2020.
             - [x] handle fastlands
         - modal spells
             - [x] handle splitcards
-            - [ ] handle MDFC
+            - [x] handle MDFC
             - [x] handle alternate costs
             - [x] handle escape
             - [x] handle X spells
@@ -39,12 +39,17 @@ It has been started by Charles Wickham in February 2020.
         - [x] rework placeholder
             - [x] basic replacement
         - [ ] nice recap graph
+            - [ ] count the mana sources of each colors
+            - [ ] count the taplands ?
         - [ ] mean / median / percentiles
         - [ ] navbar
             - [x] chose X spell
             - [ ] %'s of playing spells at N+X
         - [ ] nice sideboard input
         - [ ] French version
+        - [ ] Account setup
+            - [ ] save your decklists
+            - [ ] compare your decklists
         
 - performance upgrades
     - [ ] handle colorless spells

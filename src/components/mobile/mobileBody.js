@@ -157,7 +157,7 @@ export default function MobileBody ({ decklist, handleDecklistChange, loading, s
                                 >
                                     <ResultTable
                                         title="Lands"
-                                        isMobile={false}
+                                        isMobile={true}
                                         rows={lands}
                                         sortFunctions={sort}
                                         fields={['p1']}

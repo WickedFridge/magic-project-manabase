@@ -12,8 +12,9 @@ import XSlider from "../xSlider";
 import DesktopTabs from "./desktopTabs";
 import HelpText from "../helpText";
 import DesktopResults from "./desktopResults";
+import {useCurrentHeight} from "../../utils/width";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = (height) => makeStyles((theme) => ({
     root: {
         width: '85vw',
     },
@@ -22,21 +23,19 @@ const useStyles = makeStyles((theme) => ({
         textAlign: 'center',
         backgroundColor: '#1b222b',
     },
-    results: {
-        height: '52vh',
-    },
     background: {
-        height: '60vh',
-        padding: '2vw',
+        height: 0.845 * height -148,
+        padding: '1vw 2vw',
         overflow: 'auto',
     },
     circular: {
         color: green[700],
     },
-}));
+}))();
 
 export default function DesktopBody({ decklist, handleDecklistChange, loading, spells, lands, sort, xValue, handleChangeXValue, handleClickSubmit }) {
-    const classes = useStyles();
+    let height = useCurrentHeight();
+    const classes = useStyles(height);
 
     return (
         <div className={classes.root}>
