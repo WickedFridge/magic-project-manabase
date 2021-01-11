@@ -2,8 +2,11 @@ const { getManaCost, calculateCMC } = require("../../../decklist/cards/utils");
 const AbstractApiClient = require(`../abstract`);
 const NotFoundError = require('../../errors/NotFoundError');
 
-function getManaProduced(color_identity, oracle_text) {
+function getManaProduced(color_identity, oracle_text, type) {
     const colors = color_identity;
+    if (type.includes('Snow')) {
+        colors.push('S');
+    }
     if (oracle_text.match(/\{T}: Add \{C}/)) {
         colors.push('C');
     }
@@ -88,7 +91,7 @@ class ScryfallApiClient extends AbstractApiClient {
             if(card_faces) {
                 card_faces = card_faces.map(splitcard => handleSplitCard({ ...splitcard, color_identity }));
             } else if (RegExp('Land').test(type_line) && colors.length === 0) {
-                colors.push(...getManaProduced(color_identity, oracle_text));
+                colors.push(...getManaProduced(color_identity, oracle_text, type_line));
             }
             const cost = card_faces ? {} : getManaCost(mana_cost);
             return { name: name.toLowerCase(), cmc, colors, type: type_line.split(' '), text: oracle_text, cost, mana_cost, card_faces };
