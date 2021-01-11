@@ -108,7 +108,7 @@ export default function ResultTable({ isMobile, rows, sortFunctions, fields, sel
 
     return (
         <TableContainer className={classes.table} component={Paper}>
-            <Table size="small" aria-label="customized table">
+            <Table stickyHeader size="small" aria-label="customized table">
                 <TableHead>
                     <TableRow>
                         <StyledTableCell align="left">{title}</StyledTableCell>

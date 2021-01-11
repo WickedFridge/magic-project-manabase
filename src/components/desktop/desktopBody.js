@@ -23,6 +23,9 @@ const useStyles = (height) => makeStyles((theme) => ({
         textAlign: 'center',
         backgroundColor: '#1b222b',
     },
+    results: {
+        height: 0.85 * height -230,
+    },
     background: {
         height: 0.845 * height -148,
         padding: '1vw 2vw',
