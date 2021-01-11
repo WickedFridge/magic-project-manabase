@@ -26,6 +26,7 @@ It has been started by Charles Wickham in February 2020.
             - [x] handle fetchlands
             - [x] handle checklands
             - [x] handle fastlands
+            - [ ] handle snow mana
         - modal spells
             - [x] handle splitcards
             - [x] handle MDFC
