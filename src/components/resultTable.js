@@ -114,6 +114,7 @@ export default function ResultTable({ isMobile, rows, sortFunctions, fields, sel
                         <StyledTableCell align="left">{title}</StyledTableCell>
                         {fields.map((f, i) => <HeaderTableCell
                             id={i}
+                            key={i}
                             label={f.toUpperCase()}
                             onClick={selectFieldToSort}
                             selected={selectedField}
@@ -122,12 +123,12 @@ export default function ResultTable({ isMobile, rows, sortFunctions, fields, sel
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {sortedRows.map((row) => (
-                        <TableRow hover className={classes.row} key={row.key} style={getRowBackgroundColor(row[fields[selectedField]])}>
+                    {sortedRows.map((row, i) => (
+                        <TableRow key={i} className={classes.row} style={getRowBackgroundColor(row[fields[selectedField]])}>
                             <TableCell className={classes.row} component="th" scope="row" align="left">
                                 {capitalize(row.key)}
                             </TableCell>
-                            {fields.map(f => <TableCell align="center">{`${row[f].toFixed(2)}%`}</TableCell>)}
+                            {fields.map((f, i) => <TableCell key={i} align="center">{`${row[f].toFixed(2)}%`}</TableCell>)}
                         </TableRow>
                     ))}
                 </TableBody>
