@@ -50,7 +50,6 @@ function getMobileRow(height) {
 }
 
 function getDesktopRow(height) {
-    console.log(height);
     // this formula was handmade calculated
     return Math.round(height / 18.5 - 14.5);
 }
