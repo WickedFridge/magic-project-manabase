@@ -1,4 +1,8 @@
-const { getLandNOnCurveProba } = require("../../../common/tools/hypergeometric");
+const { customLogger } = require('../../../common/logger');
+const { getLandNOnCurveProba } = require('../../../common/tools/hypergeometric');
+
+const logger = customLogger('processOutput');
+
 
 function processOutputData(data, deckSize, lands, cardCounts) {
     Object.entries(data.spells).forEach(([spellName, spellData]) => {
@@ -20,6 +24,9 @@ function processOutputData(data, deckSize, lands, cardCounts) {
                 return acc + cardCounts.deck[key] * landData[key].p1;
             }, 0)
         landData.p1 /= count;
+    });
+    lands.forEach(l => {
+        l.colors.forEach(color => data.sources[color]++);
     });
 }
 

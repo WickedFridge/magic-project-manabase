@@ -63,6 +63,8 @@ It has been started by Charles Wickham in February 2020.
         - [ ] precalculate / cache "generic combinations"
         - [x] "on the go calculation"
     - search each CMC only once
+    
+- [ ] Google Analytics
 
 ## Usage
 

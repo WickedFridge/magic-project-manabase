@@ -34,6 +34,7 @@ async function analyzeDecklist(decklist, xValue = 2) {
     const data = {
         spells: {},
         lands: {},
+        sources: { W: 0, U: 0, B: 0, R: 0, G: 0, C:0, S:0 },
     };
     zeroSpells.forEach(s => {
         data.spells[s.name] = {

@@ -21,7 +21,7 @@ function handleSplitCard(card) {
     const cmc = calculateCMC(cost);
     const type = card.type_line.split(' ');
     const colors = type.includes('Land') && card.colors.length === 0 ?
-        getManaProduced(card.color_identity, card.oracle_text) :
+        getManaProduced(card.color_identity, card.oracle_text, type) :
         card.colors;
 
     return {
