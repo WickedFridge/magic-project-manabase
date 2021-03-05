@@ -2,18 +2,15 @@ import React from 'react';
 import { createMuiTheme } from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/styles";
 import axios from 'axios';
-import config from '../config';
+import config from '../../config';
 import ErrorSnackbar from "./ErrorSnackbar";
-import DesktopBody from "./desktop/desktopBody";
-import MobileBody from "./mobile/mobileBody";
-import {defaultDecklist, defaultResults} from "../data/defaultInputs";
-import { useCurrentWitdh } from "../utils/width";
-
-const orderRowsByP2 = (data) => data.sort((s1, s2) => s1.p2 - s2.p2);
-const orderRowsByP1 = (data) => data.sort((s1, s2) => s1.p1 - s2.p1);
+import DesktopBody from "../desktop/desktopBody";
+import MobileBody from "../mobile/mobileBody";
+import {defaultDecklist, defaultResults} from "../../data/defaultInputs";
+import { useCurrentWitdh } from "../../utils/width";
 
 const createRows = (data) => Object.entries(data)
-    .map(([key, { p1, p2 }]) => ({ key, p1, p2 }));
+    .map(([key, { p1, p2, manaCost }]) => ({ key, p1, p2, manaCost }));
 
 const defaultRows = createRows(defaultResults);
 
@@ -114,7 +111,6 @@ export default function AppBody() {
                         lands={lands}
                         xValue={xValue}
                         handleChangeXValue={handleChangeXValue}
-                        sort={[orderRowsByP1, orderRowsByP2]}
                     /> :
                     <DesktopBody
                         decklist={decklistInput}
@@ -125,7 +121,6 @@ export default function AppBody() {
                         lands={lands}
                         xValue={xValue}
                         handleChangeXValue={handleChangeXValue}
-                        sort={[orderRowsByP1, orderRowsByP2]}
                     />
 
                 }

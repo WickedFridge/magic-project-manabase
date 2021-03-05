@@ -1,14 +1,14 @@
 import React from 'react';
-import {makeStyles} from "@material-ui/core/styles";
-import {green} from "@material-ui/core/colors";
-import DecklistInput from "../decklistInput";
+import { makeStyles } from "@material-ui/core/styles";
+import { green } from "@material-ui/core/colors";
+import DecklistInput from "../shared/decklistInput";
 import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
 import Fade from "@material-ui/core/Fade";
-import {CircularProgress} from "@material-ui/core";
-import ResultTable from "../resultTable";
+import { CircularProgress } from "@material-ui/core";
+import ResultTable from "../shared/resultTable/index";
 import MobileSubmitActions from "./mobileSubmitActions";
-import HelpText from "../helpText";
+import HelpText from "../shared/helpText";
 import MobileTabs from "./mobileTabs";
 
 const useStyles = makeStyles((theme) => ({
@@ -25,7 +25,6 @@ const useStyles = makeStyles((theme) => ({
         color: 'white',
     },
     results: {
-        width: '90%',
         padding: theme.spacing(2),
         textAlign: 'center',
         color: green[700],
@@ -35,9 +34,17 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function MobileBody ({ decklist, handleDecklistChange, loading, spells, lands, sort, xValue, handleChangeXValue, handleClickSubmit }) {
+export default function MobileBody ({ decklist, handleDecklistChange, loading, spells, lands, xValue, handleChangeXValue, handleClickSubmit }) {
     const classes = useStyles();
     const [index, setIndex] = React.useState(1);
+    const spellResultfields = [
+        { name: 'Cost', type: 'text', key: 'manaCost'},
+        { name: 'P1', type: 'number', key: 'p1'},
+        { name: 'P2', type: 'number', key: 'p2'},
+    ]
+    const landsResultFields = [
+        { name: 'Land Quality', type: 'number', key: 'p1' },
+    ];
 
     const handleClick = callback => () => {
         setIndex(2);
@@ -109,8 +116,7 @@ export default function MobileBody ({ decklist, handleDecklistChange, loading, s
                                         title={"Spells"}
                                         isMobile={true}
                                         rows={spells}
-                                        sortFunctions={sort}
-                                        fields={['p1', 'p2']}
+                                        fields={spellResultfields}
                                         tooltips={[
                                             'Assuming you hit all your landdrops',
                                             'True probability',
@@ -159,8 +165,7 @@ export default function MobileBody ({ decklist, handleDecklistChange, loading, s
                                         title="Lands"
                                         isMobile={true}
                                         rows={lands}
-                                        sortFunctions={sort}
-                                        fields={['p1']}
+                                        fields={landsResultFields}
                                         tooltips={[
                                             'Land Quality',
                                         ]}

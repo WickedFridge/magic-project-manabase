@@ -1,7 +1,7 @@
 import React from "react";
-import {useCurrentWitdh} from "../utils/width";
-import MobileHeader from "./mobile/mobileHeader";
-import DesktopHeader from "./desktop/desktopHeader";
+import {useCurrentWitdh} from "../../utils/width";
+import MobileHeader from "../mobile/mobileHeader";
+import DesktopHeader from "../desktop/desktopHeader";
 
 export default function AppHeader() {
 

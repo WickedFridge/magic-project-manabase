@@ -3,7 +3,7 @@ import {makeStyles, withStyles} from '@material-ui/core/styles';
 import Fab from '@material-ui/core/Fab';
 import CheckIcon from '@material-ui/icons/Check';
 import {green, orange, yellow} from "@material-ui/core/colors";
-import XSlider from "../xSlider";
+import XSlider from "../shared/xSlider";
 import Grid from "@material-ui/core/Grid";
 
 const ColoredFab = withStyles((theme) => ({

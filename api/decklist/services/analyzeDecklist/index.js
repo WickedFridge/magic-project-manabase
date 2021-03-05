@@ -39,6 +39,7 @@ async function analyzeDecklist(decklist, xValue = 2) {
     zeroSpells.forEach(s => {
         data.spells[s.name] = {
             cmc: 0,
+            manaCost: '{0}',
             ok: 1,
             nok: 0,
         };
@@ -47,6 +48,7 @@ async function analyzeDecklist(decklist, xValue = 2) {
     nonZeroSpells.forEach(s => {
         data.spells[s.name] = {
             cmc: s.cmc,
+            manaCost: s.mana_cost,
             ok: 0,
             nok: 0,
         };

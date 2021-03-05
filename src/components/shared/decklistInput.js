@@ -4,8 +4,8 @@ import {
     makeStyles,
 } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
-import { defaultDecklist } from "../data/defaultInputs";
-import {useCurrentHeight} from "../utils/width";
+import { defaultDecklist } from "../../data/defaultInputs";
+import {useCurrentHeight} from "../../utils/width";
 
 const CssTextField = withStyles({
     root: {

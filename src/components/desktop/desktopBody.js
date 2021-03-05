@@ -1,6 +1,6 @@
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
-import DecklistInput from "../decklistInput";
+import DecklistInput from "../shared/decklistInput";
 import Box from "@material-ui/core/Box";
 import Fade from "@material-ui/core/Fade";
 import {CircularProgress} from "@material-ui/core";
@@ -8,9 +8,9 @@ import SubmitButton from "./submitButton";
 import React from "react";
 import {makeStyles} from "@material-ui/core/styles";
 import {green} from "@material-ui/core/colors";
-import XSlider from "../xSlider";
+import XSlider from "../shared/xSlider";
 import DesktopTabs from "./desktopTabs";
-import HelpText from "../helpText";
+import HelpText from "../shared/helpText";
 import DesktopResults from "./desktopResults";
 import {useCurrentHeight} from "../../utils/width";
 
@@ -36,7 +36,7 @@ const useStyles = (height) => makeStyles((theme) => ({
     },
 }))();
 
-export default function DesktopBody({ decklist, handleDecklistChange, loading, spells, lands, sort, xValue, handleChangeXValue, handleClickSubmit }) {
+export default function DesktopBody({ decklist, handleDecklistChange, loading, spells, lands, xValue, handleChangeXValue, handleClickSubmit }) {
     let height = useCurrentHeight();
     const classes = useStyles(height);
 
@@ -98,7 +98,6 @@ export default function DesktopBody({ decklist, handleDecklistChange, loading, s
                                                         <DesktopResults
                                                             spells={spells}
                                                             lands={lands}
-                                                            sort={sort}
                                                         />
                                                     </Fade>
                                                 }

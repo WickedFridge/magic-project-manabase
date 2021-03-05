@@ -1,8 +1,16 @@
 import Grid from "@material-ui/core/Grid";
-import ResultTable from "../resultTable";
+import ResultTable from "../shared/resultTable/index";
 import React from "react";
 
-export default function DesktopResults({ spells, lands, sort}) {
+export default function DesktopResults({ spells, lands}) {
+    const spellResultfields = [
+        { name: 'Mana Cost', type: 'text', key: 'manaCost'},
+        { name: 'P1', type: 'number', key: 'p1'},
+        { name: 'P2', type: 'number', key: 'p2'},
+    ]
+    const landsResultFields = [
+        { name: 'Land Quality', type: 'number', key: 'p1' },
+    ];
 
     return (
         <Grid
@@ -16,9 +24,9 @@ export default function DesktopResults({ spells, lands, sort}) {
                     title="Spells"
                     isMobile={false}
                     rows={spells}
-                    sortFunctions={sort}
-                    fields={['p1', 'p2']}
+                    fields={spellResultfields}
                     tooltips={[
+                        'Converted Mana cost',
                         'Assuming you hit all your landdrops',
                         'True probability',
                     ]}
@@ -30,8 +38,7 @@ export default function DesktopResults({ spells, lands, sort}) {
                     title="Lands"
                     isMobile={false}
                     rows={lands}
-                    sortFunctions={sort}
-                    fields={['p1']}
+                    fields={landsResultFields}
                     tooltips={[
                         'Land Quality',
                     ]}

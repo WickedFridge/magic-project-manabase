@@ -30,7 +30,7 @@ export default function HelpText() {
             <p className={classes.question}>Why does it take that much time ?</p>
             <p className={classes.answer}>The complexity is exponential, so while 40 cards decklist will be pretty quick to calculate, Brawl decklist could take a while. And I do pay for the computing power, so I keep it low so far.</p>
             <p className={classes.question}>Does it take every land into account ?</p>
-            <p className={classes.answer}>This tool takes fetchlands, ravlands, taplands, checklands, fliplands into account. For example a guildgate and a checkland won't be able to play a 2 mana spell on curve, while a triome and a checkland will. Strange lands like Phyrexian Tower and </p>
+            <p className={classes.answer}>This tool takes fetchlands, ravlands, taplands, checklands, fliplands into account. For example a guildgate and a checkland won't be able to play a 2 mana spell on curve, while a triome and a checkland will. Strange lands like Phyrexian Tower and Interplanar Beacon aren't handled yet. Almost every classic mana producing land is handled (including snow lands).</p>
             <p className={classes.question}>What about you ?</p>
             <p className={classes.answer}>I hope you'll use it and like it. I will continue improving the UI and adding features, so don't hesitate to reach out to me :) You can find me on Twitter @WickedFridge or on discord CharlesW (WickedFridge)#7589</p>
             <p className={classes.answer}>This is a project I work on for free on my free time, so don't be too hard on me too !</p>
