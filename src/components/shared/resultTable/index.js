@@ -10,6 +10,7 @@ import Paper from '@material-ui/core/Paper';
 import { red, blueGrey } from "@material-ui/core/colors";
 import {useCurrentHeight} from "../../../utils/width";
 import HeaderTableCell from "./headerTableCell";
+import ResultCell from "./resultCell";
 
 const capitalize = name => name.charAt(0).toUpperCase() + name.slice(1);
 
@@ -61,16 +62,6 @@ const getRowBackgroundColor = (value) => {
         backgroundColor
     };
 };
-
-
-const ResultCell = ({ key, row, field }) => {
-    let content = row[field.key];
-    if (field.type === 'number') {
-        content = `${content.toFixed(2)}%`;
-    }
-
-    return <TableCell key={key} align="center">{content}</TableCell>;
-}
 
 const getSortFunctions = (fields) => {
     return fields.map(field => (data) => (data.sort((s1, s2) => s1[field.key] - s2[field.key])))
