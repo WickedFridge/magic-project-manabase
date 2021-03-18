@@ -43,7 +43,7 @@ export default function MobileBody ({ decklist, handleDecklistChange, loading, s
         { name: 'P2', type: 'number', key: 'p2'},
     ]
     const landsResultFields = [
-        { name: 'Land Quality', type: 'number', key: 'p1' },
+        { name: 'Quality', type: 'number', key: 'p1' },
     ];
 
     const handleClick = callback => () => {

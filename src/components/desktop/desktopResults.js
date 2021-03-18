@@ -9,7 +9,7 @@ export default function DesktopResults({ spells, lands}) {
         { name: 'P2', type: 'number', key: 'p2'},
     ]
     const landsResultFields = [
-        { name: 'Land Quality', type: 'number', key: 'p1' },
+        { name: 'Quality', type: 'number', key: 'p1' },
     ];
 
     return (

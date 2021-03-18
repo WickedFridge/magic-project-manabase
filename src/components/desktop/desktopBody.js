@@ -4,15 +4,14 @@ import DecklistInput from "../shared/decklistInput";
 import Box from "@material-ui/core/Box";
 import Fade from "@material-ui/core/Fade";
 import {CircularProgress} from "@material-ui/core";
-import SubmitButton from "./submitButton";
 import React from "react";
 import {makeStyles} from "@material-ui/core/styles";
 import {green} from "@material-ui/core/colors";
-import XSlider from "../shared/xSlider";
 import DesktopTabs from "./desktopTabs";
 import HelpText from "../shared/helpText";
 import DesktopResults from "./desktopResults";
 import {useCurrentHeight} from "../../utils/width";
+import SubmitSection from "./submitSection";
 
 const useStyles = (height) => makeStyles((theme) => ({
     root: {
@@ -105,24 +104,12 @@ export default function DesktopBody({ decklist, handleDecklistChange, loading, s
                                         </Box>
                                     </Paper>
                                 </Grid>
-                                <Grid item xs={12}>
-                                    <Paper className={classes.paper}>
-                                        <Grid container justify="center" spacing={4}>
-                                            <Grid item>
-                                                <XSlider
-                                                    value={xValue}
-                                                    handleChange={handleChangeXValue}
-                                                />
-                                            </Grid>
-                                            <Grid item>
-                                                <SubmitButton
-                                                    onClick={handleClickSubmit}
-                                                    disabled={loading}
-                                                />
-                                            </Grid>
-                                        </Grid>
-                                    </Paper>
-                                </Grid>
+                                <SubmitSection
+                                    xValue={xValue}
+                                    handleChangeXValue={handleChangeXValue}
+                                    handleClickSubmit={handleClickSubmit}
+                                    loading={loading}
+                                />
                             </Grid>
                         </Grid>
                     </Grid>
