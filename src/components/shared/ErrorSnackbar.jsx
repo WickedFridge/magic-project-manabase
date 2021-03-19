@@ -3,11 +3,11 @@ import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import { makeStyles } from '@material-ui/core/styles';
 
-function Alert(props) {
-    const [severity, message] = props.querysuccess ? ['success', props.successmessage] : ['error', props.errormessage];
+function Alert({ errormessage, onClose, querysuccess, successmessage }) {
+    const [severity, message] = querysuccess ? ['success', successmessage] : ['error', errormessage];
 
     return (
-        <MuiAlert elevation={6} severity={severity} variant="filled" {...props}>
+        <MuiAlert elevation={6} onClose={onClose} severity={severity} variant="filled">
             {message}
         </MuiAlert>
     );
@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function ErrorSnackbar(props) {
+const ErrorSnackbar = ({ errormessage, handleClose, open, querysuccess, successmessage }) => {
     const classes = useStyles();
 
     return (
@@ -33,16 +33,18 @@ export default function ErrorSnackbar(props) {
                     horizontal: 'left',
                 }}
                 autoHideDuration={6000}
-                onClose={props.handleClose}
-                open={props.open}
+                onClose={handleClose}
+                open={open}
             >
                 <Alert
-                    errormessage={props.errormessage}
-                    onClose={props.handleClose}
-                    querysuccess={props.querysuccess}
-                    successmessage={props.successmessage}
+                    errormessage={errormessage}
+                    onClose={handleClose}
+                    querysuccess={querysuccess}
+                    successmessage={successmessage}
                 />
             </Snackbar>
         </div>
     );
-}
+};
+
+export default ErrorSnackbar;

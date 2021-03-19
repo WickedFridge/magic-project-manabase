@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function SubmitButton(props) {
+const SubmitButton = ({ disabled, onClick }) => {
     const classes = useStyles();
 
     return (
@@ -34,12 +34,14 @@ export default function SubmitButton(props) {
                     disabled: classes.disabled,
                 }}
                 color="primary"
-                disabled={props.disabled}
-                onClick={props.onClick}
+                disabled={disabled}
+                onClick={onClick}
                 variant="contained"
             >
                 Submit
             </ColorButton>
         </div>
     );
-}
+};
+
+export default SubmitButton;

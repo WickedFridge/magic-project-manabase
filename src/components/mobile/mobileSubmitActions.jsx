@@ -31,14 +31,14 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function MobileSubmitActions(props) {
+const MobileSubmitActions = ({ disabled, handleChangeXValue, onClick, xValue }) => {
     const classes = useStyles();
 
     return (
         <div>
             <Grid justify="center" spacing={3} container>
                 <Grid item>
-                    <XSlider handleChange={props.handleChangeXValue} value={props.xValue} />
+                    <XSlider handleChange={handleChangeXValue} value={xValue} />
                 </Grid>
                 <Grid item>
                     <ColoredFab
@@ -48,8 +48,8 @@ export default function MobileSubmitActions(props) {
                             disabled: classes.disabled,
                         }}
                         color="primary"
-                        disabled={props.disabled}
-                        onClick={props.onClick}
+                        disabled={disabled}
+                        onClick={onClick}
                     >
                         <CheckIcon />
                     </ColoredFab>
@@ -57,4 +57,6 @@ export default function MobileSubmitActions(props) {
             </Grid>
         </div>
     );
-}
+};
+
+export default MobileSubmitActions;

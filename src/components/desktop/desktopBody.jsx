@@ -36,7 +36,16 @@ const useStyles = (height) =>
         },
     }))();
 
-export default function DesktopBody({
+const HelpTab = ({ classes }) => (
+    <Paper className={classes.paper}>
+        <Box className={classes.background} textAlign="left">
+            <HelpText />
+        </Box>
+    </Paper>
+);
+
+const MainTab = ({
+    classes,
     decklist,
     handleDecklistChange,
     loading,
@@ -45,73 +54,88 @@ export default function DesktopBody({
     xValue,
     handleChangeXValue,
     handleClickSubmit,
-}) {
+}) => (
+    <Grid spacing={2} container>
+        <Grid xs={3} item>
+            <Paper className={classes.paper}>
+                <DecklistInput onChange={handleDecklistChange} value={decklist} />
+            </Paper>
+        </Grid>
+        <Grid xs={9} item>
+            <Grid alignItems="stretch" direction="column" justify="space-evenly" spacing={2} container>
+                <Grid xs={12} item>
+                    <Paper className={classes.paper}>
+                        <Box alignItems="center" className={classes.results} display="flex">
+                            <Grid alignItems="center" direction="column" justify="center" container>
+                                {loading ? (
+                                    <Fade
+                                        in={loading}
+                                        style={{
+                                            transitionDelay: '500ms',
+                                        }}
+                                        unmountOnExit
+                                    >
+                                        <CircularProgress className={classes.circular} size={100} thickness={2} />
+                                    </Fade>
+                                ) : (
+                                    <Fade
+                                        in={!loading}
+                                        style={{
+                                            transitionDelay: '500ms',
+                                        }}
+                                        unmountOnExit
+                                    >
+                                        <DesktopResults lands={lands} spells={spells} />
+                                    </Fade>
+                                )}
+                            </Grid>
+                        </Box>
+                    </Paper>
+                </Grid>
+                <SubmitSection
+                    handleChangeXValue={handleChangeXValue}
+                    handleClickSubmit={handleClickSubmit}
+                    loading={loading}
+                    xValue={xValue}
+                />
+            </Grid>
+        </Grid>
+    </Grid>
+);
+
+const DesktopBody = ({
+    decklist,
+    handleDecklistChange,
+    loading,
+    spells,
+    lands,
+    xValue,
+    handleChangeXValue,
+    handleClickSubmit,
+}) => {
     const height = useCurrentHeight();
     const classes = useStyles(height);
 
     return (
         <div className={classes.root}>
             <DesktopTabs
-                help={
-                    <Paper className={classes.paper}>
-                        <Box className={classes.background} textAlign="left">
-                            <HelpText />
-                        </Box>
-                    </Paper>
-                }
+                help={<HelpTab classes={classes} />}
                 main={
-                    <Grid spacing={2} container>
-                        <Grid xs={3} item>
-                            <Paper className={classes.paper}>
-                                <DecklistInput onChange={handleDecklistChange} value={decklist} />
-                            </Paper>
-                        </Grid>
-                        <Grid xs={9} item>
-                            <Grid alignItems="stretch" direction="column" justify="space-evenly" spacing={2} container>
-                                <Grid xs={12} item>
-                                    <Paper className={classes.paper}>
-                                        <Box alignItems="center" className={classes.results} display="flex">
-                                            <Grid alignItems="center" direction="column" justify="center" container>
-                                                {loading ? (
-                                                    <Fade
-                                                        in={loading}
-                                                        style={{
-                                                            transitionDelay: '500ms',
-                                                        }}
-                                                        unmountOnExit
-                                                    >
-                                                        <CircularProgress
-                                                            className={classes.circular}
-                                                            size={100}
-                                                            thickness={2}
-                                                        />
-                                                    </Fade>
-                                                ) : (
-                                                    <Fade
-                                                        in={!loading}
-                                                        style={{
-                                                            transitionDelay: '500ms',
-                                                        }}
-                                                        unmountOnExit
-                                                    >
-                                                        <DesktopResults lands={lands} spells={spells} />
-                                                    </Fade>
-                                                )}
-                                            </Grid>
-                                        </Box>
-                                    </Paper>
-                                </Grid>
-                                <SubmitSection
-                                    handleChangeXValue={handleChangeXValue}
-                                    handleClickSubmit={handleClickSubmit}
-                                    loading={loading}
-                                    xValue={xValue}
-                                />
-                            </Grid>
-                        </Grid>
-                    </Grid>
+                    <MainTab
+                        classes={classes}
+                        decklist={decklist}
+                        handleChangeXValue={handleChangeXValue}
+                        handleClickSubmit={handleClickSubmit}
+                        handleDecklistChange={handleDecklistChange}
+                        lands={lands}
+                        loading={loading}
+                        spells={spells}
+                        xValue={xValue}
+                    />
                 }
             />
         </div>
     );
-}
+};
+
+export default DesktopBody;

@@ -69,7 +69,7 @@ const getSortFunctions = (fields) => {
     return fields.map((field) => (data) => data.sort((s1, s2) => s1[field.key] - s2[field.key]));
 };
 
-export default function ResultTable({ isMobile, rows, fields, selected, tooltips, title }) {
+const ResultTable = ({ isMobile, rows, fields, selected, tooltips, title }) => {
     const height = useCurrentHeight();
     const desktopClasses = useStylesDesktop(height);
     const mobileClasses = useStylesMobile();
@@ -120,4 +120,6 @@ export default function ResultTable({ isMobile, rows, fields, selected, tooltips
             </Table>
         </TableContainer>
     );
-}
+};
+
+export default ResultTable;

@@ -32,15 +32,15 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
-export default function MobileTabs(props) {
+const MobileTabs = ({ index, help, landResults, main, setIndex, spellResults }) => {
     const classes = useStyles();
 
     const handleChange = (event, newIndex) => {
-        props.setIndex(newIndex);
+        setIndex(newIndex);
     };
 
     const handleChangeIndex = (index) => {
-        props.setIndex(index);
+        setIndex(index);
     };
 
     return (
@@ -49,7 +49,7 @@ export default function MobileTabs(props) {
                 <Tabs
                     classes={{ indicator: classes.indicator }}
                     onChange={handleChange}
-                    value={props.index}
+                    value={index}
                     variant="fullWidth"
                 >
                     <Tab aria-label="help" classes={{ selected: classes.selected }} icon={<HelpIcon />} label="Help" />
@@ -73,12 +73,14 @@ export default function MobileTabs(props) {
                     />
                 </Tabs>
             </Paper>
-            <SwipeableViews index={props.index} onChangeIndex={handleChangeIndex}>
-                <div className={classes.slide1}>{props.help}</div>
-                <div className={classes.slide2}>{props.main}</div>
-                <div className={classes.slide3}>{props.spellResults}</div>
-                <div className={classes.slide4}>{props.landResults}</div>
+            <SwipeableViews index={index} onChangeIndex={handleChangeIndex}>
+                <div className={classes.slide1}>{help}</div>
+                <div className={classes.slide2}>{main}</div>
+                <div className={classes.slide3}>{spellResults}</div>
+                <div className={classes.slide4}>{landResults}</div>
             </SwipeableViews>
         </div>
     );
-}
+};
+
+export default MobileTabs;

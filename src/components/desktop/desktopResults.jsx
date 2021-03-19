@@ -2,7 +2,7 @@ import Grid from '@material-ui/core/Grid';
 import React from 'react';
 import ResultTable from '../shared/resultTable/index';
 
-export default function DesktopResults({ spells, lands }) {
+const DesktopResults = ({ spells, lands }) => {
     const spellResultfields = [
         { name: 'Mana Cost', type: 'text', key: 'manaCost' },
         { name: 'P1', type: 'number', key: 'p1' },
@@ -34,4 +34,6 @@ export default function DesktopResults({ spells, lands }) {
             </Grid>
         </Grid>
     );
-}
+};
+
+export default DesktopResults;

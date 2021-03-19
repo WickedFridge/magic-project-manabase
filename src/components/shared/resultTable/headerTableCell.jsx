@@ -15,17 +15,13 @@ const BigTooltip = withStyles(() => ({
     },
 }))(Tooltip);
 
-const HeaderTableCell = (props) => {
+const HeaderTableCell = ({ id, label, onClick, selected, tooltips }) => {
     return (
-        <TableCell
-            align="center"
-            style={getHeaderBackgroundColor(props.selected === props.id)}
-            onClick={props.onClick(props.id)}
-        >
-            <BigTooltip title={props.tooltips} placement="top" arrow>
+        <TableCell align="center" onClick={onClick(id)} style={getHeaderBackgroundColor(selected === id)}>
+            <BigTooltip placement="top" title={tooltips} arrow>
                 <div align="center">
-                    <span>{props.label}</span>
-                    <TableSortLabel active={props.selected === props.id} />
+                    <span>{label}</span>
+                    <TableSortLabel active={selected === id} />
                 </div>
             </BigTooltip>
         </TableCell>

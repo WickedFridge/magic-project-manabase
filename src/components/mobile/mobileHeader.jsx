@@ -9,7 +9,7 @@ const useStyles = makeStyles(() => ({
         margin: '5px',
     },
 }));
-export default function MobileHeader() {
+const MobileHeader = () => {
     const classes = useStyles();
 
     return (
@@ -20,4 +20,6 @@ export default function MobileHeader() {
             </h4>
         </header>
     );
-}
+};
+
+export default MobileHeader;

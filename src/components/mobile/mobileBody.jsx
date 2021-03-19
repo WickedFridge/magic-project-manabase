@@ -34,7 +34,95 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function MobileBody({
+const HelpTab = ({ classes }) => (
+    <Box className={classes.background} textAlign="left">
+        <HelpText />
+    </Box>
+);
+
+const LandResults = ({ classes, lands, landsResultFields, loading }) => (
+    <Box alignItems="center" className={classes.results} display="flex">
+        <Grid alignItems="center" direction="column" justify="center" container>
+            {loading ? (
+                <Fade
+                    in={loading}
+                    style={{
+                        transitionDelay: '500ms',
+                    }}
+                    unmountOnExit
+                >
+                    <CircularProgress className={classes.circular} size={100} thickness={2} />
+                </Fade>
+            ) : (
+                <Fade
+                    in={!loading}
+                    style={{
+                        transitionDelay: '500ms',
+                    }}
+                    unmountOnExit
+                >
+                    <ResultTable
+                        fields={landsResultFields}
+                        rows={lands}
+                        selected={0}
+                        title="Lands"
+                        tooltips={['Land Quality']}
+                        isMobile
+                    />
+                </Fade>
+            )}
+        </Grid>
+    </Box>
+);
+
+const SpellResults = ({ classes, loading, spellResultfields, spells }) => (
+    <Box alignItems="center" className={classes.results} display="flex">
+        <Grid alignItems="center" direction="column" justify="center" container>
+            {loading ? (
+                <Fade
+                    in={loading}
+                    style={{
+                        transitionDelay: '500ms',
+                    }}
+                    unmountOnExit
+                >
+                    <CircularProgress className={classes.circular} size={100} thickness={2} />
+                </Fade>
+            ) : (
+                <Fade
+                    in={!loading}
+                    style={{
+                        transitionDelay: '500ms',
+                    }}
+                    unmountOnExit
+                >
+                    <ResultTable
+                        fields={spellResultfields}
+                        rows={spells}
+                        selected={1}
+                        title="Spells"
+                        tooltips={['Assuming you hit all your landdrops', 'True probability']}
+                        isMobile
+                    />
+                </Fade>
+            )}
+        </Grid>
+    </Box>
+);
+
+const MainTab = ({ decklist, handleDecklistChange, loading, handleChangeXValue, onClick, xValue }) => (
+    <div>
+        <DecklistInput onChange={handleDecklistChange} value={decklist} isMobile />
+        <MobileSubmitActions
+            disabled={loading}
+            handleChangeXValue={handleChangeXValue}
+            onClick={onClick}
+            xValue={xValue}
+        />
+    </div>
+);
+
+const MobileBody = ({
     decklist,
     handleDecklistChange,
     loading,
@@ -43,7 +131,7 @@ export default function MobileBody({
     xValue,
     handleChangeXValue,
     handleClickSubmit,
-}) {
+}) => {
     const classes = useStyles();
     const [index, setIndex] = React.useState(1);
     const spellResultfields = [
@@ -61,93 +149,38 @@ export default function MobileBody({
     return (
         <div className={classes.root}>
             <MobileTabs
-                help={
-                    <Box className={classes.background} textAlign="left">
-                        <HelpText />
-                    </Box>
-                }
+                help={<HelpTab classes={classes} />}
                 index={index}
                 landResults={
-                    <Box alignItems="center" className={classes.results} display="flex">
-                        <Grid alignItems="center" direction="column" justify="center" container>
-                            {loading ? (
-                                <Fade
-                                    in={loading}
-                                    style={{
-                                        transitionDelay: '500ms',
-                                    }}
-                                    unmountOnExit
-                                >
-                                    <CircularProgress className={classes.circular} size={100} thickness={2} />
-                                </Fade>
-                            ) : (
-                                <Fade
-                                    in={!loading}
-                                    style={{
-                                        transitionDelay: '500ms',
-                                    }}
-                                    unmountOnExit
-                                >
-                                    <ResultTable
-                                        fields={landsResultFields}
-                                        rows={lands}
-                                        selected={0}
-                                        title="Lands"
-                                        tooltips={['Land Quality']}
-                                        isMobile
-                                    />
-                                </Fade>
-                            )}
-                        </Grid>
-                    </Box>
+                    <LandResults
+                        classes={classes}
+                        lands={lands}
+                        landsResultFields={landsResultFields}
+                        loading={loading}
+                    />
                 }
                 main={
-                    <div>
-                        <DecklistInput onChange={handleDecklistChange} value={decklist} isMobile />
-                        <MobileSubmitActions
-                            disabled={loading}
-                            handleChangeXValue={handleChangeXValue}
-                            onClick={handleClick(handleClickSubmit)}
-                            xValue={xValue}
-                        />
-                    </div>
+                    <MainTab
+                        decklist={decklist}
+                        handleChangeXValue={handleChangeXValue}
+                        handleDecklistChange={handleDecklistChange}
+                        loading={loading}
+                        onClick={handleClick(handleClickSubmit)}
+                        xValue={xValue}
+                    />
                 }
                 setIndex={setIndex}
                 spellResults={
-                    <Box alignItems="center" className={classes.results} display="flex">
-                        <Grid alignItems="center" direction="column" justify="center" container>
-                            {loading ? (
-                                <Fade
-                                    in={loading}
-                                    style={{
-                                        transitionDelay: '500ms',
-                                    }}
-                                    unmountOnExit
-                                >
-                                    <CircularProgress className={classes.circular} size={100} thickness={2} />
-                                </Fade>
-                            ) : (
-                                <Fade
-                                    in={!loading}
-                                    style={{
-                                        transitionDelay: '500ms',
-                                    }}
-                                    unmountOnExit
-                                >
-                                    <ResultTable
-                                        fields={spellResultfields}
-                                        rows={spells}
-                                        selected={1}
-                                        title="Spells"
-                                        tooltips={['Assuming you hit all your landdrops', 'True probability']}
-                                        isMobile
-                                    />
-                                </Fade>
-                            )}
-                        </Grid>
-                    </Box>
+                    <SpellResults
+                        classes={classes}
+                        loading={loading}
+                        spellResultfields={spellResultfields}
+                        spells={spells}
+                    />
                 }
             />
         </div>
     );
-}
+};
+
+export default MobileBody;

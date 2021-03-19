@@ -3,9 +3,11 @@ import { useCurrentWitdh } from '../../utils/width';
 import MobileHeader from '../mobile/mobileHeader';
 import DesktopHeader from '../desktop/desktopHeader';
 
-export default function AppHeader() {
+const AppHeader = () => {
     const width = useCurrentWitdh();
     const isMobile = width <= 500;
 
     return isMobile ? <MobileHeader /> : <DesktopHeader />;
-}
+};
+
+export default AppHeader;

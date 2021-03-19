@@ -9,7 +9,7 @@ const useStyles = makeStyles(() => ({
         margin: '0.5em',
     },
 }));
-export default function DesktopHeader() {
+const DesktopHeader = () => {
     const classes = useStyles();
 
     return (
@@ -20,4 +20,5 @@ export default function DesktopHeader() {
             </h4>
         </header>
     );
-}
+};
+export default DesktopHeader;
