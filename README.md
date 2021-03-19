@@ -15,7 +15,7 @@ It has been started by Charles Wickham in February 2020.
     - [x] expose basic front
 - known bugs
     - [ ] Lands in sideboard are counted as mana sources
-    - [ ] X amounts in cycling isn't working
+    - [x] X amounts in cycling isn't working
 - features
     - backEnd
         - mana
@@ -65,6 +65,11 @@ It has been started by Charles Wickham in February 2020.
     - search each CMC only once
     
 - [ ] Google Analytics
+
+- tech
+    - [ ] setup linter
+    - [ ] setup prettier
+    - [ ] refacto the front
 
 ## Usage
 

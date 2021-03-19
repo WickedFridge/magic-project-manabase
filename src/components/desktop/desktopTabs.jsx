@@ -6,10 +6,10 @@ import Tab from '@material-ui/core/Tab';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-import HelpIcon from "@material-ui/icons/Help";
-import PlaylistAddCheckIcon from "@material-ui/icons/PlaylistAddCheck";
+import HelpIcon from '@material-ui/icons/Help';
+import PlaylistAddCheckIcon from '@material-ui/icons/PlaylistAddCheck';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
     paper: {
         textAlign: 'center',
         backgroundColor: '#1b222b',
@@ -24,11 +24,11 @@ function TabPanel(props) {
 
     return (
         <Typography
+            aria-labelledby={`simple-tab-${index}`}
             component="div"
-            role="tabpanel"
             hidden={value !== index}
             id={`simple-tabpanel-${index}`}
-            aria-labelledby={`simple-tab-${index}`}
+            role="tabpanel"
             {...other}
         >
             {value === index && <Box p={3}>{children}</Box>}
@@ -53,20 +53,15 @@ export default function DesktopTabs(props) {
     return (
         <div>
             <Paper className={classes.paper}>
-                <Tabs
-                    value={value}
-                    onChange={handleChange}
-                    centered
-                    classes={{ indicator: classes.indicator }}
-                >
-                    <Tab icon={<PlaylistAddCheckIcon/>} label="Analyze" />
-                    <Tab icon={<HelpIcon/>}  label="Help" />
+                <Tabs classes={{ indicator: classes.indicator }} onChange={handleChange} value={value} centered>
+                    <Tab icon={<PlaylistAddCheckIcon />} label="Analyze" />
+                    <Tab icon={<HelpIcon />} label="Help" />
                 </Tabs>
             </Paper>
-            <TabPanel value={value} index={0}>
+            <TabPanel index={0} value={value}>
                 {props.main}
             </TabPanel>
-            <TabPanel value={value} index={1}>
+            <TabPanel index={1} value={value}>
                 {props.help}
             </TabPanel>
         </div>

@@ -1,6 +1,6 @@
-import TableCell from "@material-ui/core/TableCell";
-import React from "react";
-import { makeStyles } from "@material-ui/styles";
+import TableCell from '@material-ui/core/TableCell';
+import React from 'react';
+import { makeStyles } from '@material-ui/styles';
 import ManaWhite from '../../../images/mana/colored/white.svg';
 import ManaBlue from '../../../images/mana/colored/blue.svg';
 import ManaBlack from '../../../images/mana/colored/black.svg';
@@ -74,14 +74,14 @@ const images = {
     '{12}': ManaTwelve,
     '{13}': ManaThirteen,
     '{15}': ManaFifteen,
-}
+};
 
 const ManaSymbol = ({ color }) => {
     const styles = classes();
     const image = images[color] || images['{X}'];
 
     return <img alt={color} className={styles.manaSymbol} src={image} />;
-}
+};
 
 const ResultCell = ({ row, field }) => {
     let content = row[field.key];
@@ -91,10 +91,16 @@ const ResultCell = ({ row, field }) => {
     }
     if (field.type === 'text') {
         const manaSymbols = content.match(/({\w(\/\w)?})/g);
-        content = <div>{manaSymbols.map((mana) => <ManaSymbol color={mana} />)}</div>
+        content = (
+            <div>
+                {manaSymbols.map((mana) => (
+                    <ManaSymbol color={mana} />
+                ))}
+            </div>
+        );
     }
 
     return <TableCell align="center">{content}</TableCell>;
-}
+};
 
 export default ResultCell;

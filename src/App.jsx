@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
-import AppBody from "./components/shared/appBody";
-import AppHeader from "./components/shared/appHeader";
+import AppBody from './components/shared/appBody';
+import AppHeader from './components/shared/appHeader';
 // import { v4 } from 'uuid'
 // import ReactGA from 'react-ga';
 // import auth from './auth.ts'; // Sample authentication provider
@@ -10,18 +10,18 @@ import AppHeader from "./components/shared/appHeader";
 // ReactGA.initialize(trackingId);
 // ReactGA.set({
 //     userId: v4()
-    // userId: auth.currentUserId(),
-    // any data that is relevant to the user session
-    // that you would like to track with google analytics
+// userId: auth.currentUserId(),
+// any data that is relevant to the user session
+// that you would like to track with google analytics
 // });
 
 function App() {
-  return (
-    <div className="App">
-      <AppHeader/>
-      <AppBody/>
-    </div>
-  );
+    return (
+        <div className="App">
+            <AppHeader />
+            <AppBody />
+        </div>
+    );
 }
 
 export default App;

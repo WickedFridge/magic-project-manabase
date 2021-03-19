@@ -1,27 +1,26 @@
 import React from 'react';
-import { createMuiTheme } from "@material-ui/core";
-import { ThemeProvider } from "@material-ui/styles";
+import { createMuiTheme } from '@material-ui/core';
+import { ThemeProvider } from '@material-ui/styles';
 import axios from 'axios';
 import config from '../../config';
-import ErrorSnackbar from "./ErrorSnackbar";
-import DesktopBody from "../desktop/desktopBody";
-import MobileBody from "../mobile/mobileBody";
-import {defaultDecklist, defaultResults} from "../../data/defaultInputs";
-import { useCurrentWitdh } from "../../utils/width";
+import DesktopBody from '../desktop/desktopBody';
+import MobileBody from '../mobile/mobileBody';
+import { defaultDecklist, defaultResults } from '../../data/defaultInputs';
+import { useCurrentWitdh } from '../../utils/width';
+import ErrorSnackbar from './ErrorSnackbar';
 
-const createRows = (data) => Object.entries(data)
-    .map(([key, { p1, p2, manaCost }]) => ({ key, p1, p2, manaCost }));
+const createRows = (data) => Object.entries(data).map(([key, { p1, p2, manaCost }]) => ({ key, p1, p2, manaCost }));
 
 const defaultRows = createRows(defaultResults);
 
 const theme = createMuiTheme({
     palette: {
-        type: "dark"
-    }
+        type: 'dark',
+    },
 });
 
 export default function AppBody() {
-    let width = useCurrentWitdh();
+    const width = useCurrentWitdh();
     const isMobile = width <= 500;
     const [loading, setLoading] = React.useState(false);
     const [spells, setSpells] = React.useState(defaultRows);
@@ -42,10 +41,9 @@ export default function AppBody() {
             sideboard: [],
         };
 
-        const cleanDeck = decklistInput.split('\n')
-            .filter(e => !!e);
+        const cleanDeck = decklistInput.split('\n').filter((e) => !!e);
         let currentCategory = 'deck';
-        cleanDeck.forEach(row => {
+        cleanDeck.forEach((row) => {
             if (['Sideboard', 'Deck', 'Companion', 'Commander'].includes(row)) {
                 currentCategory = row.toLowerCase();
             } else {
@@ -60,14 +58,14 @@ export default function AppBody() {
             url: config.backendUrl,
             data,
         })
-            .then(res => {
+            .then((res) => {
                 setLoading(false);
                 setSpells(createRows(res.data.spells));
                 setLands(createRows(res.data.lands));
                 setOpen(true);
                 setQuerysuccess(true);
             })
-            .catch(e => {
+            .catch((e) => {
                 setLoading(false);
                 setOpen(true);
                 setQuerysuccess(false);
@@ -94,36 +92,36 @@ export default function AppBody() {
         <div>
             <ThemeProvider theme={theme}>
                 <ErrorSnackbar
-                    open={open}
+                    errormessage={errormessage}
                     handleClick={handleClick}
                     handleClose={handleClose}
+                    open={open}
                     querysuccess={querysuccess}
                     successmessage="Success !"
-                    errormessage={errormessage}
                 />
-                { isMobile ?
+                {isMobile ? (
                     <MobileBody
                         decklist={decklistInput}
-                        handleDecklistChange={(event) => setDecklist(event.target.value)}
+                        handleChangeXValue={handleChangeXValue}
                         handleClickSubmit={handleClickSubmit}
+                        handleDecklistChange={(event) => setDecklist(event.target.value)}
+                        lands={lands}
                         loading={loading}
                         spells={spells}
-                        lands={lands}
                         xValue={xValue}
-                        handleChangeXValue={handleChangeXValue}
-                    /> :
+                    />
+                ) : (
                     <DesktopBody
                         decklist={decklistInput}
-                        handleDecklistChange={(event) => setDecklist(event.target.value)}
+                        handleChangeXValue={handleChangeXValue}
                         handleClickSubmit={handleClickSubmit}
+                        handleDecklistChange={(event) => setDecklist(event.target.value)}
+                        lands={lands}
                         loading={loading}
                         spells={spells}
-                        lands={lands}
                         xValue={xValue}
-                        handleChangeXValue={handleChangeXValue}
                     />
-
-                }
+                )}
             </ThemeProvider>
         </div>
     );
