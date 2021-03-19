@@ -1,11 +1,8 @@
 import React from 'react';
-import {
-    withStyles,
-    makeStyles,
-} from '@material-ui/core/styles';
+import { withStyles, makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
-import { defaultDecklist } from "../../data/defaultInputs";
-import {useCurrentHeight} from "../../utils/width";
+import { defaultDecklist } from '../../data/defaultInputs';
+import { useCurrentHeight } from '../../utils/width';
 
 const CssTextField = withStyles({
     root: {
@@ -39,14 +36,14 @@ const useStyles = makeStyles((theme) => ({
         margin: theme.spacing(1),
     },
     input: {
-        color: "lightgrey",
+        color: 'lightgrey',
         fontSize: 15,
-    }
+    },
 }));
 
 function getMobileRow(height) {
     // this formula was handmade calculated
-    return Math.round((height-242.4)/17.6);
+    return Math.round((height - 242.4) / 17.6);
 }
 
 function getDesktopRow(height) {
@@ -56,31 +53,29 @@ function getDesktopRow(height) {
 
 export default function DecklistInput(props) {
     const classes = useStyles();
-    let height = useCurrentHeight();
+    const height = useCurrentHeight();
 
-    const maxRows = props.isMobile
-        ? getMobileRow(height)
-        : getDesktopRow(height);
+    const maxRows = props.isMobile ? getMobileRow(height) : getDesktopRow(height);
 
     return (
         <form className={classes.root} noValidate>
             <CssTextField
-                className={classes.margin}
-                label="Decklist"
-                variant="outlined"
-                id="custom-css-outlined-input"
-                multiline
-                value={props.value}
-                onChange={props.onChange}
-                color="secondary"
-                rows={maxRows}
-                InputProps={{
-                    className: classes.input
-                }}
                 InputLabelProps={{
-                    className: classes.input
+                    className: classes.input,
                 }}
+                InputProps={{
+                    className: classes.input,
+                }}
+                className={classes.margin}
+                color="secondary"
+                id="custom-css-outlined-input"
+                label="Decklist"
+                onChange={props.onChange}
                 placeholder={defaultDecklist}
+                rows={maxRows}
+                value={props.value}
+                variant="outlined"
+                multiline
             />
         </form>
     );

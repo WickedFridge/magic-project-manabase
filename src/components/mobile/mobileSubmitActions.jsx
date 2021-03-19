@@ -1,10 +1,10 @@
 import React from 'react';
-import {makeStyles, withStyles} from '@material-ui/core/styles';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Fab from '@material-ui/core/Fab';
 import CheckIcon from '@material-ui/icons/Check';
-import {green, orange, yellow} from "@material-ui/core/colors";
-import XSlider from "../shared/xSlider";
-import Grid from "@material-ui/core/Grid";
+import { green, orange, yellow } from '@material-ui/core/colors';
+import Grid from '@material-ui/core/Grid';
+import XSlider from '../shared/xSlider';
 
 const ColoredFab = withStyles((theme) => ({
     root: {
@@ -17,9 +17,7 @@ const ColoredFab = withStyles((theme) => ({
             backgroundColor: yellow[700],
         },
     },
-    disabled: {
-
-    }
+    disabled: {},
 }))(Fab);
 
 const useStyles = makeStyles((theme) => ({
@@ -38,23 +36,20 @@ export default function MobileSubmitActions(props) {
 
     return (
         <div>
-            <Grid container justify="center" spacing={3}>
+            <Grid justify="center" spacing={3} container>
                 <Grid item>
-                    <XSlider
-                        value={props.xValue}
-                        handleChange={props.handleChangeXValue}
-                    />
+                    <XSlider handleChange={props.handleChangeXValue} value={props.xValue} />
                 </Grid>
                 <Grid item>
                     <ColoredFab
-                        color="primary"
                         aria-label="add"
-                        onClick={props.onClick}
-                        disabled={props.disabled}
                         classes={{
                             root: classes.root,
                             disabled: classes.disabled,
                         }}
+                        color="primary"
+                        disabled={props.disabled}
+                        onClick={props.onClick}
                     >
                         <CheckIcon />
                     </ColoredFab>

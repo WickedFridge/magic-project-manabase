@@ -1,7 +1,7 @@
 import React from 'react';
 import Button from '@material-ui/core/Button';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
-import {green, orange, yellow} from "@material-ui/core/colors";
+import { green, orange, yellow } from '@material-ui/core/colors';
 
 const ColorButton = withStyles((theme) => ({
     root: {
@@ -14,9 +14,7 @@ const ColorButton = withStyles((theme) => ({
             backgroundColor: yellow[700],
         },
     },
-    disabled: {
-
-    }
+    disabled: {},
 }))(Button);
 
 const useStyles = makeStyles((theme) => ({
@@ -31,14 +29,14 @@ export default function SubmitButton(props) {
     return (
         <div>
             <ColorButton
-                variant="contained"
-                color="primary"
-                onClick={props.onClick}
-                disabled={props.disabled}
                 classes={{
                     root: classes.root,
                     disabled: classes.disabled,
                 }}
+                color="primary"
+                disabled={props.disabled}
+                onClick={props.onClick}
+                variant="contained"
             >
                 Submit
             </ColorButton>

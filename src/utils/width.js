@@ -1,16 +1,13 @@
-import React, {useEffect} from "react";
+/* eslint-disable no-undef */
+import React, { useEffect } from 'react';
 
-const getWidth = () => window.innerWidth
-    || document.documentElement.clientWidth
-    || document.body.clientWidth;
+const getWidth = () => window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
 
-const getHeight = () => window.innerHeight
-    || document.documentElement.clientHeight
-    || document.body.clientHeight;
+const getHeight = () => window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 
 export function useCurrentWitdh() {
     // save current window width in the state object
-    let [width, setWidth] = React.useState(getWidth());
+    const [width, setWidth] = React.useState(getWidth());
 
     // in this case useEffect will execute only once because
     // it does not have any dependencies.
@@ -30,7 +27,7 @@ export function useCurrentWitdh() {
         return () => {
             // remove resize listener
             window.removeEventListener('resize', resizeListener);
-        }
+        };
     }, []);
 
     return width;
@@ -38,7 +35,7 @@ export function useCurrentWitdh() {
 
 export function useCurrentHeight() {
     // save current window width in the state object
-    let [height, setHeight] = React.useState(getHeight());
+    const [height, setHeight] = React.useState(getHeight());
 
     // in this case useEffect will execute only once because
     // it does not have any dependencies.
@@ -58,7 +55,7 @@ export function useCurrentHeight() {
         return () => {
             // remove resize listener
             window.removeEventListener('resize', resizeListener);
-        }
+        };
     }, []);
 
     return height;

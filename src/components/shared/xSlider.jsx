@@ -15,15 +15,15 @@ export default function XSlider(props) {
     return (
         <div className={classes.root}>
             <Slider
-                defaultValue={2}
                 aria-labelledby="discrete-slider"
-                valueLabelDisplay="auto"
-                step={1}
-                marks
-                min={0}
+                defaultValue={2}
                 max={10}
-                value={props.value}
+                min={0}
                 onChange={props.handleChange}
+                step={1}
+                value={props.value}
+                valueLabelDisplay="auto"
+                marks
             />
             <Typography id="discrete-slider" gutterBottom>
                 X Value
