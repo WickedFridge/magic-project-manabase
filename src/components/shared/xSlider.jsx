@@ -9,7 +9,7 @@ const useStyles = makeStyles({
     },
 });
 
-export default function XSlider(props) {
+const XSlider = ({ handleChange, value }) => {
     const classes = useStyles();
 
     return (
@@ -19,9 +19,9 @@ export default function XSlider(props) {
                 defaultValue={2}
                 max={10}
                 min={0}
-                onChange={props.handleChange}
+                onChange={handleChange}
                 step={1}
-                value={props.value}
+                value={value}
                 valueLabelDisplay="auto"
                 marks
             />
@@ -30,4 +30,6 @@ export default function XSlider(props) {
             </Typography>
         </div>
     );
-}
+};
+
+export default XSlider;

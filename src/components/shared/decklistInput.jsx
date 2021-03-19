@@ -51,11 +51,11 @@ function getDesktopRow(height) {
     return Math.round(height / 18.5 - 14.5);
 }
 
-export default function DecklistInput(props) {
+const DecklistInput = ({ isMobile, value, onChange }) => {
     const classes = useStyles();
     const height = useCurrentHeight();
 
-    const maxRows = props.isMobile ? getMobileRow(height) : getDesktopRow(height);
+    const maxRows = isMobile ? getMobileRow(height) : getDesktopRow(height);
 
     return (
         <form className={classes.root} noValidate>
@@ -70,13 +70,15 @@ export default function DecklistInput(props) {
                 color="secondary"
                 id="custom-css-outlined-input"
                 label="Decklist"
-                onChange={props.onChange}
+                onChange={onChange}
                 placeholder={defaultDecklist}
                 rows={maxRows}
-                value={props.value}
+                value={value}
                 variant="outlined"
                 multiline
             />
         </form>
     );
-}
+};
+
+export default DecklistInput;

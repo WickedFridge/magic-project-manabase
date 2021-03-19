@@ -38,11 +38,11 @@ function TabPanel(props) {
 
 TabPanel.propTypes = {
     children: PropTypes.node,
-    index: PropTypes.any.isRequired,
-    value: PropTypes.any.isRequired,
+    index: PropTypes.number,
+    value: PropTypes.number,
 };
 
-export default function DesktopTabs(props) {
+const DesktopTabs = ({ main, help }) => {
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
 
@@ -59,11 +59,13 @@ export default function DesktopTabs(props) {
                 </Tabs>
             </Paper>
             <TabPanel index={0} value={value}>
-                {props.main}
+                {main}
             </TabPanel>
             <TabPanel index={1} value={value}>
-                {props.help}
+                {help}
             </TabPanel>
         </div>
     );
-}
+};
+
+export default DesktopTabs;

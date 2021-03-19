@@ -19,7 +19,7 @@ const theme = createMuiTheme({
     },
 });
 
-export default function AppBody() {
+const AppBody = () => {
     const width = useCurrentWitdh();
     const isMobile = width <= 500;
     const [loading, setLoading] = React.useState(false);
@@ -125,4 +125,6 @@ export default function AppBody() {
             </ThemeProvider>
         </div>
     );
-}
+};
+
+export default AppBody;

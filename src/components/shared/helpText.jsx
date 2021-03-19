@@ -12,7 +12,7 @@ const useStyles = makeStyles(() => ({
         fontSize: 17,
     },
 }));
-export default function HelpText() {
+const HelpText = () => {
     const classes = useStyles();
 
     return (
@@ -70,4 +70,6 @@ export default function HelpText() {
             </p>
         </div>
     );
-}
+};
+
+export default HelpText;
