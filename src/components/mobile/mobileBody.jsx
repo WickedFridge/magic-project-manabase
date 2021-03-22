@@ -110,28 +110,14 @@ const SpellResults = ({ classes, loading, spellResultfields, spells }) => (
     </Box>
 );
 
-const MainTab = ({ decklist, handleDecklistChange, loading, handleChangeXValue, onClick, xValue }) => (
+const MainTab = ({ loading, onClick }) => (
     <div>
-        <DecklistInput onChange={handleDecklistChange} value={decklist} isMobile />
-        <MobileSubmitActions
-            disabled={loading}
-            handleChangeXValue={handleChangeXValue}
-            onClick={onClick}
-            xValue={xValue}
-        />
+        <DecklistInput isMobile />
+        <MobileSubmitActions disabled={loading} onClick={onClick} />
     </div>
 );
 
-const MobileBody = ({
-    decklist,
-    handleDecklistChange,
-    loading,
-    spells,
-    lands,
-    xValue,
-    handleChangeXValue,
-    handleClickSubmit,
-}) => {
+const MobileBody = ({ loading, spells, lands, handleClickSubmit }) => {
     const classes = useStyles();
     const [index, setIndex] = React.useState(1);
     const spellResultfields = [
@@ -159,16 +145,7 @@ const MobileBody = ({
                         loading={loading}
                     />
                 }
-                main={
-                    <MainTab
-                        decklist={decklist}
-                        handleChangeXValue={handleChangeXValue}
-                        handleDecklistChange={handleDecklistChange}
-                        loading={loading}
-                        onClick={handleClick(handleClickSubmit)}
-                        xValue={xValue}
-                    />
-                }
+                main={<MainTab loading={loading} onClick={handleClick(handleClickSubmit)} />}
                 setIndex={setIndex}
                 spellResults={
                     <SpellResults

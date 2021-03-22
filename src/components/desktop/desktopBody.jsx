@@ -44,21 +44,11 @@ const HelpTab = ({ classes }) => (
     </Paper>
 );
 
-const MainTab = ({
-    classes,
-    decklist,
-    handleDecklistChange,
-    loading,
-    spells,
-    lands,
-    xValue,
-    handleChangeXValue,
-    handleClickSubmit,
-}) => (
+const MainTab = ({ classes, loading, spells, lands, handleClickSubmit }) => (
     <Grid spacing={2} container>
         <Grid xs={3} item>
             <Paper className={classes.paper}>
-                <DecklistInput onChange={handleDecklistChange} value={decklist} />
+                <DecklistInput />
             </Paper>
         </Grid>
         <Grid xs={9} item>
@@ -92,27 +82,13 @@ const MainTab = ({
                         </Box>
                     </Paper>
                 </Grid>
-                <SubmitSection
-                    handleChangeXValue={handleChangeXValue}
-                    handleClickSubmit={handleClickSubmit}
-                    loading={loading}
-                    xValue={xValue}
-                />
+                <SubmitSection handleClickSubmit={handleClickSubmit} loading={loading} />
             </Grid>
         </Grid>
     </Grid>
 );
 
-const DesktopBody = ({
-    decklist,
-    handleDecklistChange,
-    loading,
-    spells,
-    lands,
-    xValue,
-    handleChangeXValue,
-    handleClickSubmit,
-}) => {
+const DesktopBody = ({ loading, spells, lands, handleClickSubmit }) => {
     const height = useCurrentHeight();
     const classes = useStyles(height);
 
@@ -123,14 +99,10 @@ const DesktopBody = ({
                 main={
                     <MainTab
                         classes={classes}
-                        decklist={decklist}
-                        handleChangeXValue={handleChangeXValue}
                         handleClickSubmit={handleClickSubmit}
-                        handleDecklistChange={handleDecklistChange}
                         lands={lands}
                         loading={loading}
                         spells={spells}
-                        xValue={xValue}
                     />
                 }
             />

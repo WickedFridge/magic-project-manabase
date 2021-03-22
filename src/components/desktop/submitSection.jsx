@@ -14,7 +14,7 @@ const useStyles = () =>
         },
     }))();
 
-const SubmitSection = ({ xValue, handleChangeXValue, handleClickSubmit, loading }) => {
+const SubmitSection = ({ handleClickSubmit, loading }) => {
     const classes = useStyles();
 
     return (
@@ -22,7 +22,7 @@ const SubmitSection = ({ xValue, handleChangeXValue, handleClickSubmit, loading 
             <Paper className={classes.paper}>
                 <Grid justify="center" spacing={4} container>
                     <Grid item>
-                        <XSlider handleChange={handleChangeXValue} value={xValue} />
+                        <XSlider />
                     </Grid>
                     <Grid item>
                         <SubmitButton disabled={loading} onClick={handleClickSubmit} />
