@@ -1,7 +1,9 @@
 import React from 'react';
 import './App.css';
+import { Provider } from 'react-redux';
 import AppBody from './components/shared/appBody';
 import AppHeader from './components/shared/appHeader';
+import store from './core/store/index';
 // import { v4 } from 'uuid'
 // import ReactGA from 'react-ga';
 // import auth from './auth.ts'; // Sample authentication provider
@@ -17,10 +19,12 @@ import AppHeader from './components/shared/appHeader';
 
 function App() {
     return (
-        <div className="App">
-            <AppHeader />
-            <AppBody />
-        </div>
+        <Provider store={store}>
+            <div className="App">
+                <AppHeader />
+                <AppBody />
+            </div>
+        </Provider>
     );
 }
 

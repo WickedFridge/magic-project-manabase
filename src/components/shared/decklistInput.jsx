@@ -3,6 +3,9 @@ import { withStyles, makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import { defaultDecklist } from '../../data/defaultInputs';
 import { useCurrentHeight } from '../../utils/width';
+import { useDispatch, useSelector } from 'react-redux';
+import setDecklist from '../../core/useCases/input/setDecklist';
+import { decklistSelector } from '../../core/useCases/input/selector';
 
 const CssTextField = withStyles({
     root: {
@@ -51,11 +54,18 @@ function getDesktopRow(height) {
     return Math.round(height / 18.5 - 14.5);
 }
 
-const DecklistInput = ({ isMobile, value, onChange }) => {
+const DecklistInput = ({ isMobile }) => {
     const classes = useStyles();
     const height = useCurrentHeight();
+    const dispatch = useDispatch();
 
     const maxRows = isMobile ? getMobileRow(height) : getDesktopRow(height);
+
+    const decklist = useSelector(decklistSelector);
+
+    const onChange = (event) => {
+        dispatch(setDecklist(event.target.value));
+    };
 
     return (
         <form className={classes.root} noValidate>
@@ -73,7 +83,7 @@ const DecklistInput = ({ isMobile, value, onChange }) => {
                 onChange={onChange}
                 placeholder={defaultDecklist}
                 rows={maxRows}
-                value={value}
+                value={decklist}
                 variant="outlined"
                 multiline
             />

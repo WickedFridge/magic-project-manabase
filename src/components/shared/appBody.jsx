@@ -2,11 +2,13 @@ import React from 'react';
 import { createMuiTheme } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/styles';
 import axios from 'axios';
+import { useSelector } from 'react-redux';
 import config from '../../config';
 import DesktopBody from '../desktop/desktopBody';
 import MobileBody from '../mobile/mobileBody';
 import { defaultDecklist, defaultResults } from '../../data/defaultInputs';
 import { useCurrentWitdh } from '../../utils/width';
+import { decklistSelector, xValueSelector } from '../../core/useCases/input/selector';
 import ErrorSnackbar from './ErrorSnackbar';
 
 const createRows = (data) => Object.entries(data).map(([key, { p1, p2, manaCost }]) => ({ key, p1, p2, manaCost }));
@@ -25,11 +27,12 @@ const AppBody = () => {
     const [loading, setLoading] = React.useState(false);
     const [spells, setSpells] = React.useState(defaultRows);
     const [lands, setLands] = React.useState(defaultRows);
-    const [decklistInput, setDecklist] = React.useState('');
+    const decklistInput = useSelector(decklistSelector);
     const [open, setOpen] = React.useState(false);
     const [querysuccess, setQuerysuccess] = React.useState(true);
     const [errormessage, setErrormessage] = React.useState(true);
-    const [xValue, setXValue] = React.useState(2);
+    const xValue = useSelector(xValueSelector);
+    // const [xValue, setXValue] = React.useState(2);
 
     const handleClickSubmit = () => {
         setLoading(true);
@@ -84,10 +87,6 @@ const AppBody = () => {
         setOpen(false);
     };
 
-    const handleChangeXValue = (event, newValue) => {
-        setXValue(newValue);
-    };
-
     return (
         <div>
             <ThemeProvider theme={theme}>
@@ -100,26 +99,13 @@ const AppBody = () => {
                     successmessage="Success !"
                 />
                 {isMobile ? (
-                    <MobileBody
-                        decklist={decklistInput}
-                        handleChangeXValue={handleChangeXValue}
-                        handleClickSubmit={handleClickSubmit}
-                        handleDecklistChange={(event) => setDecklist(event.target.value)}
-                        lands={lands}
-                        loading={loading}
-                        spells={spells}
-                        xValue={xValue}
-                    />
+                    <MobileBody handleClickSubmit={handleClickSubmit} lands={lands} loading={loading} spells={spells} />
                 ) : (
                     <DesktopBody
-                        decklist={decklistInput}
-                        handleChangeXValue={handleChangeXValue}
                         handleClickSubmit={handleClickSubmit}
-                        handleDecklistChange={(event) => setDecklist(event.target.value)}
                         lands={lands}
                         loading={loading}
                         spells={spells}
-                        xValue={xValue}
                     />
                 )}
             </ThemeProvider>
