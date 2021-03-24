@@ -11,7 +11,7 @@ import HelpText from '../shared/helpText';
 import { useCurrentHeight } from '../../utils/width';
 import DesktopTabs from './desktopTabs';
 import DesktopResults from './desktopResults';
-import SubmitSection from './submitSection';
+import SubmitSection from './submit/submitSection';
 
 const useStyles = (height) =>
     makeStyles((theme) => ({

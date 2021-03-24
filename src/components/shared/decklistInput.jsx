@@ -1,11 +1,11 @@
 import React from 'react';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
+import { useDispatch, useSelector } from 'react-redux';
 import { defaultDecklist } from '../../data/defaultInputs';
 import { useCurrentHeight } from '../../utils/width';
-import { useDispatch, useSelector } from 'react-redux';
-import setDecklist from '../../core/useCases/input/setDecklist';
-import { decklistSelector } from '../../core/useCases/input/selector';
+import { setDecklist } from '../../core/useCases/input/setInputActions';
+import { decklistStringSelector } from '../../core/useCases/input/selector';
 
 const CssTextField = withStyles({
     root: {
@@ -61,7 +61,7 @@ const DecklistInput = ({ isMobile }) => {
 
     const maxRows = isMobile ? getMobileRow(height) : getDesktopRow(height);
 
-    const decklist = useSelector(decklistSelector);
+    const decklist = useSelector(decklistStringSelector);
 
     const onChange = (event) => {
         dispatch(setDecklist(event.target.value));
