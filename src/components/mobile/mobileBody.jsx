@@ -10,6 +10,9 @@ import ResultTable from '../shared/resultTable/index';
 import HelpText from '../shared/helpText';
 import MobileSubmitActions from './mobileSubmitActions';
 import MobileTabs from './mobileTabs';
+import { useSelector } from 'react-redux';
+import { landsSelector, spellsSelector } from '../../core/useCases/stats/selector';
+import { loadingSelector } from '../../core/useCases/input/selector';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -110,15 +113,18 @@ const SpellResults = ({ classes, loading, spellResultfields, spells }) => (
     </Box>
 );
 
-const MainTab = ({ loading, onClick }) => (
+const MainTab = ({ onClick }) => (
     <div>
         <DecklistInput isMobile />
-        <MobileSubmitActions disabled={loading} onClick={onClick} />
+        <MobileSubmitActions onClick={onClick} />
     </div>
 );
 
-const MobileBody = ({ loading, spells, lands, handleClickSubmit }) => {
+const MobileBody = () => {
     const classes = useStyles();
+    const spells = useSelector(spellsSelector);
+    const lands = useSelector(landsSelector);
+    const loading = useSelector(loadingSelector);
     const [index, setIndex] = React.useState(1);
     const spellResultfields = [
         { name: 'Cost', type: 'text', key: 'manaCost' },
@@ -127,9 +133,8 @@ const MobileBody = ({ loading, spells, lands, handleClickSubmit }) => {
     ];
     const landsResultFields = [{ name: 'Quality', type: 'number', key: 'p1' }];
 
-    const handleClick = (callback) => () => {
+    const onClick = () => {
         setIndex(2);
-        callback();
     };
 
     return (
@@ -145,7 +150,7 @@ const MobileBody = ({ loading, spells, lands, handleClickSubmit }) => {
                         loading={loading}
                     />
                 }
-                main={<MainTab loading={loading} onClick={handleClick(handleClickSubmit)} />}
+                main={<MainTab onClick={onClick} />}
                 setIndex={setIndex}
                 spellResults={
                     <SpellResults

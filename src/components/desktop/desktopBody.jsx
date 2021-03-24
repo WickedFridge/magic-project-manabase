@@ -6,9 +6,12 @@ import { CircularProgress } from '@material-ui/core';
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { green } from '@material-ui/core/colors';
+import { useSelector } from 'react-redux';
 import DecklistInput from '../shared/decklistInput';
 import HelpText from '../shared/helpText';
 import { useCurrentHeight } from '../../utils/width';
+import { loadingSelector } from '../../core/useCases/input/selector';
+import { landsSelector, spellsSelector } from '../../core/useCases/stats/selector';
 import DesktopTabs from './desktopTabs';
 import DesktopResults from './desktopResults';
 import SubmitSection from './submit/submitSection';
@@ -44,68 +47,63 @@ const HelpTab = ({ classes }) => (
     </Paper>
 );
 
-const MainTab = ({ classes, loading, spells, lands, handleClickSubmit }) => (
-    <Grid spacing={2} container>
-        <Grid xs={3} item>
-            <Paper className={classes.paper}>
-                <DecklistInput />
-            </Paper>
-        </Grid>
-        <Grid xs={9} item>
-            <Grid alignItems="stretch" direction="column" justify="space-evenly" spacing={2} container>
-                <Grid xs={12} item>
-                    <Paper className={classes.paper}>
-                        <Box alignItems="center" className={classes.results} display="flex">
-                            <Grid alignItems="center" direction="column" justify="center" container>
-                                {loading ? (
-                                    <Fade
-                                        in={loading}
-                                        style={{
-                                            transitionDelay: '500ms',
-                                        }}
-                                        unmountOnExit
-                                    >
-                                        <CircularProgress className={classes.circular} size={100} thickness={2} />
-                                    </Fade>
-                                ) : (
-                                    <Fade
-                                        in={!loading}
-                                        style={{
-                                            transitionDelay: '500ms',
-                                        }}
-                                        unmountOnExit
-                                    >
-                                        <DesktopResults lands={lands} spells={spells} />
-                                    </Fade>
-                                )}
-                            </Grid>
-                        </Box>
-                    </Paper>
+const MainTab = ({ classes }) => {
+    const loading = useSelector(loadingSelector);
+    const spells = useSelector(spellsSelector);
+    const lands = useSelector(landsSelector);
+
+    return (
+        <Grid spacing={2} container>
+            <Grid xs={3} item>
+                <Paper className={classes.paper}>
+                    <DecklistInput />
+                </Paper>
+            </Grid>
+            <Grid xs={9} item>
+                <Grid alignItems="stretch" direction="column" justify="space-evenly" spacing={2} container>
+                    <Grid xs={12} item>
+                        <Paper className={classes.paper}>
+                            <Box alignItems="center" className={classes.results} display="flex">
+                                <Grid alignItems="center" direction="column" justify="center" container>
+                                    {loading ? (
+                                        <Fade
+                                            in={loading}
+                                            style={{
+                                                transitionDelay: '500ms',
+                                            }}
+                                            unmountOnExit
+                                        >
+                                            <CircularProgress className={classes.circular} size={100} thickness={2} />
+                                        </Fade>
+                                    ) : (
+                                        <Fade
+                                            in={!loading}
+                                            style={{
+                                                transitionDelay: '500ms',
+                                            }}
+                                            unmountOnExit
+                                        >
+                                            <DesktopResults lands={lands} spells={spells} />
+                                        </Fade>
+                                    )}
+                                </Grid>
+                            </Box>
+                        </Paper>
+                    </Grid>
+                    <SubmitSection />
                 </Grid>
-                <SubmitSection handleClickSubmit={handleClickSubmit} loading={loading} />
             </Grid>
         </Grid>
-    </Grid>
-);
+    );
+};
 
-const DesktopBody = ({ loading, spells, lands, handleClickSubmit }) => {
+const DesktopBody = () => {
     const height = useCurrentHeight();
     const classes = useStyles(height);
 
     return (
         <div className={classes.root}>
-            <DesktopTabs
-                help={<HelpTab classes={classes} />}
-                main={
-                    <MainTab
-                        classes={classes}
-                        handleClickSubmit={handleClickSubmit}
-                        lands={lands}
-                        loading={loading}
-                        spells={spells}
-                    />
-                }
-            />
+            <DesktopTabs help={<HelpTab classes={classes} />} main={<MainTab classes={classes} />} />
         </div>
     );
 };
