@@ -4,7 +4,14 @@ import Fab from '@material-ui/core/Fab';
 import CheckIcon from '@material-ui/icons/Check';
 import { green, orange, yellow } from '@material-ui/core/colors';
 import Grid from '@material-ui/core/Grid';
+import { useDispatch, useSelector } from 'react-redux';
+import axios from 'axios';
 import XSlider from '../shared/xSlider';
+import { decklistSelector, loadingSelector, xValueSelector } from '../../core/useCases/input/selector';
+import { setLoading } from '../../core/useCases/input/setInputActions';
+import config from '../../config';
+import { setErrorMessage, setOpen, setQuerySuccess } from '../../core/useCases/popup/setPopupActions';
+import { setLands, setSpells } from '../../core/useCases/stats/setStatsActions';
 
 const ColoredFab = withStyles((theme) => ({
     root: {
@@ -31,14 +38,44 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const MobileSubmitActions = ({ disabled, handleChangeXValue, onClick, xValue }) => {
+const MobileSubmitActions = ({ onClick }) => {
     const classes = useStyles();
+    const loading = useSelector(loadingSelector);
+    const dispatch = useDispatch();
+    const decklist = useSelector(decklistSelector);
+    const xValue = useSelector(xValueSelector);
+
+    const onSubmit = async () => {
+        onClick();
+        dispatch(setLoading(true));
+
+        const data = { decklist, xValue };
+        console.log(data);
+        try {
+            const response = await axios({
+                method: 'post',
+                url: config.backendUrl,
+                data,
+            });
+            dispatch(setLoading(false));
+            dispatch(setOpen(true));
+            dispatch(setQuerySuccess(true));
+            dispatch(setSpells(response.data.spells));
+            dispatch(setLands(response.data.lands));
+        } catch (e) {
+            dispatch(setLoading(false));
+            dispatch(setOpen(true));
+            dispatch(setQuerySuccess(false));
+            console.error(e);
+            dispatch(setErrorMessage(e.response.data.error));
+        }
+    };
 
     return (
         <div>
             <Grid justify="center" spacing={3} container>
                 <Grid item>
-                    <XSlider handleChange={handleChangeXValue} value={xValue} />
+                    <XSlider />
                 </Grid>
                 <Grid item>
                     <ColoredFab
@@ -48,8 +85,8 @@ const MobileSubmitActions = ({ disabled, handleChangeXValue, onClick, xValue }) 
                             disabled: classes.disabled,
                         }}
                         color="primary"
-                        disabled={disabled}
-                        onClick={onClick}
+                        disabled={loading}
+                        onClick={onSubmit}
                     >
                         <CheckIcon />
                     </ColoredFab>

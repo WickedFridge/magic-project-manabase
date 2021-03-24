@@ -14,7 +14,7 @@ const useStyles = () =>
         },
     }))();
 
-const SubmitSection = ({ handleClickSubmit, loading }) => {
+const SubmitSection = () => {
     const classes = useStyles();
 
     return (
@@ -25,7 +25,7 @@ const SubmitSection = ({ handleClickSubmit, loading }) => {
                         <XSlider />
                     </Grid>
                     <Grid item>
-                        <SubmitButton disabled={loading} onClick={handleClickSubmit} />
+                        <SubmitButton />
                     </Grid>
                 </Grid>
             </Paper>
