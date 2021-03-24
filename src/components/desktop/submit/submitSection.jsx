@@ -2,7 +2,7 @@ import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import XSlider from '../shared/xSlider';
+import XSlider from '../../shared/xSlider';
 import SubmitButton from './submitButton';
 
 const useStyles = () =>

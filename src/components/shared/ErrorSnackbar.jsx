@@ -2,6 +2,9 @@ import React from 'react';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import { makeStyles } from '@material-ui/core/styles';
+import { useDispatch, useSelector } from 'react-redux';
+import { setOpen } from '../../core/useCases/popup/setPopupActions';
+import { errorMessageSelector, popupOpenSelector, querySuccessSelector } from '../../core/useCases/popup/selector';
 
 function Alert({ errormessage, onClose, querysuccess, successmessage }) {
     const [severity, message] = querysuccess ? ['success', successmessage] : ['error', errormessage];
@@ -22,8 +25,19 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const ErrorSnackbar = ({ errormessage, handleClose, open, querysuccess, successmessage }) => {
+const ErrorSnackbar = ({ successMessage }) => {
     const classes = useStyles();
+    const dispatch = useDispatch();
+    const open = useSelector(popupOpenSelector);
+    const errorMessage = useSelector(errorMessageSelector);
+    const querySuccess = useSelector(querySuccessSelector);
+
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        dispatch(setOpen(false));
+    };
 
     return (
         <div className={classes.root}>
@@ -37,10 +51,10 @@ const ErrorSnackbar = ({ errormessage, handleClose, open, querysuccess, successm
                 open={open}
             >
                 <Alert
-                    errormessage={errormessage}
+                    errormessage={errorMessage}
                     onClose={handleClose}
-                    querysuccess={querysuccess}
-                    successmessage={successmessage}
+                    querysuccess={querySuccess}
+                    successmessage={successMessage}
                 />
             </Snackbar>
         </div>
