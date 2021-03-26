@@ -5,13 +5,10 @@ import CheckIcon from '@material-ui/icons/Check';
 import { green, orange, yellow } from '@material-ui/core/colors';
 import Grid from '@material-ui/core/Grid';
 import { useDispatch, useSelector } from 'react-redux';
-import axios from 'axios';
 import XSlider from '../shared/xSlider';
 import { decklistSelector, loadingSelector, xValueSelector } from '../../core/useCases/input/selector';
-import { setLoading } from '../../core/useCases/input/setInputActions';
-import config from '../../config';
-import { setErrorMessage, setOpen, setQuerySuccess } from '../../core/useCases/popup/setPopupActions';
-import { setLands, setSpells } from '../../core/useCases/stats/setStatsActions';
+import analyzeDecklistAction from '../../core/useCases/stats/analyzeDecklistActions';
+import { POST } from '../../core/utils/http';
 
 const ColoredFab = withStyles((theme) => ({
     root: {
@@ -38,6 +35,10 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+const analyzeFetcher = async (backendUrl, data) => {
+    return POST({ url: backendUrl, data });
+};
+
 const MobileSubmitActions = ({ onClick }) => {
     const classes = useStyles();
     const loading = useSelector(loadingSelector);
@@ -47,28 +48,8 @@ const MobileSubmitActions = ({ onClick }) => {
 
     const onSubmit = async () => {
         onClick();
-        dispatch(setLoading(true));
-
         const data = { decklist, xValue };
-        console.log(data);
-        try {
-            const response = await axios({
-                method: 'post',
-                url: config.backendUrl,
-                data,
-            });
-            dispatch(setLoading(false));
-            dispatch(setOpen(true));
-            dispatch(setQuerySuccess(true));
-            dispatch(setSpells(response.data.spells));
-            dispatch(setLands(response.data.lands));
-        } catch (e) {
-            dispatch(setLoading(false));
-            dispatch(setOpen(true));
-            dispatch(setQuerySuccess(false));
-            console.error(e);
-            dispatch(setErrorMessage(e.response.data.error));
-        }
+        dispatch(analyzeDecklistAction(analyzeFetcher, data)());
     };
 
     return (
