@@ -1,6 +1,7 @@
 import TableCell from '@material-ui/core/TableCell';
 import React from 'react';
 import { makeStyles } from '@material-ui/styles';
+import { v4 } from 'uuid';
 import ManaWhite from '../../../images/mana/colored/white.svg';
 import ManaBlue from '../../../images/mana/colored/blue.svg';
 import ManaBlack from '../../../images/mana/colored/black.svg';
@@ -94,7 +95,7 @@ const ResultCell = ({ row, field }) => {
         content = (
             <div>
                 {manaSymbols.map((mana) => (
-                    <ManaSymbol color={mana} />
+                    <ManaSymbol key={v4()} color={mana} />
                 ))}
             </div>
         );

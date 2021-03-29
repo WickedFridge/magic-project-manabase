@@ -41,9 +41,9 @@ const analyzeFetcher = async (backendUrl, data) => {
 
 const MobileSubmitActions = ({ onClick }) => {
     const classes = useStyles();
-    const loading = useSelector(loadingSelector);
     const dispatch = useDispatch();
     const decklist = useSelector(decklistSelector);
+    const loading = useSelector(loadingSelector);
     const xValue = useSelector(xValueSelector);
 
     const onSubmit = async () => {

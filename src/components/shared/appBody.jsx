@@ -13,8 +13,7 @@ const theme = createMuiTheme({
 });
 
 const AppBody = () => {
-    const width = useCurrentWitdh();
-    const isMobile = width <= 500;
+    const [, isMobile] = useCurrentWitdh();
 
     return (
         <div>

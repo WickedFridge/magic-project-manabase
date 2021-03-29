@@ -8,7 +8,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import { red, blueGrey } from '@material-ui/core/colors';
-import { useCurrentHeight } from '../../../utils/width';
+import { useCurrentHeight, useCurrentWitdh } from '../../../utils/width';
 import HeaderTableCell from './headerTableCell';
 import ResultCell from './resultCell';
 
@@ -69,8 +69,9 @@ const getSortFunctions = (fields) => {
     return fields.map((field) => (data) => data.sort((s1, s2) => s1[field.key] - s2[field.key]));
 };
 
-const ResultTable = ({ isMobile, rows, fields, selected, tooltips, title }) => {
-    const height = useCurrentHeight();
+const ResultTable = ({ rows, fields, selected, tooltips, title }) => {
+    const [height] = useCurrentHeight();
+    const [, isMobile] = useCurrentWitdh();
     const desktopClasses = useStylesDesktop(height);
     const mobileClasses = useStylesMobile();
     const sortFunctions = getSortFunctions(fields);

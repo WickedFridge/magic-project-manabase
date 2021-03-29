@@ -1,13 +1,17 @@
 /* eslint-disable no-undef */
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 
 const getWidth = () => window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
 
 const getHeight = () => window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 
+const DESKTOP_BREAKPOINT = 768;
+
 export function useCurrentWitdh() {
     // save current window width in the state object
     const [width, setWidth] = React.useState(getWidth());
+
+    const isMobile = useMemo(() => width < DESKTOP_BREAKPOINT, [width]);
 
     // in this case useEffect will execute only once because
     // it does not have any dependencies.
@@ -30,7 +34,7 @@ export function useCurrentWitdh() {
         };
     }, []);
 
-    return width;
+    return [width, isMobile];
 }
 
 export function useCurrentHeight() {
@@ -58,5 +62,5 @@ export function useCurrentHeight() {
         };
     }, []);
 
-    return height;
+    return [height];
 }
