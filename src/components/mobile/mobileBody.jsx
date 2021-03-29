@@ -70,7 +70,6 @@ const LandResults = ({ classes, lands, landsResultFields, loading }) => (
                         selected={0}
                         title="Lands"
                         tooltips={['Land Quality']}
-                        isMobile
                     />
                 </Fade>
             )}
@@ -105,7 +104,6 @@ const SpellResults = ({ classes, loading, spellResultfields, spells }) => (
                         selected={1}
                         title="Spells"
                         tooltips={['Assuming you hit all your landdrops', 'True probability']}
-                        isMobile
                     />
                 </Fade>
             )}
@@ -115,7 +113,7 @@ const SpellResults = ({ classes, loading, spellResultfields, spells }) => (
 
 const MainTab = ({ onClick }) => (
     <div>
-        <DecklistInput isMobile />
+        <DecklistInput />
         <MobileSubmitActions onClick={onClick} />
     </div>
 );

@@ -42,7 +42,7 @@ TabPanel.propTypes = {
     value: PropTypes.number,
 };
 
-const DesktopTabs = ({ main, help }) => {
+const DesktopTabs = ({ tabs }) => {
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
 
@@ -58,12 +58,11 @@ const DesktopTabs = ({ main, help }) => {
                     <Tab icon={<HelpIcon />} label="Help" />
                 </Tabs>
             </Paper>
-            <TabPanel index={0} value={value}>
-                {main}
-            </TabPanel>
-            <TabPanel index={1} value={value}>
-                {help}
-            </TabPanel>
+            {tabs.map((tab, index) => (
+                <TabPanel index={index} value={value}>
+                    {tab}
+                </TabPanel>
+            ))}
         </div>
     );
 };

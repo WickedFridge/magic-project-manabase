@@ -3,7 +3,7 @@ import { withStyles, makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import { useDispatch, useSelector } from 'react-redux';
 import { defaultDecklist } from '../../data/defaultInputs';
-import { useCurrentHeight } from '../../utils/width';
+import { useCurrentHeight, useCurrentWitdh } from '../../utils/width';
 import { setDecklist } from '../../core/useCases/input/setInputActions';
 import { decklistStringSelector } from '../../core/useCases/input/selector';
 
@@ -54,9 +54,10 @@ function getDesktopRow(height) {
     return Math.round(height / 18.5 - 14.5);
 }
 
-const DecklistInput = ({ isMobile }) => {
+const DecklistInput = () => {
     const classes = useStyles();
-    const height = useCurrentHeight();
+    const [height] = useCurrentHeight();
+    const [, isMobile] = useCurrentWitdh();
     const dispatch = useDispatch();
 
     const maxRows = isMobile ? getMobileRow(height) : getDesktopRow(height);

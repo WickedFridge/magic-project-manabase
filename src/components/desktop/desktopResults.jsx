@@ -15,7 +15,6 @@ const DesktopResults = ({ spells, lands }) => {
             <Grid xs={8} item>
                 <ResultTable
                     fields={spellResultfields}
-                    isMobile={false}
                     rows={spells}
                     selected={1}
                     title="Spells"
@@ -25,7 +24,6 @@ const DesktopResults = ({ spells, lands }) => {
             <Grid xs={4} item>
                 <ResultTable
                     fields={landsResultFields}
-                    isMobile={false}
                     rows={lands}
                     selected={0}
                     title="Lands"

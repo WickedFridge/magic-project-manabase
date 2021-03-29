@@ -11,6 +11,7 @@ import { makeStyles } from '@material-ui/core/styles';
 const useStyles = makeStyles(() => ({
     slide1: {
         padding: 10,
+        overflow: 'auto',
     },
     slide2: {
         padding: '5px 25px',
