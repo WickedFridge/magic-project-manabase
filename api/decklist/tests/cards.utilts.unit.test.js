@@ -1,10 +1,47 @@
-const { cachedCanPlaySpellOnCurve, hasCorrectColors, isCheckLand, isFetchland, isFastland, evaluateEtb, isDFC, isMDFC, isTransformableCard, getManaCost } = require('../cards/utils');
+const {
+    cachedCanPlaySpellOnCurve,
+    hasCorrectColors,
+    isCheckLand,
+    isFetchland,
+    isFastland,
+    evaluateEtb,
+    isDFC,
+    isMDFC,
+    isTransformableCard,
+    getManaCost,
+} = require('../cards/utils');
 const { handleFetchlands } = require('../services/analyzeDecklist');
-const { forest, island, mountain, swamp, plains, simicGuildGate, giantGrowth, growthSpiral,
-        mockGrowthSpiral, mockTempleSimic, mockIsland, mockTempleGolgari, mockUro,
-        frilledMystic, deathRite, saheeli, volcanicIsland, irrigatedFarmland, glacialFortress,
-        meddlingMage, marshFlats, bloodstainedMire, mistyRainforest, prismaticVista, evolvingWilds, fabledPassage,
-        bloomingMarsh, maelstromPulse, delver, kazanduMammoth,
+const {
+    forest,
+    island,
+    mountain,
+    swamp,
+    plains,
+    simicGuildGate,
+    giantGrowth,
+    growthSpiral,
+    mockGrowthSpiral,
+    mockTempleSimic,
+    mockIsland,
+    mockTempleGolgari,
+    mockUro,
+    frilledMystic,
+    deathRite,
+    saheeli,
+    volcanicIsland,
+    irrigatedFarmland,
+    glacialFortress,
+    meddlingMage,
+    marshFlats,
+    bloodstainedMire,
+    mistyRainforest,
+    prismaticVista,
+    evolvingWilds,
+    fabledPassage,
+    bloomingMarsh,
+    maelstromPulse,
+    delver,
+    kazanduMammoth,
 } = require('../cards');
 
 describe('has Correct Colors unit testing', () => {
@@ -44,144 +81,215 @@ const testCanPlayOnCurve = ({ lands, spell, outcome }) => () => {
 };
 
 describe('Basic can play spell testing - color', () => {
-    it('basic can play giant growth', testCanPlayOnCurve({
-        lands: [forest()],
-        spell: giantGrowth(),
-        outcome: true,
-    }));
+    it(
+        'basic can play giant growth',
+        testCanPlayOnCurve({
+            lands: [forest()],
+            spell: giantGrowth(),
+            outcome: true,
+        }),
+    );
 
-    it(`basic can't play giant growth`, testCanPlayOnCurve({
-        lands: [island()],
-        spell: giantGrowth(),
-        outcome: false,
-    }));
+    it(
+        `basic can't play giant growth`,
+        testCanPlayOnCurve({
+            lands: [island()],
+            spell: giantGrowth(),
+            outcome: false,
+        }),
+    );
 
-    it('basic can play growth spiral', testCanPlayOnCurve({
-        lands: [forest(), island()],
-        spell: growthSpiral(),
-        outcome: true,
-    }));
+    it(
+        'basic can play growth spiral',
+        testCanPlayOnCurve({
+            lands: [forest(), island()],
+            spell: growthSpiral(),
+            outcome: true,
+        }),
+    );
 
-    it(`basic can't play growth spiral 1`, testCanPlayOnCurve({
-        lands: [island(0), island(1)],
-        spell: growthSpiral(),
-        outcome: false,
-    }));
+    it(
+        `basic can't play growth spiral 1`,
+        testCanPlayOnCurve({
+            lands: [island(0), island(1)],
+            spell: growthSpiral(),
+            outcome: false,
+        }),
+    );
 
-    it(`basic can't play growth spiral 2`, testCanPlayOnCurve({
-        lands: [forest(0), forest(1)],
-        spell: growthSpiral(),
-        outcome: false,
-    }));
+    it(
+        `basic can't play growth spiral 2`,
+        testCanPlayOnCurve({
+            lands: [forest(0), forest(1)],
+            spell: growthSpiral(),
+            outcome: false,
+        }),
+    );
 
-    it(`mock can play growth spiral 0`, testCanPlayOnCurve({
-        lands: [mockTempleSimic(), mockIsland()],
-        spell: mockGrowthSpiral(),
-        outcome: true,
-    }));
+    it(
+        `mock can play growth spiral 0`,
+        testCanPlayOnCurve({
+            lands: [mockTempleSimic(), mockIsland()],
+            spell: mockGrowthSpiral(),
+            outcome: true,
+        }),
+    );
 });
 
 describe('Basic can play spell testing - etb', () => {
-    it('basic can play giant growth', testCanPlayOnCurve({
-        lands: [forest(), simicGuildGate()],
-        spell: giantGrowth(),
-        outcome: true,
-    }));
-    it('basic can play growth spiral - 1', testCanPlayOnCurve({
-        lands: [forest(), simicGuildGate()],
-        spell: growthSpiral(),
-        outcome: true,
-    }));
-    it('basic can play growth spiral - 2', testCanPlayOnCurve({
-        lands: [simicGuildGate(), island()],
-        spell: growthSpiral(),
-        outcome: true,
-    }));
-    it(`can play growth spiral - 3`, testCanPlayOnCurve({
-        lands: [simicGuildGate(0), simicGuildGate(1), island()],
-        spell: growthSpiral(),
-        outcome: true,
-    }));
-    it(`basic can't play growth spiral - 1`, testCanPlayOnCurve({
-        lands: [simicGuildGate(0), simicGuildGate(1)],
-        spell: growthSpiral(),
-        outcome: false,
-    }));
-    it(`basic can't play growth spiral - 2`,testCanPlayOnCurve({
-        lands: [simicGuildGate(0), simicGuildGate(1), mountain()],
-        spell: growthSpiral(),
-        outcome: false,
-    }));
+    it(
+        'basic can play giant growth',
+        testCanPlayOnCurve({
+            lands: [forest(), simicGuildGate()],
+            spell: giantGrowth(),
+            outcome: true,
+        }),
+    );
+    it(
+        'basic can play growth spiral - 1',
+        testCanPlayOnCurve({
+            lands: [forest(), simicGuildGate()],
+            spell: growthSpiral(),
+            outcome: true,
+        }),
+    );
+    it(
+        'basic can play growth spiral - 2',
+        testCanPlayOnCurve({
+            lands: [simicGuildGate(), island()],
+            spell: growthSpiral(),
+            outcome: true,
+        }),
+    );
+    it(
+        `can play growth spiral - 3`,
+        testCanPlayOnCurve({
+            lands: [simicGuildGate(0), simicGuildGate(1), island()],
+            spell: growthSpiral(),
+            outcome: true,
+        }),
+    );
+    it(
+        `basic can't play growth spiral - 1`,
+        testCanPlayOnCurve({
+            lands: [simicGuildGate(0), simicGuildGate(1)],
+            spell: growthSpiral(),
+            outcome: false,
+        }),
+    );
+    it(
+        `basic can't play growth spiral - 2`,
+        testCanPlayOnCurve({
+            lands: [simicGuildGate(0), simicGuildGate(1), mountain()],
+            spell: growthSpiral(),
+            outcome: false,
+        }),
+    );
 });
 
 describe('can play spell testing - generic mana', () => {
-    it('can play Uro', testCanPlayOnCurve({
-        lands: [mockTempleGolgari(), island(), swamp()],
-        spell: mockUro(),
-        outcome: true,
-    }));
-    it('can play Frilled Mystic', testCanPlayOnCurve({
-        lands: [mockTempleGolgari(0), mockTempleGolgari(1), island(0), island(1)],
-        spell: frilledMystic(),
-        outcome: true,
-    }));
+    it(
+        'can play Uro',
+        testCanPlayOnCurve({
+            lands: [mockTempleGolgari(), island(), swamp()],
+            spell: mockUro(),
+            outcome: true,
+        }),
+    );
+    it(
+        'can play Frilled Mystic',
+        testCanPlayOnCurve({
+            lands: [mockTempleGolgari(0), mockTempleGolgari(1), island(0), island(1)],
+            spell: frilledMystic(),
+            outcome: true,
+        }),
+    );
 });
 
 describe('can play spell testing - hybrid mana', () => {
-    it('can play Deathrite 1', testCanPlayOnCurve({
-        lands: [forest(0)],
-        spell: deathRite(0),
-        outcome: true,
-    }));
-    it('can play Deathrite 2', testCanPlayOnCurve({
-        lands: [swamp(0)],
-        spell: deathRite(0),
-        outcome: true,
-    }));
-    it('can play Saheeli 1', testCanPlayOnCurve({
-        lands: [island(0), mountain(0), mountain(1)],
-        spell: saheeli(0),
-        outcome: true,
-    }));
-    it('can play Saheeli 2', testCanPlayOnCurve({
-        lands: [volcanicIsland(0), volcanicIsland(1), swamp(0)],
-        spell: saheeli(0),
-        outcome: true,
-    }));
-    it('can not Saheeli 1', testCanPlayOnCurve({
-        lands: [volcanicIsland(0), swamp(0), swamp(1)],
-        spell: saheeli(0),
-        outcome: false,
-    }));
+    it(
+        'can play Deathrite 1',
+        testCanPlayOnCurve({
+            lands: [forest(0)],
+            spell: deathRite(0),
+            outcome: true,
+        }),
+    );
+    it(
+        'can play Deathrite 2',
+        testCanPlayOnCurve({
+            lands: [swamp(0)],
+            spell: deathRite(0),
+            outcome: true,
+        }),
+    );
+    it(
+        'can play Saheeli 1',
+        testCanPlayOnCurve({
+            lands: [island(0), mountain(0), mountain(1)],
+            spell: saheeli(0),
+            outcome: true,
+        }),
+    );
+    it(
+        'can play Saheeli 2',
+        testCanPlayOnCurve({
+            lands: [volcanicIsland(0), volcanicIsland(1), swamp(0)],
+            spell: saheeli(0),
+            outcome: true,
+        }),
+    );
+    it(
+        'can not Saheeli 1',
+        testCanPlayOnCurve({
+            lands: [volcanicIsland(0), swamp(0), swamp(1)],
+            spell: saheeli(0),
+            outcome: false,
+        }),
+    );
 });
 
-
 describe('can play spell testing - checklands', () => {
-    it('can play Meddling Mage 1', testCanPlayOnCurve({
-        lands: [irrigatedFarmland(0), glacialFortress(0)],
-        spell: meddlingMage(0),
-        outcome: true,
-    }));
-    it('can play Meddling Mage 2', testCanPlayOnCurve({
-        lands: [irrigatedFarmland(0), glacialFortress(0), glacialFortress(1)],
-        spell: meddlingMage(0),
-        outcome: true,
-    }));
-    it('can play Meddling Mage 3', testCanPlayOnCurve({
-        lands: [irrigatedFarmland(0), irrigatedFarmland(1), glacialFortress(0)],
-        spell: meddlingMage(0),
-        outcome: true,
-    }));
-    it('can not play Meddling Mage 1', testCanPlayOnCurve({
-        lands: [irrigatedFarmland(0), irrigatedFarmland(1)],
-        spell: meddlingMage(0),
-        outcome: false,
-    }));
-    it('can not play Meddling Mage 2', testCanPlayOnCurve({
-        lands: [glacialFortress(0), glacialFortress(1)],
-        spell: meddlingMage(0),
-        outcome: false,
-    }));
+    it(
+        'can play Meddling Mage 1',
+        testCanPlayOnCurve({
+            lands: [irrigatedFarmland(0), glacialFortress(0)],
+            spell: meddlingMage(0),
+            outcome: true,
+        }),
+    );
+    it(
+        'can play Meddling Mage 2',
+        testCanPlayOnCurve({
+            lands: [irrigatedFarmland(0), glacialFortress(0), glacialFortress(1)],
+            spell: meddlingMage(0),
+            outcome: true,
+        }),
+    );
+    it(
+        'can play Meddling Mage 3',
+        testCanPlayOnCurve({
+            lands: [irrigatedFarmland(0), irrigatedFarmland(1), glacialFortress(0)],
+            spell: meddlingMage(0),
+            outcome: true,
+        }),
+    );
+    it(
+        'can not play Meddling Mage 1',
+        testCanPlayOnCurve({
+            lands: [irrigatedFarmland(0), irrigatedFarmland(1)],
+            spell: meddlingMage(0),
+            outcome: false,
+        }),
+    );
+    it(
+        'can not play Meddling Mage 2',
+        testCanPlayOnCurve({
+            lands: [glacialFortress(0), glacialFortress(1)],
+            spell: meddlingMage(0),
+            outcome: false,
+        }),
+    );
 });
 
 describe('isCheckland testing', () => {
@@ -350,7 +458,6 @@ describe('handle Fetchland', () => {
     });
 });
 
-
 describe('can play spell testing - fetchlands', () => {
     it('can play Meddling Mage 1', () => {
         const fetch = marshFlats(0);
@@ -373,7 +480,6 @@ describe('can play spell testing - fetchlands', () => {
     });
 });
 
-
 describe('fastland testing', () => {
     it('Blooming marsh', () => {
         const land = bloomingMarsh(0);
@@ -383,37 +489,47 @@ describe('fastland testing', () => {
         const landsUntap = [bloomingMarsh(0), bloomingMarsh(1), bloomingMarsh(2)];
         const landsTap = [simicGuildGate(0), simicGuildGate(1), bloomingMarsh(0), bloomingMarsh(1)];
         const land = {
-            text: 'Blooming Marsh enters the battlefield tapped unless you control two or fewer other lands.\n{T}: Add {B} or {G}.',
+            text:
+                'Blooming Marsh enters the battlefield tapped unless you control two or fewer other lands.\n{T}: Add {B} or {G}.',
         };
         expect(evaluateEtb(land.text).etbTapped(landsTap, 4)).toBe(true);
         expect(evaluateEtb(land.text).etbTapped(landsTap, 2)).toBe(false);
         expect(evaluateEtb(land.text).etbTapped(landsUntap, 3)).toBe(false);
     });
-    it('can play giantGrowth with 3 fastlands', testCanPlayOnCurve({
-        lands: [bloomingMarsh(0), bloomingMarsh(1), bloomingMarsh(2)],
-        spell: giantGrowth(0),
-        outcome: true,
-    }));
-    it('can not play frilled Mystic with 2 fastlands and 2 guildgate', testCanPlayOnCurve({
-        lands: [simicGuildGate(0), simicGuildGate(1), bloomingMarsh(0), bloomingMarsh(1)],
-        spell: frilledMystic(0),
-        outcome: false,
-    }));
-    it('can play Maelstrom Pulse with 3 fastlands', testCanPlayOnCurve({
-        lands: [bloomingMarsh(0), bloomingMarsh(1), bloomingMarsh(2)],
-        spell: maelstromPulse(0),
-        outcome: true,
-    }));
+    it(
+        'can play giantGrowth with 3 fastlands',
+        testCanPlayOnCurve({
+            lands: [bloomingMarsh(0), bloomingMarsh(1), bloomingMarsh(2)],
+            spell: giantGrowth(0),
+            outcome: true,
+        }),
+    );
+    it(
+        'can not play frilled Mystic with 2 fastlands and 2 guildgate',
+        testCanPlayOnCurve({
+            lands: [simicGuildGate(0), simicGuildGate(1), bloomingMarsh(0), bloomingMarsh(1)],
+            spell: frilledMystic(0),
+            outcome: false,
+        }),
+    );
+    it(
+        'can play Maelstrom Pulse with 3 fastlands',
+        testCanPlayOnCurve({
+            lands: [bloomingMarsh(0), bloomingMarsh(1), bloomingMarsh(2)],
+            spell: maelstromPulse(0),
+            outcome: true,
+        }),
+    );
 });
 
 describe('double-face cards testing', () => {
     it('is Double-Face Card testing', () => {
         const doubleFaceCards = [delver(), kazanduMammoth()];
         const singleFaceCards = [bloodstainedMire(), deathRite()];
-        doubleFaceCards.forEach(card => {
+        doubleFaceCards.forEach((card) => {
             expect(isDFC(card)).toBe(true);
         });
-        singleFaceCards.forEach(card => {
+        singleFaceCards.forEach((card) => {
             expect(isDFC(card)).toBe(false);
         });
     });
@@ -442,7 +558,7 @@ describe('mana cost testing', () => {
         const expected = {
             X: 1,
             U: 1,
-            R:1
+            R: 1,
         };
         expect(getManaCost(codifiedcmc)).toEqual(expected);
     });
@@ -453,5 +569,5 @@ describe('mana cost testing', () => {
             0: 1,
         };
         expect(getManaCost(codifiedcmc)).toEqual(expected);
-    })
-})
+    });
+});
