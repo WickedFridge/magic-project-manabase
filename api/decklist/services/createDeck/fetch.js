@@ -1,9 +1,9 @@
 const config = require('config');
 const { createClient: createScryfallClient } = require('../../../common/api-client/scryfall/factory');
 const { isDFC, isTransformableCard, isPathway, hasTypeLand, markEtbAndLandType } = require('../../cards/utils');
+const { customLogger } = require('../../../common/logger');
 const { handleXSpell, handleSplitCard } = require('./spells');
 const { handlePathway } = require('./lands');
-const { customLogger } = require('../../../common/logger');
 
 const scryfallApiClient = createScryfallClient(config.apiClients.scryfall);
 const logger = customLogger('fetch');
@@ -20,40 +20,40 @@ async function fetchCardInfo(decklist, xValue) {
     const lands = [];
     const cardsCount = {};
 
-    (await Promise.all(decklist.map(cardCountAndName => {
-        const [count, name] = splitCountAndName(cardCountAndName);
-        cardsCount[name] = parseInt(count);
-        return scryfallApiClient.getCardByName(name);
-    })))
-        .forEach((card) => {
-            // handle splitcards
-            if (isDFC(card)) {
-                if (isTransformableCard(card)) {
-                    logger.info('coucou');
-                    card.card_faces.pop();
-                    logger.info(card.card_faces);
-                }
-                if (isPathway(card)) {
-                    lands.push(...handlePathway(card, cardsCount));
-                } else {
-                    card.card_faces.forEach(splitcard => {
-                        const [addedSpells, addedLands] = handleSplitCard(card, splitcard, xValue, cardsCount);
-                        spells.push(...addedSpells);
-                        lands.push(...addedLands);
-                    })
-                }
+    (
+        await Promise.all(
+            decklist.map((cardCountAndName) => {
+                const [count, name] = splitCountAndName(cardCountAndName);
+                cardsCount[name] = parseInt(count);
+                return scryfallApiClient.getCardByName(name);
+            }),
+        )
+    ).forEach((card) => {
+        // handle splitcards
+        if (isDFC(card)) {
+            if (isTransformableCard(card)) {
+                card.card_faces.pop();
             }
-            else if (!hasTypeLand(card)) {
-                // handle regular spells
-                handleXSpell(card, xValue);
-                spells.push(card);
+            if (isPathway(card)) {
+                lands.push(...handlePathway(card, cardsCount));
             } else {
-                // handle lands
-                const count = cardsCount[card.name];
-                const landsToPush = Array(count).fill(markEtbAndLandType(card));
-                lands.push(...landsToPush);
+                card.card_faces.forEach((splitcard) => {
+                    const [addedSpells, addedLands] = handleSplitCard(card, splitcard, xValue, cardsCount);
+                    spells.push(...addedSpells);
+                    lands.push(...addedLands);
+                });
             }
-        });
+        } else if (!hasTypeLand(card)) {
+            // handle regular spells
+            handleXSpell(card, xValue);
+            spells.push(card);
+        } else {
+            // handle lands
+            const count = cardsCount[card.name];
+            const landsToPush = Array(count).fill(markEtbAndLandType(card));
+            lands.push(...landsToPush);
+        }
+    });
     return [cardsCount, spells, lands];
 }
 

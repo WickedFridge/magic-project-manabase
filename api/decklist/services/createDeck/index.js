@@ -12,7 +12,7 @@ async function createDeck(decklist, xValue) {
         deck: deckCardsCount,
         sideboard: sideCardsCount,
         commander: commanderCardsCount,
-    }
+    };
 
     handleFetchlands(lands);
     handleNotManaProducingLands(lands);

@@ -6,8 +6,7 @@ const logger = customLogger('utils');
 let cache = new Map();
 
 function getArrayOfCards(cardsCount, card, name) {
-    const cardname = Object.keys(cardsCount)
-        .find(key => key.includes(name) || name.includes(key));
+    const cardname = Object.keys(cardsCount).find((key) => key.includes(name) || name.includes(key));
     const count = cardsCount[cardname];
     return Array(count).fill(markEtbAndLandType(card));
 }
@@ -21,22 +20,26 @@ function isDFC(card) {
 }
 
 function canTransform(splitcard) {
-    return splitcard.text.includes(`transform ${splitcard.name}`) ||
-        splitcard.text.match(/[Ee]xile [\w, ']+, then return (him|her|them) to the battlefield transformed under (his|her|their) owner's control/);
+    return (
+        splitcard.text.toLowerCase().includes(`transform ${splitcard.name}`) ||
+        splitcard.text.match(
+            /[Ee]xile [\w, ']+, then return (him|her|them) to the battlefield transformed under (his|her|their) owner's control/,
+        )
+    );
 }
 
 function isTransformableCard(card) {
     if (!isDFC(card)) {
         return false;
     }
-    return card.card_faces.some(splitcard => canTransform(splitcard));
+    return card.card_faces.some((splitcard) => canTransform(splitcard));
 }
 
 function isMDFC(card) {
     if (!isDFC(card)) {
         return false;
     }
-    return !isTransformableCard(card)
+    return !isTransformableCard(card);
 }
 
 function hasTypeLand(card) {
@@ -44,7 +47,7 @@ function hasTypeLand(card) {
 }
 
 function isPathway(card) {
-    return card.card_faces.every(splitcard => {
+    return card.card_faces.every((splitcard) => {
         return splitcard.type.includes('Land');
     });
 }
@@ -54,7 +57,7 @@ function isFastland(text) {
 }
 
 function isFetchland(text) {
-    const test = /Search your library for an? (basic land|Plains|Island|Swamp|Mountain|Forest)(?: or )?(Plains|Island|Swamp|Mountain|Forest)? card, put it onto the battlefield\s?(tapped)?, then shuffle your library\.(?: Then if you control )?(four or more)?(?: lands, untap that land.)?/;
+    const test = /Search your library for an? (basic land|Plains|Island|Swamp|Mountain|Forest)(?: or )?(Plains|Island|Swamp|Mountain|Forest)? card, put it onto the battlefield\s?(tapped)?, then shuffle( your library)?\.(?: Then if you control )?(four or more)?(?: lands, untap that land.)?/;
     const match = text.match(test);
     if (!match) {
         return false;
@@ -62,7 +65,7 @@ function isFetchland(text) {
     if (match[1] === 'basic land') {
         match[1] = 'Basic';
     }
-    return match.slice(1, 5).filter(e => !!e);
+    return match.slice(1, 5).filter((e) => !!e);
 }
 
 function isRavland(text) {
@@ -75,7 +78,7 @@ function isCheckLand(text) {
     if (!match) {
         return false;
     }
-    return [match[1], match[3]].filter(e => !!e);
+    return [match[1], match[3]].filter((e) => !!e);
 }
 
 function evaluateEtb(text) {
@@ -99,7 +102,10 @@ function evaluateEtb(text) {
     }
     const checkLands = isCheckLand(text);
     if (checkLands) {
-        return { etbTapped: (lands) => !lands.some(l => checkLands.some(check => l.type.includes(check))), checkland: true };
+        return {
+            etbTapped: (lands) => !lands.some((l) => checkLands.some((check) => l.type.includes(check))),
+            checkland: true,
+        };
     }
     return { etbTapped: () => true };
 }
@@ -108,14 +114,19 @@ function markEtbAndLandType(card) {
     return {
         ...evaluateEtb(card.text),
         ...card,
-    }
+    };
 }
 
 function hasCorrectColors(lands, spell) {
-    const findLandforEachColor = (color) => lands.some(l => l.colors.includes(color));
-    const regularColors = Object.keys(spell.cost).filter(color => color !== 'generic' && !color.includes('/'));
-    const hybridColors = [...new Set(Object.keys(spell.cost).filter(color => color.includes('/'))
-        .reduce((acc, cur) => [...acc, ...cur.split('/')], []))];
+    const findLandforEachColor = (color) => lands.some((l) => l.colors.includes(color));
+    const regularColors = Object.keys(spell.cost).filter((color) => color !== 'generic' && !color.includes('/'));
+    const hybridColors = [
+        ...new Set(
+            Object.keys(spell.cost)
+                .filter((color) => color.includes('/'))
+                .reduce((acc, cur) => [...acc, ...cur.split('/')], []),
+        ),
+    ];
     const foundRegularColors = regularColors.every(findLandforEachColor);
     if (!foundRegularColors) {
         return false;
@@ -123,11 +134,11 @@ function hasCorrectColors(lands, spell) {
     if (hybridColors.length === 0) {
         return true;
     }
-    return hybridColors.some(findLandforEachColor)
+    return hybridColors.some(findLandforEachColor);
 }
 
 function hasUntappedLand(lands, spell) {
-    return lands.some(l => l.etbTapped(lands, spell.cmc) === false);
+    return lands.some((l) => l.etbTapped(lands, spell.cmc) === false);
 }
 
 function findCorrectLand(lands, color) {
@@ -135,15 +146,13 @@ function findCorrectLand(lands, color) {
         return lands[0];
     }
     if (color.includes('/')) {
-        return lands
-            .find(land => land.colors
-                .some(c => color.split('/').includes(c)));
+        return lands.find((land) => land.colors.some((c) => color.split('/').includes(c)));
     }
-    const exactMatchs = lands.filter(land => land.colors.length === 1 && land.colors.includes(color));
+    const exactMatchs = lands.filter((land) => land.colors.length === 1 && land.colors.includes(color));
     if (exactMatchs.length > 0) {
         return exactMatchs[0];
     }
-    return lands.find(land => land.colors.includes(color));
+    return lands.find((land) => land.colors.includes(color));
 }
 
 /**
@@ -157,21 +166,25 @@ function findCorrectLand(lands, color) {
  */
 function evaluateCost(lands, cost, cmc) {
     const colorsToFind = copy(cost);
-    const remainingLands = lands.map(l => copy(l))
-        .sort((land1, land2) => land1.colors.length - land2.colors.length);
+    const remainingLands = lands.map((l) => copy(l)).sort((land1, land2) => land1.colors.length - land2.colors.length);
     const usedLands = [];
     const sortedLandsToFind = Object.keys(cost).sort((c1, c2) => c1.length - c2.length);
     sortedLandsToFind.forEach((color) => {
-        for(let i=0; i<cost[color]; i++) {
+        for (let i = 0; i < cost[color]; i++) {
             const foundLand = findCorrectLand(remainingLands, color);
             if (!foundLand) {
                 return;
             }
-            usedLands.push(...remainingLands.splice(remainingLands.findIndex(l => l.name === foundLand.name), 1));
+            usedLands.push(
+                ...remainingLands.splice(
+                    remainingLands.findIndex((l) => l.name === foundLand.name),
+                    1,
+                ),
+            );
             colorsToFind[color]--;
         }
     });
-    return Object.values(colorsToFind).every(l => l === 0) && hasUntappedLand(usedLands, cmc);
+    return Object.values(colorsToFind).every((l) => l === 0) && hasUntappedLand(usedLands, cmc);
 }
 
 function canPlaySpellOnCurve(lands, spell) {
@@ -182,18 +195,16 @@ function canPlaySpellOnCurve(lands, spell) {
         return false;
     }
 
-    const comb = getAllCombinations(lands).filter(l => l.length === spell.cmc);
+    const comb = getAllCombinations(lands).filter((l) => l.length === spell.cmc);
     if (comb.length === 0) {
         return false;
     }
-    return comb.some(comb => evaluateCost(comb, spell.cost, spell.cmc));
+    return comb.some((comb) => evaluateCost(comb, spell.cost, spell.cmc));
 }
 
 function cachedCanPlaySpellOnCurve(lands, spell) {
-    const key = JSON.stringify([spell.mana_cost, lands.map(l => l.name).sort()]);
-    const value = cache.has(key) ?
-        cache.get(key) :
-        canPlaySpellOnCurve(lands, spell);
+    const key = JSON.stringify([spell.mana_cost, lands.map((l) => l.name).sort()]);
+    const value = cache.has(key) ? cache.get(key) : canPlaySpellOnCurve(lands, spell);
 
     cache.set(key, value);
     return value;
@@ -204,7 +215,7 @@ function getManaCost(codifiedCmc) {
     if (!codifiedCmc) {
         return manacost;
     }
-    const matches = codifiedCmc.substr(1).slice(0,-1).split('}{');
+    const matches = codifiedCmc.substr(1).slice(0, -1).split('}{');
 
     matches.forEach((val) => {
         // eslint-disable-next-line no-extra-boolean-cast
