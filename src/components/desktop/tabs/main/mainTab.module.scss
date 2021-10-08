@@ -1,0 +1,24 @@
+.mainTab {
+  display: flex;
+  flex-grow: 1;
+  justify-content: space-between;
+  height: 100%;
+  padding: 15px;
+}
+
+.inputPanel {
+  display: flex;
+  flex-direction: column;
+  width: 20%;
+  margin: 5px
+}
+
+.resultsPanel {
+  width: 80%;
+  margin: 5px;
+}
+
+.placeholder {
+  background: #824802;
+  height: 800px;
+}

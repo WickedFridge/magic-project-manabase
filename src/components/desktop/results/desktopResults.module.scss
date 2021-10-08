@@ -1,0 +1,22 @@
+.resultsContainer {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.leftPanel {
+  width: 66%;
+  margin: 0 5px;
+}
+
+.rightPanel {
+  display: flex;
+  align-items: flex-start;
+  flex-grow: 1;
+  margin: 0 5px;
+}
+
+.rightPanelContainer {
+  height: 100%;
+  flex-grow: 1;
+}

@@ -1,0 +1,52 @@
+body {
+  background-color: #282c34;
+  height: 100vh;
+
+  h1,
+  h2,
+  h3,
+  h4,
+  p,
+  button,
+  div,
+  a,
+  header {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    color: inherit;
+    text-decoration: none;
+    box-sizing: border-box;
+    outline: none;
+
+  &:disabled {
+     opacity: 0.6;
+     cursor: not-allowed;
+   }
+  }
+
+  a {
+    color: orange;
+    text-decoration: none;
+  }
+
+  a:hover {
+    color: #eaeb06;
+  }
+}
+
+#root {
+  height: 100%;
+}
+
+.App {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  font-size: calc(8px + 1vmin);
+  color: white;
+  height: 100%;
+  flex-grow: 1;
+}
