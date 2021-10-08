@@ -14,7 +14,9 @@ function getCacheClient({ ttl: defaultTtl } = {}) {
             cache[key] = value;
             const finalTtl = typeof ttl === `number` ? ttl : defaultTtl;
             if (typeof finalTtl === `number` && finalTtl > 0) {
-                setTimeout(() => { this.delete(key); }, finalTtl);
+                setTimeout(() => {
+                    this.delete(key);
+                }, finalTtl);
             }
             return this;
         },

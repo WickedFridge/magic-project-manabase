@@ -23,7 +23,6 @@ const MainTab = () => {
                 </div>
                 <div className={styles.resultsPanel}>
                     <LoadingScreen loading={loading}>
-                        {/* <div className={styles.placeholder}>coucou</div> */}
                         <DesktopResults lands={lands} spells={spells} />
                     </LoadingScreen>
                 </div>

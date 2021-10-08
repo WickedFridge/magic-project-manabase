@@ -1,12 +1,12 @@
-const redis = require('redis');
 const { promisify } = require('util');
+const redis = require('redis');
 const { createClient } = require('../cache/factory');
 
 const cache = createClient({ type: 'memory' });
 
 // const client = redis.createClient();
 
-function copy (obj) {
+function copy(obj) {
     const output = JSON.parse(JSON.stringify(obj));
     Object.entries(obj).forEach(([key, value]) => {
         if (typeof value === 'function') {
@@ -27,11 +27,11 @@ function getAllPermutations(xs) {
     for (let i = 0; i < xs.length; i = i + 1) {
         let rest = getAllPermutations(xs.slice(0, i).concat(xs.slice(i + 1)));
 
-        if(!rest.length) {
-            ret.push([xs[i]])
+        if (!rest.length) {
+            ret.push([xs[i]]);
         } else {
-            for(let j = 0; j < rest.length; j = j + 1) {
-                ret.push([xs[i]].concat(rest[j]))
+            for (let j = 0; j < rest.length; j = j + 1) {
+                ret.push([xs[i]].concat(rest[j]));
             }
         }
     }
@@ -45,8 +45,8 @@ function getAllPermutations(xs) {
  * @param res
  * @returns {Array}
  */
-function getAllCombinations(rest, active = [], res = []){
-    if (rest.length === 0){
+function getAllCombinations(rest, active = [], res = []) {
+    if (rest.length === 0) {
         res.push(active);
         return active;
     } else {
@@ -65,8 +65,8 @@ function getAllCombinations(rest, active = [], res = []){
  * @param res
  * @returns {Array}
  */
-function getAllCombinationsOfMaxLength(rest, length, active = [], res = []){
-    if (rest.length === 0 || active.length === length){
+function getAllCombinationsOfMaxLength(rest, length, active = [], res = []) {
+    if (rest.length === 0 || active.length === length) {
         res.push(active);
         return active;
     } else {
@@ -78,7 +78,7 @@ function getAllCombinationsOfMaxLength(rest, length, active = [], res = []){
 
 function cachedGetAllCombinationsOfMaxLength(array, length) {
     const key = cache.generateCacheKey([array, length]);
-    if(cache.get(key)){
+    if (cache.get(key)) {
         return cache.get(key);
     }
     const value = getAllCombinationsOfMaxLength(array, length);
@@ -86,8 +86,8 @@ function cachedGetAllCombinationsOfMaxLength(array, length) {
     return value;
 }
 
-function getAllCombinationsOfMinAndMaxLengthWithCallback(callback, rest, min, max, active = [], res = []){
-    if (rest.length === 0 || active.length === max){
+function getAllCombinationsOfMinAndMaxLengthWithCallback(callback, rest, min, max, active = [], res = []) {
+    if (rest.length === 0 || active.length === max) {
         if (active.length >= min) {
             callback(active);
         }
@@ -103,5 +103,5 @@ module.exports = {
     getAllCombinations,
     getAllCombinationsOfMaxLength,
     getAllCombinationsOfMinAndMaxLengthWithCallback,
-    cachedGetAllCombinationsOfMaxLength
+    cachedGetAllCombinationsOfMaxLength,
 };

@@ -1,6 +1,6 @@
-const redis = require('redis');
 const { promisify } = require('util');
 const { performance } = require('perf_hooks');
+const redis = require('redis');
 const { getAverageLandCountInHand } = require('../common/tools/hypergeometric');
 
 getAverageLandCountInHand(60, 24);
@@ -68,6 +68,3 @@ getAverageLandCountInHand(60, 24);
 //         client.quit();
 //     }
 // })();
-
-
-

@@ -28,12 +28,12 @@ function initLogger(config) {
 
     if (_loggerConfig.logger && !authorizedLogLevels.includes(_loggerConfig.logger.level)) {
         console.log(
-            `WARNING: INVALID LOG LEVEL ${_loggerConfig.logger.level} IN CONFIGURATION, force to default level: 'debug'`
+            `WARNING: INVALID LOG LEVEL ${_loggerConfig.logger.level} IN CONFIGURATION, force to default level: 'debug'`,
         );
         _loggerConfig.logger.level = `debug`;
     }
 
-    console.log(`Starting with logger configuration`, _loggerConfig)
+    console.log(`Starting with logger configuration`, _loggerConfig);
 }
 
 function consoleFormat(tag) {
@@ -44,7 +44,7 @@ function consoleFormat(tag) {
         format.timestamp({
             format: `DD/MM HH:mm`,
         }),
-        format.printf(info => {
+        format.printf((info) => {
             if (typeof info.message === `object`) {
                 info.message = util.inspect(info.message, {
                     compact: true,
@@ -81,7 +81,7 @@ function logFileFormat(tag) {
         format.timestamp({
             format: `DD/MM HH:mm`,
         }),
-        format.printf(info => {
+        format.printf((info) => {
             if (typeof info.message === `object`) {
                 info.message = util.inspect(info.message, {
                     compact: true,
@@ -98,9 +98,10 @@ function logFileFormat(tag) {
 
 function slackFormat(projectName, info) {
     let text = `*${projectName}* \`${info.level}\``;
-    text += typeof info.message === `object`
-        ? ` \`\`\`${util.inspect(info.message, { depth: Infinity })}\`\`\``
-        : ` ${info.message}`;
+    text +=
+        typeof info.message === `object`
+            ? ` \`\`\`${util.inspect(info.message, { depth: Infinity })}\`\`\``
+            : ` ${info.message}`;
     if (info.stack) {
         text += `\n\`\`\`${info.stack}\`\`\``;
     }
@@ -118,12 +119,12 @@ function slackFormat(projectName, info) {
  *
  * Winston does hide error information when using logger.info(new Error()) 💩💩💩
  * Let's override logging method to automatically pass it to message.err
-*/
+ */
 function patchLoggerInstance(logger) {
     const methodsToWrap = authorizedLogLevels;
-    methodsToWrap.forEach(method => {
+    methodsToWrap.forEach((method) => {
         const oldMethod = logger[method];
-        logger[method] = function(...args) {
+        logger[method] = function (...args) {
             // If the message is an instance of Error, we add usefull informations to the log
             if (args[0] instanceof Error) {
                 const message = {
@@ -153,9 +154,10 @@ function customLogger(tag = _loggerConfig.name) {
         transports: [
             new transports.Console({
                 prettyPrint: true,
-                format: process.env.NODE_ENV === 'production'
-                    ? logFileFormat(colorizedFormattedTag)
-                    : consoleFormat(colorizedFormattedTag),
+                format:
+                    process.env.NODE_ENV === 'production'
+                        ? logFileFormat(colorizedFormattedTag)
+                        : consoleFormat(colorizedFormattedTag),
             }),
         ],
     };
@@ -170,7 +172,7 @@ function customLogger(tag = _loggerConfig.name) {
     if (_loggerConfig.slack && _loggerConfig.slack.webhook) {
         const projectName = _loggerConfig.name;
         const slackTransport = new (require(`common/logger/slack-transport`))({
-            formatter: info => slackFormat(projectName, info),
+            formatter: (info) => slackFormat(projectName, info),
             channel: _loggerConfig.slack.channel,
             webhookUrl: _loggerConfig.slack.webhook,
             level: `error`,
@@ -187,8 +189,8 @@ function customLogger(tag = _loggerConfig.name) {
                 messageFormatter: cloudwatchFormat.bind(null, tag),
                 level: `debug`,
                 ..._loggerConfig.aws,
-            }
-        ));
+            }),
+        );
     }
 
     const logger = createLogger(loggerConfig);

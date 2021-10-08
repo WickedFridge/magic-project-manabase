@@ -28,8 +28,8 @@ module.exports = class SlackTransport extends Transport {
     log(info, callback) {
         // Figure out which keys in info are attachments
         const attachments = [];
-        const attachmentKeys = Object.keys(info).filter(key => !isNaN(parseInt(key)));
-        attachmentKeys.forEach(key => attachments.push(info[key]));
+        const attachmentKeys = Object.keys(info).filter((key) => !isNaN(parseInt(key)));
+        attachmentKeys.forEach((key) => attachments.push(info[key]));
 
         const payload = {
             channel: this.channel,
@@ -59,7 +59,7 @@ module.exports = class SlackTransport extends Transport {
                     },
                     {
                         title: `Date`,
-                        value: (new Date()).toString(),
+                        value: new Date().toString(),
                         short: true,
                     },
                 ],
@@ -72,11 +72,14 @@ module.exports = class SlackTransport extends Transport {
 
         this.webhook.send(payload, (err, header, statusCode, body) => {
             if (err) {
-                console.error(`
+                console.error(
+                    `
                     ===============================================
                     CAN'T SEND AN ERROR TO SLACK. PLEASE NOTICE ME.
                     ===============================================
-                `, err);
+                `,
+                    err,
+                );
             } else {
                 setImmediate(() => this.emit(`logged`, info));
             }

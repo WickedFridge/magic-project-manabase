@@ -18,9 +18,9 @@ function handleSplitCard(card, splitcard, xValue, cardsCount) {
         return [spells, lands];
     }
     if (isMDFC(card)) {
-        lands.push(...getArrayOfCards(cardsCount, splitcard, card.name))
+        lands.push(...getArrayOfCards(cardsCount, splitcard, card.name));
     }
-    return [spells, lands]
+    return [spells, lands];
 }
 
 module.exports = {

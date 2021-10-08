@@ -11,7 +11,6 @@ function getDeepValue(obj) {
     return obj;
 }
 
-
 module.exports = {
     getDeepValue,
 };

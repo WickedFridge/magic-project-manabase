@@ -6,11 +6,7 @@ const decklistApp = require('./decklist');
 
 const runtimeOpts = {
     timeoutSeconds: 120,
-    memory: '512MB'
+    memory: '512MB',
 };
 
-
-exports.decklist = functions
-    .region('europe-west2')
-    .runWith(runtimeOpts)
-    .https.onRequest(decklistApp);
+exports.decklist = functions.region('europe-west2').runWith(runtimeOpts).https.onRequest(decklistApp);

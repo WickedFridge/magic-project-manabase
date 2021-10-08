@@ -13,6 +13,7 @@
     "node": "10"
   },
   "dependencies": {
+    "@stdlib/stats": "^0.0.13",
     "@stdlib/stdlib": "^0.0.92",
     "axios": "^0.19.2",
     "body-parser": "^1.19.0",

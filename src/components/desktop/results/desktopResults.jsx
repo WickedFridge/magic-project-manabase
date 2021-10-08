@@ -23,7 +23,6 @@ const DesktopResults = ({ spells, lands }) => {
             </div>
             <div className={styles.rightPanelContainer}>
                 <div className={styles.rightPanel}>
-                    {/* coucou */}
                     <ResultTable
                         fields={landsResultFields}
                         rows={lands}

@@ -24,7 +24,6 @@ function childProcess() {
     const t0 = performance.now();
     longComputation();
     const t1 = performance.now();
-    console.log(`${t1-t0}ms`);
+    console.log(`${t1 - t0}ms`);
     process.exit();
 }
-

@@ -2,9 +2,9 @@ const config = require('config');
 const bodyParser = require('body-parser');
 const express = require('express');
 const cors = require('cors');
+const { customLogger } = require('../common/logger');
 const { analyzeDecklist } = require('./services/analyzeDecklist');
 const { getCache } = require('./cards/utils');
-const { customLogger } = require('../common/logger');
 
 const logger = customLogger('index');
 

@@ -83,6 +83,7 @@ firebase login
 
 You also need Node version 10 to make the cloud function work.
 ```
+brew install nvm
 nvm install 10
 nvm use 10y
 ```
@@ -91,7 +92,7 @@ nvm use 10y
 ```
 yarn
 yarn start
-cd functions/
+cd api/
 yarn
 yarn serve
 ```
@@ -114,6 +115,6 @@ yarn serve
 ### Deploy
 ```
 yarn build
-cd functions/
+cd api/
 firebase deploy
 ```

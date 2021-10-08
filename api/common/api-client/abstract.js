@@ -34,7 +34,7 @@ function logError(logger, params, error, level = `error`) {
 /**
  * Log an Axios request
  */
-function logSuccess(logger, params, response, level=`verbose`) {
+function logSuccess(logger, params, response, level = `verbose`) {
     logger[level]({
         axios: `success`,
         request: {
@@ -67,7 +67,16 @@ function generateCacheKey(axiosParams) {
  */
 class AbstractApiClient {
     // eslint-disable-next-line complexity
-    constructor({ baseURL, baseHeaders, timeout, logger, retryCount, timeTrackerLabel, successLoglevel, cacheClientConfig }) {
+    constructor({
+        baseURL,
+        baseHeaders,
+        timeout,
+        logger,
+        retryCount,
+        timeTrackerLabel,
+        successLoglevel,
+        cacheClientConfig,
+    }) {
         if (new.target === AbstractApiClient) {
             throw new TypeError(`Cannot construct AbstractApiClient instances directly`);
         }
@@ -112,12 +121,16 @@ class AbstractApiClient {
             baseURL: axiosParams.baseUrl || this.baseURL,
             headers: { ...this.baseHeaders, ...headers },
             timeout: axiosParams.timeout || this.timeout,
-            validateStatus: status => status >= 200 && status < 400,
+            validateStatus: (status) => status >= 200 && status < 400,
             ...axiosParams,
         };
         try {
-            if (this.forceTimeout) { throw new AxiosTimeout(); }
-            if (this.forceError) { throw new AxiosError(`fake internal error`, 500); }
+            if (this.forceTimeout) {
+                throw new AxiosTimeout();
+            }
+            if (this.forceError) {
+                throw new AxiosError(`fake internal error`, 500);
+            }
             const response = await axios.request(params);
             // logSuccess(this.logger, params, response, logLevel || this.logLevel);
             if (cacheKey) {

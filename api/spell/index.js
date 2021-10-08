@@ -23,7 +23,6 @@ app.post('/spell/can-play', async (req, res) => {
     }
 });
 
-
 app.get('/spell/cache', async (req, res) => {
     const cache = Array.from(getCache()).map(([key, value]) => [...JSON.parse(key), value]);
     res.json(cache);

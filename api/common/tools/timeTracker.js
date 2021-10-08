@@ -24,7 +24,6 @@ const _timeTracker = {};
  * If no value added (botcore just (re(start)) then value can be null
  */
 const timeTracker = {
-
     /**
      * Generate new Timestamp
      *
@@ -68,10 +67,10 @@ const timeTracker = {
         const dataset = Array.from(_timeTracker[requestType]);
         const sampleSize = dataset.length;
         dataset.sort((a, b) => a - b);
-        const p50 = Math.floor(50 * sampleSize / 100);
-        const p90 = Math.floor(90 * sampleSize / 100);
-        const p95 = Math.floor(95 * sampleSize / 100);
-        const p99 = Math.floor(99 * sampleSize / 100);
+        const p50 = Math.floor((50 * sampleSize) / 100);
+        const p90 = Math.floor((90 * sampleSize) / 100);
+        const p95 = Math.floor((95 * sampleSize) / 100);
+        const p99 = Math.floor((99 * sampleSize) / 100);
         // Calculate
         const sum = sampleSize ? dataset.reduce((a, b) => a + b) : 0;
         return {

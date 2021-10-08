@@ -6,9 +6,7 @@ const clients = {};
 function createClient(config) {
     const key = JSON.stringify(config);
     if (!clients[key]) {
-        clients[key] = config.mock === true
-            ? new SpellApiClientMock(config)
-            : new SpellApiClient(config);
+        clients[key] = config.mock === true ? new SpellApiClientMock(config) : new SpellApiClient(config);
     }
     return clients[key];
 }
