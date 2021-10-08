@@ -1,5 +1,5 @@
 import React from 'react';
-import './App.css';
+import './App.scss';
 import { Provider } from 'react-redux';
 import AppBody from './components/shared/appBody';
 import AppHeader from './components/shared/appHeader';

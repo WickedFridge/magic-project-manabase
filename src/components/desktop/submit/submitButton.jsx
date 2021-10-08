@@ -44,20 +44,18 @@ const SubmitButton = () => {
     };
 
     return (
-        <div>
-            <ColorButton
-                classes={{
-                    root: classes.root,
-                    disabled: classes.disabled,
-                }}
-                color="primary"
-                disabled={loading}
-                onClick={onSubmit}
-                variant="contained"
-            >
-                Submit
-            </ColorButton>
-        </div>
+        <ColorButton
+            classes={{
+                root: classes.root,
+                disabled: classes.disabled,
+            }}
+            color="primary"
+            disabled={loading}
+            onClick={onSubmit}
+            variant="contained"
+        >
+            Submit
+        </ColorButton>
     );
 };
 

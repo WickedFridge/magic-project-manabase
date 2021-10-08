@@ -51,7 +51,7 @@ function getMobileRow(height) {
 
 function getDesktopRow(height) {
     // this formula was handmade calculated
-    return Math.round(height / 18.5 - 14.5);
+    return Math.round(height / 18.5 - 20);
 }
 
 const DecklistInput = () => {

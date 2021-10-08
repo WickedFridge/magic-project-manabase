@@ -6,12 +6,12 @@ import Fade from '@material-ui/core/Fade';
 import { CircularProgress } from '@material-ui/core';
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import DesktopResults from '../desktopResults';
-import SubmitSection from '../submit/submitSection';
-import DecklistInput from '../../shared/decklistInput';
-import { landsSelector, spellsSelector } from '../../../core/useCases/stats/selector';
-import { loadingSelector } from '../../../core/useCases/input/selector';
-import { useCurrentHeight } from '../../../utils/width';
+import DesktopResults from '../../results/desktopResults';
+import SubmitSection from '../../submit/submitSection';
+import DecklistInput from '../../../shared/decklistInput';
+import { landsSelector, spellsSelector } from '../../../../core/useCases/stats/selector';
+import { loadingSelector } from '../../../../core/useCases/input/selector';
+import { useCurrentHeight } from '../../../../utils/width';
 
 const useStyles = (height) =>
     makeStyles((theme) => ({
@@ -19,6 +19,11 @@ const useStyles = (height) =>
             padding: theme.spacing(2),
             textAlign: 'center',
             backgroundColor: '#1b222b',
+            height: '100%',
+            margin: 15,
+        },
+        leftPanel: {
+            height: '100%',
         },
         results: {
             height: 0.85 * height - 230,
@@ -42,7 +47,9 @@ const MainTab = () => {
         <Grid spacing={2} container>
             <Grid xs={3} item>
                 <Paper className={classes.paper}>
-                    <DecklistInput />
+                    <div className={classes.leftPanel}>
+                        <DecklistInput />
+                    </div>
                 </Paper>
             </Grid>
             <Grid xs={9} item>

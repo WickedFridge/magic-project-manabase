@@ -35,8 +35,9 @@ const useStylesDesktop = (height) =>
     makeStyles({
         table: {
             maxWidth: '100%',
-            height: 0.85 * height - 230,
+            maxHeight: 0.85 * height - 130,
             backgroundColor: '#1b222b',
+            overflow: 'auto',
         },
     })();
 

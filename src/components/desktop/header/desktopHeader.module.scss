@@ -1,0 +1,19 @@
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 15px;
+  margin: 5px 0;
+
+  h1 {
+    margin: 10px;
+  }
+  h4 {
+    margin: 2px;
+  }
+
+  & > div {
+    width: 100%;
+  }
+}

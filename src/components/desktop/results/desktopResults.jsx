@@ -1,6 +1,6 @@
-import Grid from '@material-ui/core/Grid';
 import React from 'react';
-import ResultTable from '../shared/resultTable/index';
+import ResultTable from '../../shared/resultTable';
+import styles from './desktopResults.module.scss';
 
 const DesktopResults = ({ spells, lands }) => {
     const spellResultfields = [
@@ -11,8 +11,8 @@ const DesktopResults = ({ spells, lands }) => {
     const landsResultFields = [{ name: 'Quality', type: 'number', key: 'p1' }];
 
     return (
-        <Grid alignItems="center" justify="center" spacing={2} container>
-            <Grid xs={8} item>
+        <div className={styles.resultsContainer}>
+            <div className={styles.leftPanel}>
                 <ResultTable
                     fields={spellResultfields}
                     rows={spells}
@@ -20,17 +20,20 @@ const DesktopResults = ({ spells, lands }) => {
                     title="Spells"
                     tooltips={['Converted Mana cost', 'Assuming you hit all your landdrops', 'True probability']}
                 />
-            </Grid>
-            <Grid xs={4} item>
-                <ResultTable
-                    fields={landsResultFields}
-                    rows={lands}
-                    selected={0}
-                    title="Lands"
-                    tooltips={['Land Quality']}
-                />
-            </Grid>
-        </Grid>
+            </div>
+            <div className={styles.rightPanelContainer}>
+                <div className={styles.rightPanel}>
+                    {/* coucou */}
+                    <ResultTable
+                        fields={landsResultFields}
+                        rows={lands}
+                        selected={0}
+                        title="Lands"
+                        tooltips={['Land Quality']}
+                    />
+                </div>
+            </div>
+        </div>
     );
 };
 

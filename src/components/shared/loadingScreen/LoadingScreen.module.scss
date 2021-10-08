@@ -1,0 +1,11 @@
+.loadingScreen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: green;
+}
+
+:global .MuiCircularProgress-colorPrimary {
+  color: inherit !important;
+}
