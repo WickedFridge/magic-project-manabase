@@ -2,21 +2,36 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
+  height: 100%
 }
 
 .leftPanel {
   width: 66%;
   margin: 0 5px;
+  height: 100%;
 }
 
 .rightPanel {
   display: flex;
   align-items: flex-start;
   flex-grow: 1;
-  margin: 0 5px;
+  margin: 0 5px 15px;
+  max-height: 70%;
+}
+
+.rightPanelSources {
+  display: flex;
+  align-items: flex-start;
+  flex-grow: 1;
+  margin: 0 5px 15px;
+  max-height: 30%;
 }
 
 .rightPanelContainer {
   height: 100%;
-  flex-grow: 1;
+  max-height: 100%;
+  margin: 0 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }

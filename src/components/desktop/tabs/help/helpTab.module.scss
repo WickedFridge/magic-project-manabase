@@ -1,0 +1,10 @@
+.mainTab {
+  display: flex;
+  flex-grow: 1;
+  justify-content: space-between;
+  height: 82vh;
+  max-height: 82vh;
+  padding: 20px 30px;
+  overflow: auto;
+  text-align: left;
+}

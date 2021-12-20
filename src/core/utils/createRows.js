@@ -1,3 +1,3 @@
-const createRows = (data) => Object.entries(data).map(([key, { p1, p2, manaCost }]) => ({ key, p1, p2, manaCost }));
+const createRows = (data) => Object.entries(data).map(([key, value]) => ({ key, ...value }));
 
 export default createRows;

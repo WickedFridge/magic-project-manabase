@@ -1,12 +1,11 @@
-import { defaultResults } from '../../../data/defaultInputs';
+import { defaultLands, defaultResults, defaultSources } from '../../../data/defaultInputs';
 import createRows from '../../utils/createRows';
 import StatsActionTypes from './types';
 
-const defaultRows = createRows(defaultResults);
-
 const init = {
-    lands: defaultRows,
-    spells: defaultRows,
+    lands: createRows(defaultLands),
+    spells: createRows(defaultResults),
+    sources: createRows(defaultSources),
 };
 
 const statsReducer = (state = init, action) => {
@@ -15,6 +14,8 @@ const statsReducer = (state = init, action) => {
             return { ...state, lands: createRows(action.payload) };
         case StatsActionTypes.SET_SPELLS:
             return { ...state, spells: createRows(action.payload) };
+        case StatsActionTypes.SET_SOURCES:
+            return { ...state, sources: createRows(action.payload) };
         default:
             return state;
     }

@@ -7,7 +7,7 @@ import Fade from '@material-ui/core/Fade';
 import { CircularProgress } from '@material-ui/core';
 import DecklistInput from '../shared/decklistInput';
 import ResultTable from '../shared/resultTable/index';
-import HelpText from '../shared/helpText';
+import HelpText from '../shared/help/helpText';
 import MobileSubmitActions from './mobileSubmitActions';
 import MobileTabs from './mobileTabs';
 import { useSelector } from 'react-redux';

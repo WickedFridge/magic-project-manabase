@@ -26,7 +26,7 @@ function processOutputData(data, deckSize, lands, cardCounts) {
         landData.p1 /= count;
     });
     lands.forEach((l) => {
-        l.colors.forEach((color) => data.sources[color]++);
+        l.colors.forEach((color) => data.sources[color].count++);
     });
 }
 

@@ -51,13 +51,30 @@ export const defaultResults = {
     'Card 7': { ok: 440832, nok: 34188, p1: 92.8, p2: 92.8, manaCost: '{2}{G}{W}' },
     'Card 8': { ok: 143232, nok: 3334, p1: 97.73, p2: 97.73, manaCost: '{R}{G}' },
     'Card 9': { ok: 139333, nok: 7233, p1: 95.07, p2: 95.07, manaCost: '{R}{G}' },
-    'Card 10': { ok: 126055, nok: 20105, p1: 86.24, p2: 86.24, manaCost: '{R}{G}' },
-    'Card 11': { ok: 144370, nok: 2196, p1: 98.5, p2: 98.5, manaCost: '{R}{G}' },
+    'Card 10': { ok: 126055, nok: 20105, p1: 86.24, p2: 66.24, manaCost: '{R}{G}' },
+    'Card 11': { ok: 144370, nok: 2196, p1: 78.5, p2: 68.5, manaCost: '{R}{G}' },
     'Card 12': { ok: 124887, nok: 21679, p1: 85.21, p2: 85.21, manaCost: '{R}{G}' },
-    'Card 13': { ok: 143577, nok: 2989, p1: 97.96, p2: 97.96, manaCost: '{R}{G}' },
+    'Card 13': { ok: 143577, nok: 2989, p1: 97.96, p2: 57.96, manaCost: '{R}{G}' },
     'Card 14': { ok: 144072, nok: 2088, p1: 98.57, p2: 98.57, manaCost: '{R}{G}' },
-    'Card 15': { ok: 144370, nok: 2196, p1: 98.5, p2: 98.5, manaCost: '{R}{G}' },
-    'Card 16': { ok: 124470, nok: 18036, p1: 87.34, p2: 87.34, manaCost: '{R}{G}' },
-    'Card 17': { ok: 452711, nok: 22309, p1: 95.3, p2: 95.3, manaCost: '{R}{G}' },
-    'Card 18': { ok: 140182, nok: 2324, p1: 98.37, p2: 98.37, manaCost: '{R}{G}' },
+    'Card 15': { ok: 144072, nok: 2088, p1: 68.57, p2: 65.57, manaCost: '{R}{G}' },
+};
+
+export const defaultLands = {
+    'Land 1': { ok: 109873, nok: 8882, p1: 92.52, p2: 92.52, manaCost: '{R}{G}' },
+    'Land 2': { ok: 0, nok: 146566, p1: 0.0, p2: 0.0, manaCost: '{R}{G}' },
+    'Land 3': { ok: 140182, nok: 2324, p1: 98.37, p2: 98.37, manaCost: '{2}{G}' },
+    'Land 4': { ok: 143365, nok: 2795, p1: 98.09, p2: 98.09, manaCost: '{4}{U}' },
+    'Land 5': { ok: 117958, nok: 797, p1: 99.33, p2: 99.33, manaCost: '{5}{G}' },
+    'Land 6': { ok: 288740, nok: 4392, p1: 98.5, p2: 98.5, manaCost: '{U}{R}' },
+    'Land 7': { ok: 440832, nok: 34188, p1: 92.8, p2: 92.8, manaCost: '{2}{G}{W}' },
+};
+
+export const defaultSources = {
+    W: { count: 2 },
+    U: { count: 4 },
+    B: { count: 6 },
+    R: { count: 12 },
+    G: { count: 3 },
+    C: { count: 6 },
+    S: { count: 9 },
 };
