@@ -11,6 +11,9 @@ import { red, blueGrey } from '@material-ui/core/colors';
 import { useCurrentHeight, useCurrentWitdh } from '../../../utils/width';
 import HeaderTableCell from './headerTableCell';
 import ResultCell from './resultCell';
+import styles from './resultTable.module.scss';
+import ManaSymbol from '../manaSymbol/manaSymbol';
+import { v4 } from 'uuid';
 
 const capitalize = (name) => name.charAt(0).toUpperCase() + name.slice(1);
 
@@ -31,18 +34,24 @@ const useStylesMobile = makeStyles({
     },
 });
 
-const useStylesDesktop = (height) =>
+const useStylesDesktop = () =>
     makeStyles({
         table: {
             maxWidth: '100%',
-            maxHeight: 0.85 * height - 130,
+            maxHeight: 'inherit',
             backgroundColor: '#1b222b',
             overflow: 'auto',
         },
     })();
 
-const getRowBackgroundColor = (value) => {
+const getRowBackgroundColor = (value, type) => {
     let backgroundColor = blueGrey[900];
+
+    // only apply colorization to percentages (not color count so far)
+    if (type === 'number') {
+        return { backgroundColor };
+    }
+
     const val = parseInt(value, 10);
     if (val < 60) {
         return { backgroundColor: red[800] };
@@ -70,6 +79,19 @@ const getSortFunctions = (fields) => {
     return fields.map((field) => (data) => data.sort((s1, s2) => s1[field.key] - s2[field.key]));
 };
 
+const KeyCell = ({ classes, field, row }) => {
+    let content = capitalize(row.key);
+    if (field.rowType === 'mana') {
+        content = <ManaSymbol key={v4()} color={`{${row.key}}`} />;
+    }
+
+    return (
+        <TableCell align="left" className={classes.row} component="th" scope="row">
+            {content}
+        </TableCell>
+    );
+};
+
 const ResultTable = ({ rows, fields, selected, tooltips, title }) => {
     const [height] = useCurrentHeight();
     const [, isMobile] = useCurrentWitdh();
@@ -86,7 +108,7 @@ const ResultTable = ({ rows, fields, selected, tooltips, title }) => {
     };
 
     return (
-        <TableContainer className={classes.table} component={Paper}>
+        <TableContainer className={styles.tableContainer} component={Paper}>
             <Table aria-label="customized table" size="small" stickyHeader>
                 <TableHead>
                     <TableRow>
@@ -108,11 +130,9 @@ const ResultTable = ({ rows, fields, selected, tooltips, title }) => {
                         <TableRow
                             key={i}
                             className={classes.row}
-                            style={getRowBackgroundColor(row[fields[selectedField].key])}
+                            style={getRowBackgroundColor(row[fields[selectedField].key], fields[selectedField].type)}
                         >
-                            <TableCell align="left" className={classes.row} component="th" scope="row">
-                                {capitalize(row.key)}
-                            </TableCell>
+                            <KeyCell classes={classes} field={fields[0]} row={row} />
                             {fields.map((field, i) => (
                                 <ResultCell key={i} field={field} row={row} />
                             ))}

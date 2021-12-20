@@ -3,7 +3,7 @@ import React from 'react';
 import DesktopResults from '../../results/desktopResults';
 import SubmitSection from '../../submit/submitSection';
 import DecklistInput from '../../../shared/decklistInput';
-import { landsSelector, spellsSelector } from '../../../../core/useCases/stats/selector';
+import { landsSelector, sourcesSelector, spellsSelector } from '../../../../core/useCases/stats/selector';
 import { loadingSelector } from '../../../../core/useCases/input/selector';
 import LoadingScreen from '../../../shared/loadingScreen/LoadingScreen';
 import CustomPaper from '../../../shared/customPaper/CustomPaper';
@@ -13,6 +13,7 @@ const MainTab = () => {
     const loading = useSelector(loadingSelector);
     const spells = useSelector(spellsSelector);
     const lands = useSelector(landsSelector);
+    const sources = useSelector(sourcesSelector);
 
     return (
         <CustomPaper>
@@ -23,7 +24,7 @@ const MainTab = () => {
                 </div>
                 <div className={styles.resultsPanel}>
                     <LoadingScreen loading={loading}>
-                        <DesktopResults lands={lands} spells={spells} />
+                        <DesktopResults lands={lands} sources={sources} spells={spells} />
                     </LoadingScreen>
                 </div>
             </div>
