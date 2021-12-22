@@ -56,8 +56,17 @@ function isFastland(text) {
     return RegExp(/enters the battlefield tapped unless you control two or fewer other lands./).test(text);
 }
 
+function isVeryFastland(text) {
+    return RegExp(/If you control two or more other lands, [\w ]+ enters the battlefield tapped./).test(text);
+}
+
+function isSlowland(text) {
+    return RegExp(/enters the battlefield tapped unless you control two or more other lands./).test(text);
+}
+
 function isFetchland(text) {
-    const test = /Search your library for an? (basic land|Plains|Island|Swamp|Mountain|Forest)(?: or )?(Plains|Island|Swamp|Mountain|Forest)? card, put it onto the battlefield\s?(tapped)?, then shuffle( your library)?\.(?: Then if you control )?(four or more)?(?: lands, untap that land.)?/;
+    const test =
+        /Search your library for an? (basic land|Plains|Island|Swamp|Mountain|Forest)(?: or )?(Plains|Island|Swamp|Mountain|Forest)? card, put it onto the battlefield\s?(tapped)?, then shuffle( your library)?\.(?: Then if you control )?(four or more)?(?: lands, untap that land.)?/;
     const match = text.match(test);
     if (!match) {
         return false;
@@ -73,7 +82,8 @@ function isRavland(text) {
 }
 
 function isCheckLand(text) {
-    const test = /enters the battlefield tapped unless you control an? (Plains|Island|Swamp|Mountain|Forest)( or an? (Plains|Island|Swamp|Mountain|Forest))?\./;
+    const test =
+        /enters the battlefield tapped unless you control an? (Plains|Island|Swamp|Mountain|Forest)( or an? (Plains|Island|Swamp|Mountain|Forest))?\./;
     const match = text.match(test);
     if (!match) {
         return false;
@@ -96,6 +106,12 @@ function evaluateEtb(text) {
     }
     if (isFastland(text)) {
         return { etbTapped: (lands, cmc) => lands.length > 3 && cmc > 3 };
+    }
+    if (isVeryFastland(text)) {
+        return { etbTapped: (lands, cmc) => lands.length > 2 && cmc > 2 };
+    }
+    if (isSlowland(text)) {
+        return { etbTapped: (lands) => lands.length < 3 };
     }
     if (isRavland(text)) {
         return { etbTapped: () => false, ravland: true };
@@ -244,6 +260,8 @@ module.exports = {
     isCheckLand,
     isFetchland,
     isFastland,
+    isVeryFastland,
+    isSlowland,
     evaluateEtb,
     isDFC,
     isTransformableCard,

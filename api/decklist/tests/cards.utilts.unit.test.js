@@ -9,6 +9,8 @@ const {
     isMDFC,
     isTransformableCard,
     getManaCost,
+    isVeryFastland,
+    isSlowland,
 } = require('../cards/utils');
 const { handleFetchlands } = require('../services/analyzeDecklist');
 const {
@@ -42,6 +44,8 @@ const {
     maelstromPulse,
     delver,
     kazanduMammoth,
+    lairOfTheHydra,
+    deathcapGlaze,
 } = require('../cards');
 
 describe('has Correct Colors unit testing', () => {
@@ -76,9 +80,11 @@ describe('has Correct Colors unit testing', () => {
     });
 });
 
-const testCanPlayOnCurve = ({ lands, spell, outcome }) => () => {
-    expect(cachedCanPlaySpellOnCurve(lands, spell)).toBe(outcome);
-};
+const testCanPlayOnCurve =
+    ({ lands, spell, outcome }) =>
+    () => {
+        expect(cachedCanPlaySpellOnCurve(lands, spell)).toBe(outcome);
+    };
 
 describe('Basic can play spell testing - color', () => {
     it(
@@ -489,8 +495,7 @@ describe('fastland testing', () => {
         const landsUntap = [bloomingMarsh(0), bloomingMarsh(1), bloomingMarsh(2)];
         const landsTap = [simicGuildGate(0), simicGuildGate(1), bloomingMarsh(0), bloomingMarsh(1)];
         const land = {
-            text:
-                'Blooming Marsh enters the battlefield tapped unless you control two or fewer other lands.\n{T}: Add {B} or {G}.',
+            text: 'Blooming Marsh enters the battlefield tapped unless you control two or fewer other lands.\n{T}: Add {B} or {G}.',
         };
         expect(evaluateEtb(land.text).etbTapped(landsTap, 4)).toBe(true);
         expect(evaluateEtb(land.text).etbTapped(landsTap, 2)).toBe(false);
@@ -516,6 +521,76 @@ describe('fastland testing', () => {
         'can play Maelstrom Pulse with 3 fastlands',
         testCanPlayOnCurve({
             lands: [bloomingMarsh(0), bloomingMarsh(1), bloomingMarsh(2)],
+            spell: maelstromPulse(0),
+            outcome: true,
+        }),
+    );
+});
+
+describe('veryfastland testing', () => {
+    it('Lair of the Hydra', () => {
+        const land = lairOfTheHydra(0);
+        expect(isVeryFastland(land.text)).toBe(true);
+    });
+    it('can play giant growth', () => {
+        const landsUntap = [lairOfTheHydra(0), lairOfTheHydra(1)];
+        const landsTap = [simicGuildGate(0), lairOfTheHydra(0), lairOfTheHydra(1)];
+        const land = lairOfTheHydra();
+        expect(evaluateEtb(land.text).etbTapped(landsTap, 3)).toBe(true);
+        expect(evaluateEtb(land.text).etbTapped(landsTap, 2)).toBe(false);
+        expect(evaluateEtb(land.text).etbTapped(landsUntap, 2)).toBe(false);
+    });
+    it(
+        'can play giantGrowth with 2 veryfastlands',
+        testCanPlayOnCurve({
+            lands: [lairOfTheHydra(0), lairOfTheHydra(1)],
+            spell: giantGrowth(0),
+            outcome: true,
+        }),
+    );
+    it(
+        'can not play frilled Mystic with 2 veryfastlands and 2 guildgate',
+        testCanPlayOnCurve({
+            lands: [simicGuildGate(0), simicGuildGate(1), lairOfTheHydra(0), lairOfTheHydra(1)],
+            spell: frilledMystic(0),
+            outcome: false,
+        }),
+    );
+});
+
+describe('slowland testing', () => {
+    it('Deathcap Glaze', () => {
+        const land = deathcapGlaze(0);
+        expect(isSlowland(land.text)).toBe(true);
+    });
+    it('can play Maelstrom Pulse', () => {
+        const landsUntap = [deathcapGlaze(0), deathcapGlaze(1)];
+        const landsTap = [simicGuildGate(0), simicGuildGate(1), deathcapGlaze(0), deathcapGlaze(1)];
+        const land = deathcapGlaze();
+        expect(evaluateEtb(land.text).etbTapped(landsTap, 4)).toBe(false);
+        expect(evaluateEtb(land.text).etbTapped(landsTap, 2)).toBe(false);
+        expect(evaluateEtb(land.text).etbTapped(landsUntap, 3)).toBe(true);
+    });
+    it(
+        'can not play giantGrowth with 3 slowlands',
+        testCanPlayOnCurve({
+            lands: [deathcapGlaze(0), deathcapGlaze(1), deathcapGlaze(2)],
+            spell: giantGrowth(0),
+            outcome: false,
+        }),
+    );
+    it(
+        'can play frilled Mystic with 2 slowlands and 2 guildgate',
+        testCanPlayOnCurve({
+            lands: [simicGuildGate(0), simicGuildGate(1), deathcapGlaze(0), deathcapGlaze(1)],
+            spell: frilledMystic(0),
+            outcome: true,
+        }),
+    );
+    it(
+        'can play Maelstrom Pulse with 3 fastlands',
+        testCanPlayOnCurve({
+            lands: [deathcapGlaze(0), deathcapGlaze(1), deathcapGlaze(2)],
             spell: maelstromPulse(0),
             outcome: true,
         }),

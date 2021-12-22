@@ -53,48 +53,42 @@ const fabledPassage = (id) => ({
     name: `Fabled Passage ${id}`,
     type: ['Land'],
     colors: [],
-    text:
-        '{T}, Sacrifice Fabled Passage: Search your library for a basic land card, put it onto the battlefield tapped, then shuffle your library. Then if you control four or more lands, untap that land.',
+    text: '{T}, Sacrifice Fabled Passage: Search your library for a basic land card, put it onto the battlefield tapped, then shuffle your library. Then if you control four or more lands, untap that land.',
 });
 
 const prismaticVista = (id) => ({
     name: `Prismatic Vista ${id}`,
     type: ['Land'],
     colors: [],
-    text:
-        '{T}, Pay 1 life, Sacrifice Prismatic Vista: Search your library for a basic land card, put it onto the battlefield, then shuffle your library.',
+    text: '{T}, Pay 1 life, Sacrifice Prismatic Vista: Search your library for a basic land card, put it onto the battlefield, then shuffle your library.',
 });
 
 const mistyRainforest = (id) => ({
     name: `Misty Rainforest ${id}`,
     type: ['Land'],
     colors: [],
-    text:
-        '{T}, Pay 1 life, Sacrifice Misty Rainforest: Search your library for a Forest or Island card, put it onto the battlefield, then shuffle your library.',
+    text: '{T}, Pay 1 life, Sacrifice Misty Rainforest: Search your library for a Forest or Island card, put it onto the battlefield, then shuffle your library.',
 });
 
 const bloodstainedMire = (id) => ({
     name: `Bloodstained Mire ${id}`,
     type: ['Land'],
     colors: [],
-    text:
-        '{T}, Pay 1 life, Sacrifice Bloodstained Mire: Search your library for a Swamp or Mountain card, put it onto the battlefield, then shuffle your library.',
+    text: '{T}, Pay 1 life, Sacrifice Bloodstained Mire: Search your library for a Swamp or Mountain card, put it onto the battlefield, then shuffle your library.',
 });
 
 const marshFlats = (id) => ({
     name: `Marsh Flats ${id}`,
     type: ['Land'],
     colors: [],
-    text:
-        '{T}, Pay 1 life, Sacrifice Marsh Flats: Search your library for a Plains or Swamp card, put it onto the battlefield, then shuffle your library.',
+    text: '{T}, Pay 1 life, Sacrifice Marsh Flats: Search your library for a Plains or Swamp card, put it onto the battlefield, then shuffle your library.',
 });
 
 const evolvingWilds = (id) => ({
     name: `Evolving Wilds ${id}`,
     type: ['Land'],
     colors: [],
-    text:
-        '{T}, Sacrifice Evolving Wilds: Search your library for a basic land card, put it onto the battlefield tapped, then shuffle your library.',
+    text: '{T}, Sacrifice Evolving Wilds: Search your library for a basic land card, put it onto the battlefield tapped, then shuffle your library.',
 });
 
 const growthSpiral = (id) => ({
@@ -131,8 +125,7 @@ const mockTempleSimic = () => ({
     cmc: 0,
     colors: ['U', 'G'],
     type: ['Land'],
-    text:
-        'Temple of Mystery enters the battlefield tapped.\nWhen Temple of Mystery enters the battlefield, scry 1.\n{T}: Add {G} or {U}.',
+    text: 'Temple of Mystery enters the battlefield tapped.\nWhen Temple of Mystery enters the battlefield, scry 1.\n{T}: Add {G} or {U}.',
     cost: {},
 });
 
@@ -153,8 +146,7 @@ const mockTempleGolgari = () => ({
     cmc: 0,
     colors: ['B', 'G'],
     type: ['Land'],
-    text:
-        'Temple of Malady enters the battlefield tapped.\nWhen Temple of Malady enters the battlefield, scry 1.\n{T}: Add {B} or {G}.',
+    text: 'Temple of Malady enters the battlefield tapped.\nWhen Temple of Malady enters the battlefield, scry 1.\n{T}: Add {B} or {G}.',
     cost: {},
 });
 
@@ -164,8 +156,7 @@ const mockUro = () => ({
     cmc: 3,
     colors: ['G', 'U'],
     type: ['Legendary', 'Creature', '—', 'Elder', 'Giant'],
-    text:
-        'When Uro enters the battlefield, sacrifice it unless it escaped.\nWhenever Uro enters the battlefield or attacks, you gain 3 life and draw a card, then you may put a land card from your hand onto the battlefield.\nEscape—{G}{G}{U}{U}, Exile five other cards from your graveyard. (You may cast this card from your graveyard for its escape cost.)',
+    text: 'When Uro enters the battlefield, sacrifice it unless it escaped.\nWhenever Uro enters the battlefield or attacks, you gain 3 life and draw a card, then you may put a land card from your hand onto the battlefield.\nEscape—{G}{G}{U}{U}, Exile five other cards from your graveyard. (You may cast this card from your graveyard for its escape cost.)',
     cost: { generic: 1, G: 1, U: 1 },
 });
 
@@ -184,8 +175,7 @@ const deathRite = () => ({
     cmc: 1,
     colors: ['B', 'G'],
     type: ['Creature', '—', 'Elf', 'Shaman'],
-    text:
-        '{T}: Exile target land card from a graveyard. Add one mana of any color.\n{B}, {T}: Exile target instant or sorcery card from a graveyard. Each opponent loses 2 life.\n{G}, {T}: Exile target creature card from a graveyard. You gain 2 life.',
+    text: '{T}: Exile target land card from a graveyard. Add one mana of any color.\n{B}, {T}: Exile target instant or sorcery card from a graveyard. Each opponent loses 2 life.\n{G}, {T}: Exile target creature card from a graveyard. You gain 2 life.',
     cost: { 'B/G': 1 },
     mana_cost: '{B/G}',
     card_faces: undefined,
@@ -196,8 +186,7 @@ const saheeli = () => ({
     cmc: 3,
     colors: ['R', 'U'],
     type: ['Legendary', 'Planeswalker', '—', 'Saheeli'],
-    text:
-        "Whenever you cast a noncreature spell, create a 1/1 colorless Servo artifact creature token.\n−2: Target artifact you control becomes a copy of another target artifact or creature you control until end of turn, except it's an artifact in addition to its other types.",
+    text: "Whenever you cast a noncreature spell, create a 1/1 colorless Servo artifact creature token.\n−2: Target artifact you control becomes a copy of another target artifact or creature you control until end of turn, except it's an artifact in addition to its other types.",
     cost: { generic: 1, 'U/R': 2 },
     mana_cost: '{1}{U/R}{U/R}',
     card_faces: undefined,
@@ -214,8 +203,7 @@ const glacialFortress = () => ({
     cmc: 0,
     colors: ['U', 'W'],
     type: ['Land'],
-    text:
-        'Glacial Fortress enters the battlefield tapped unless you control a Plains or an Island.\n{T}: Add {W} or {U}.',
+    text: 'Glacial Fortress enters the battlefield tapped unless you control a Plains or an Island.\n{T}: Add {W} or {U}.',
     cost: {},
     mana_cost: '',
     card_faces: undefined,
@@ -227,8 +215,7 @@ const irrigatedFarmland = () => ({
     cmc: 0,
     colors: ['U', 'W'],
     type: ['Land', '—', 'Plains', 'Island'],
-    text:
-        '({T}: Add {W} or {U}.)\nIrrigated Farmland enters the battlefield tapped.\nCycling {2} ({2}, Discard this card: Draw a card.)',
+    text: '({T}: Add {W} or {U}.)\nIrrigated Farmland enters the battlefield tapped.\nCycling {2} ({2}, Discard this card: Draw a card.)',
     cost: {},
     mana_cost: '',
     card_faces: undefined,
@@ -251,8 +238,7 @@ const bloomingMarsh = () => ({
     cmc: 0,
     colors: ['B', 'G'],
     type: ['Land'],
-    text:
-        'Blooming Marsh enters the battlefield tapped unless you control two or fewer other lands.\n{T}: Add {B} or {G}.',
+    text: 'Blooming Marsh enters the battlefield tapped unless you control two or fewer other lands.\n{T}: Add {B} or {G}.',
     cost: {},
     mana_cost: '',
     card_faces: undefined,
@@ -283,8 +269,7 @@ const delver = () => ({
             cmc: 1,
             colors: ['U'],
             type: ['Creature', '—', 'Human', 'Wizard'],
-            text:
-                'At the beginning of your upkeep, look at the top card of your library. You may reveal that card. If an instant or sorcery card is revealed this way, transform Delver of Secrets.',
+            text: 'At the beginning of your upkeep, look at the top card of your library. You may reveal that card. If an instant or sorcery card is revealed this way, transform Delver of Secrets.',
             cost: { U: 1 },
             mana_cost: '{U}',
         },
@@ -314,8 +299,7 @@ const kazanduMammoth = () => ({
             cmc: 3,
             colors: ['G'],
             type: ['Creature', '—', 'Elephant'],
-            text:
-                'Landfall — Whenever a land enters the battlefield under your control, Kazandu Mammoth gets +2/+2 until end of turn.',
+            text: 'Landfall — Whenever a land enters the battlefield under your control, Kazandu Mammoth gets +2/+2 until end of turn.',
             cost: { generic: 1, G: 2 },
             mana_cost: '{1}{G}{G}',
         },
@@ -329,6 +313,32 @@ const kazanduMammoth = () => ({
             mana_cost: '',
         },
     ],
+});
+
+const deathcapGlaze = () => ({
+    etbTapped: (lands, cmc) => lands.length < 3,
+    name: 'deathcap glade',
+    cmc: 0,
+    colors: ['B', 'G'],
+    type: ['Land'],
+    text: 'Deathcap Glade enters the battlefield tapped unless you control two or more other lands.\n{T}: Add {B} or {G}.',
+    cost: {},
+    mana_cost: '',
+    card_faces: undefined,
+    producesMana: true,
+});
+
+const lairOfTheHydra = () => ({
+    etbTapped: (lands, cmc) => lands.length > 2 && cmc > 2,
+    name: 'lair of the hydra',
+    cmc: 0,
+    colors: ['G'],
+    type: ['Land'],
+    text: "If you control two or more other lands, Lair of the Hydra enters the battlefield tapped.\n{T}: Add {G}.\n{X}{G}: Until end of turn, Lair of the Hydra becomes an X/X green Hydra creature. It's still a land. X can't be 0.",
+    cost: {},
+    mana_cost: '',
+    card_faces: undefined,
+    producesMana: true,
 });
 
 module.exports = {
@@ -362,4 +372,6 @@ module.exports = {
     maelstromPulse,
     delver,
     kazanduMammoth,
+    deathcapGlaze,
+    lairOfTheHydra,
 };
