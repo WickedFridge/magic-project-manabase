@@ -32,6 +32,15 @@ async function analyzeDecklist(decklist, xValue = 2) {
     const zeroSpells = spells.filter((s) => s.cmc === 0);
     const nonZeroSpells = spells.filter((s) => s.cmc > 0);
 
+    // We create an array of Spells that don't share a mana cost (for exemple no Goblin Guide + DRC)
+    const uniqueCostSpells = nonZeroSpells.reduce((acc, cur) => {
+        if (!acc.map((a) => a.mana_cost).includes(cur.mana_cost)) {
+            acc.push(cur);
+        }
+        return acc;
+    }, []);
+    logger.info(uniqueCostSpells.map((u) => u.mana_cost));
+
     const data = {
         spells: {},
         lands: {},
@@ -75,7 +84,7 @@ async function analyzeDecklist(decklist, xValue = 2) {
 
     const callback = getCallback(averageLandCount);
     const t2 = performance.now();
-    getAllCombinationsOfMinAndMaxLengthWithCallback(callback(data, nonZeroSpells), lands, minCMC, maxCMC);
+    getAllCombinationsOfMinAndMaxLengthWithCallback(callback(data, uniqueCostSpells), lands, minCMC, maxCMC);
     const t3 = performance.now();
     processOutputData(data, deckSize, lands, cardCounts);
     logger.info(data);
