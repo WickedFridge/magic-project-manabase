@@ -200,7 +200,7 @@ function evaluateCost(lands, cost, cmc) {
             colorsToFind[color]--;
         }
     });
-    return Object.values(colorsToFind).every((l) => l === 0) && hasUntappedLand(usedLands, cmc);
+    return Object.values(colorsToFind).every((l) => l === 0) && hasUntappedLand(usedLands, { cmc });
 }
 
 function canPlaySpellOnCurve(lands, spell) {

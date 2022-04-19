@@ -7,6 +7,8 @@ const {
     saheeli,
     giantGrowth,
     growthSpiral,
+    fieldOfRuin,
+    darkslickShores,
 } = require('../cards');
 const { evaluateCost } = require('../cards/utils');
 
@@ -78,6 +80,20 @@ describe('manacost 1', () => {
         const cost = { 'U/R': 2, generic: 1 };
         const cmc = 3;
         const lands = [volcanicIsland(0), forest(0), forest(1)];
+        expect(evaluateCost(lands, cost, cmc)).toBe(false);
+    });
+
+    it('tapped 4', () => {
+        const cost = { 'B': 4 };
+        const cmc = 4;
+        const lands = [darkslickShores(0), darkslickShores(1), darkslickShores(2), darkslickShores(3)];
+        expect(evaluateCost(lands, cost, cmc)).toBe(false);
+    });
+
+    it('tapped 4 and colorless 1', () => {
+        const cost = { 'B': 4 };
+        const cmc = 4;
+        const lands = [darkslickShores(0), darkslickShores(1), darkslickShores(2), darkslickShores(3), fieldOfRuin(0)];
         expect(evaluateCost(lands, cost, cmc)).toBe(false);
     });
 });
