@@ -91,6 +91,20 @@ const evolvingWilds = (id) => ({
     text: '{T}, Sacrifice Evolving Wilds: Search your library for a basic land card, put it onto the battlefield tapped, then shuffle your library.',
 });
 
+const fieldOfRuin = (id) => ({
+    name: `Field of Ruin ${id}`,
+    type: ['Land'],
+    colors: ['C'],
+    etbTapped: () => false,
+});
+
+const darkslickShores = (id) => ({
+    name: `Darkslick Shores ${id}`,
+    type: ['Land'],
+    colors: ['U', 'B'],
+    etbTapped: (lands, cmc) => lands.length > 3 && cmc > 3
+});
+
 const growthSpiral = (id) => ({
     name: `Growth Spiral ${id}`,
     type: ['spell'],
@@ -351,6 +365,8 @@ module.exports = {
     simicGuildGate,
     fabledPassage,
     evolvingWilds,
+    fieldOfRuin,
+    darkslickShores,
     prismaticVista,
     mistyRainforest,
     bloodstainedMire,
