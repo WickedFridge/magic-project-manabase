@@ -1,6 +1,6 @@
 const { performance } = require('perf_hooks');
 const { customLogger } = require('../../../common/logger');
-const { getAllCombinationsOfMinAndMaxLengthWithCallback } = require('../../../common/tools/utils');
+const { getAllCombinationsOfMinAndMaxLengthWithCallback2 } = require('../../../common/tools/utils');
 const { getAverageLandCountInHand } = require('../../../common/tools/hypergeometric');
 const { createDeck } = require('../createDeck');
 const { getCallback } = require('./callback');
@@ -84,7 +84,7 @@ async function analyzeDecklist(decklist, xValue = 2) {
 
     const callback = getCallback(averageLandCount);
     const t2 = performance.now();
-    getAllCombinationsOfMinAndMaxLengthWithCallback(callback(data, uniqueCostSpells), lands, minCMC, maxCMC);
+    getAllCombinationsOfMinAndMaxLengthWithCallback2(callback(data, uniqueCostSpells), lands, minCMC, maxCMC);
     const t3 = performance.now();
     processOutputData(data, deckSize, lands, cardCounts);
     logger.info(data);

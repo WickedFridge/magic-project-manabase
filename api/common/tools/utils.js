@@ -97,11 +97,45 @@ function getAllCombinationsOfMinAndMaxLengthWithCallback(callback, rest, min, ma
     getAllCombinationsOfMinAndMaxLengthWithCallback(callback, rest.slice(1), min, max, active, res);
 }
 
+function getAllCombinationsOfMinAndMaxLengthWithCallback2(callback, rest, min, max) {
+    for (var i = min;i <= max;i++) {
+        var res = internalGetAllCombinationsOfMinAndMaxLengthWithCallback2(callback, rest, i);
+        if (res !== undefined) {
+            return res;
+        }
+    }
+}
+
+function internalGetAllCombinationsOfMinAndMaxLengthWithCallback2(callback, elements, len) {
+    var combination = Array(len)
+                .fill(0)
+                .map((el, i) => i);
+    var result = Array(len)
+    while (combination[len - 1] < elements.length) {
+        for (var i = 0;i < len;i++) {
+            result[i] = elements[combination[i]];
+        }
+        const res = callback(result);
+        if (res !== undefined) {
+            return res;
+        }
+        var t = len - 1;
+        while (t != 0 && combination[t] == (elements.length - len + t)) {
+            t--;
+        }
+        combination[t]++;
+        for (var i = t + 1;i < len;i++) {
+            combination[i] = combination[i - 1] + 1;
+        }
+    }
+}
+
 module.exports = {
     copy,
     getAllPermutations,
     getAllCombinations,
     getAllCombinationsOfMaxLength,
     getAllCombinationsOfMinAndMaxLengthWithCallback,
+    getAllCombinationsOfMinAndMaxLengthWithCallback2,
     cachedGetAllCombinationsOfMaxLength,
 };

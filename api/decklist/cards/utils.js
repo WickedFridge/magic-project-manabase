@@ -1,5 +1,5 @@
 const { customLogger } = require('../../common/logger');
-const { copy, getAllCombinations } = require('../../common/tools/utils');
+const { copy, getAllCombinationsOfMinAndMaxLengthWithCallback2 } = require('../../common/tools/utils');
 
 const logger = customLogger('utils');
 
@@ -211,11 +211,13 @@ function canPlaySpellOnCurve(lands, spell) {
         return false;
     }
 
-    const comb = getAllCombinations(lands).filter((l) => l.length === spell.cmc);
-    if (comb.length === 0) {
-        return false;
-    }
-    return comb.some((comb) => evaluateCost(comb, spell.cost, spell.cmc));
+    const comb = getAllCombinationsOfMinAndMaxLengthWithCallback2((comb) => {
+        if (evaluateCost(comb, spell.cost, spell.cmc)) {
+            return comb;
+        }
+    }, lands, spell.cmc, spell.cmc);
+
+    return comb !== undefined;
 }
 
 function cachedCanPlaySpellOnCurve(lands, spell) {
